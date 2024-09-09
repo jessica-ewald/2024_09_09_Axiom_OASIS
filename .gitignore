@@ -163,3 +163,9 @@ cython_debug/
 
 # macOS
 .DS_Store
+
+# Snakemake
+1_snakemake/inputs/
+1_snakemake/outputs/
+
+test.ipynb
