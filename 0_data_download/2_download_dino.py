@@ -13,7 +13,7 @@ from cpgdata.utils import download_s3_files, parallel
 def main() -> None:
     """Download data.
 
-    Download index file, download data.
+    Read in index file, download data.
 
     """
     index_dir = Path("../1_snakemake/inputs/cpg_index")
