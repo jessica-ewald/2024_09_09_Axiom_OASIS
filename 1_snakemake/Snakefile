@@ -1,0 +1,15 @@
+configfile: "./inputs/conf/mad_featselect.json"
+
+WORKFLOW = config["workflow"]
+categories = config["categories"]
+features = config["features"]
+
+# Load rules
+include: "rules/common.smk"
+include: "rules/processing.smk"
+include: "rules/concresponse.smk"
+include: "rules/classifier.smk"
+
+rule all:
+     input:
+          expand("outputs/{features}/{scenario}/profiles/mad_featselect.parquet", scenario=WORKFLOW, features=features),
