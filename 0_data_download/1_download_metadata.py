@@ -17,7 +17,7 @@ def main() -> None:
 
     """
     index_dir = Path("../1_snakemake/inputs/cpg_index")
-    prof_dir = Path("../1_snakemake/inputs/profiles/dino")
+    prof_dir = Path("../1_snakemake/inputs/metadata/dino")
     ncores = 10
 
     index_files = list(index_dir.glob("*.parquet"))
@@ -26,7 +26,8 @@ def main() -> None:
     index_df = pl.scan_parquet(index_files)
     index_df = (
         index_df.filter(pl.col("dataset_id").eq("cpg0037-oasis"))
-        .filter(pl.col("leaf_node").str.contains("dinov2_b_fieldnorm.parquet"))
+        .filter(pl.col("obj_key").str.contains("scratch"))
+        .filter(pl.col("obj_key").str.contains("metadata"))
         .select("key")
         .collect()
     )

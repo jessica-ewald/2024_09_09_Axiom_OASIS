@@ -26,7 +26,8 @@ def main() -> None:
     index_df = pl.scan_parquet(index_files)
     index_df = (
         index_df.filter(pl.col("dataset_id").eq("cpg0037-oasis"))
-        .filter(pl.col("leaf_node").str.contains("dinov2_b_fieldnorm.parquet"))
+        .filter(pl.col("obj_key").str.contains("scratch"))
+        .filter(pl.col("obj_key").str.contains("dinov2"))
         .select("key")
         .collect()
     )
