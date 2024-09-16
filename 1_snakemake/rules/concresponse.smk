@@ -20,12 +20,12 @@ rule prep_gmd:
 
 rule prep_cmd:
     input:
-        expand("outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet", scenario=WORKFLOW),
+        expand("outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet", scenario=WORKFLOW, features=features),
     output:
         expand("outputs/{features}/{scenario}/cmd/{category}_rot.parquet",
-               scenario=WORKFLOW, category=categories),
+               scenario=WORKFLOW, category=categories, features=features),
         expand("outputs/{features}/{scenario}/cmd/{category}_inv.parquet",
-               scenario=WORKFLOW, category=categories)
+               scenario=WORKFLOW, category=categories, features=features)
     params:
         cover_var=config["cover_var"],
         treatment=config["treatment"],
@@ -49,9 +49,9 @@ rule compute_cmd:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet",
         expand("outputs/{features}/{scenario}/cmd/{category}_rot.parquet",
-               scenario=WORKFLOW, category=categories),
+               scenario=WORKFLOW, category=categories, features=features),
         expand("outputs/{features}/{scenario}/cmd/{category}_inv.parquet",
-               scenario=WORKFLOW, category=categories)
+               scenario=WORKFLOW, category=categories, features=features)
     output:
         "outputs/{features}/{scenario}/cmd/cmd.parquet",
     params:

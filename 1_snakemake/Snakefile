@@ -12,4 +12,4 @@ include: "rules/classifier.smk"
 
 rule all:
      input:
-          expand("outputs/{features}/{scenario}/profiles/mad_featselect.parquet", scenario=WORKFLOW, features=features),
+          expand("outputs/{features}/{scenario}/profiles/raw.parquet", scenario=WORKFLOW, features=features),

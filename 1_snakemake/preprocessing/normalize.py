@@ -11,16 +11,18 @@ def mad(variant_feats_path, neg_stats_path, normalized_path):
     neg_stats = neg_stats.query("feature in @features")
 
     # get counts and sort by plate
-    plates, counts = np.unique(meta["Metadata_Plate"], return_counts=True)
-    ix = np.argsort(meta["Metadata_Plate"])
+    plates, counts = np.unique(meta["Metadata_plate"], return_counts=True)
+    ix = np.argsort(meta["Metadata_plate"])
     meta = meta.iloc[ix]
     vals = vals[ix]
 
     # get mad and median matrices for MAD normalization
-    mads = neg_stats.pivot(index="Metadata_Plate", columns="feature", values="mad")
+    mads = neg_stats.pivot(index="Metadata_plate", columns="feature", values="mad")
     mads = mads.loc[plates, features].values
     medians = neg_stats.pivot(
-        index="Metadata_Plate", columns="feature", values="median"
+        index="Metadata_plate",
+        columns="feature",
+        values="median",
     )
     medians = medians.loc[plates, features].values
 
@@ -38,7 +40,7 @@ def spherize(input_path, normalized_path):
     dframe = pycytominer.normalize(
         dframe,
         image_features=True,
-        samples="Metadata_Compound == 'DMSO'",
+        samples="Metadata_compound_name == 'DMSO'",
         method="spherize",
     )
     dframe.to_parquet(normalized_path)

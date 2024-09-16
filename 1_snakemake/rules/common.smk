@@ -9,7 +9,7 @@ rule write_parquet:
     output:
         "outputs/{features}/{scenario}/profiles/raw.parquet",
     run:
-        pp.io.write_parquet(config["input_path_profiles"], config["input_path_metadata"], config["next_lowest_dose"], *output)
+        pp.io.write_parquet(config["input_path_profiles"], config["input_path_metadata"], *output)
 
 
 rule filter_cell_count:
