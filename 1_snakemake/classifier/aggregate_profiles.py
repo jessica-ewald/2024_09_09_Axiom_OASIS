@@ -9,26 +9,27 @@ logger.setLevel(logging.INFO)
 
 
 def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
-    """Aggregate subset of profiles for each compound"""
-
+    """Aggregate subset of profiles for each compound."""
     feat_cols = [i for i in dat.columns if "Metadata" not in i]
 
     if method == "all":
         agg_df = pl.from_pandas(
             pycytominer.aggregate(
-                dat.to_pandas(), strata=["Metadata_Compound"], features=feat_cols
-            )
+                dat.to_pandas(),
+                strata=["Metadata_Compound"],
+                features=feat_cols,
+            ),
         )
 
     elif method == "allpod":
         agg_df = pl.from_pandas(
             pycytominer.aggregate(
                 dat.filter(
-                    pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD")
+                    pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD"),
                 ).to_pandas(),
                 strata=["Metadata_Compound"],
                 features=feat_cols,
-            )
+            ),
         )
 
     elif method == "allpodcc":
@@ -36,11 +37,11 @@ def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
             pycytominer.aggregate(
                 dat.filter(
                     (pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD"))
-                    & (pl.col("Metadata_Log10Dose") < pl.col("Metadata_ccPOD"))
+                    & (pl.col("Metadata_Log10Dose") < pl.col("Metadata_ccPOD")),
                 ).to_pandas(),
                 strata=["Metadata_Compound"],
                 features=feat_cols,
-            )
+            ),
         )
 
     elif method == "lastpod":
@@ -48,33 +49,33 @@ def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
             pycytominer.aggregate(
                 dat.filter(
                     (pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD"))
-                    & (pl.col("Metadata_Concentration") == 50.0)
+                    & (pl.col("Metadata_Concentration") == 50.0),
                 ).to_pandas(),
                 strata=["Metadata_Compound"],
                 features=feat_cols,
-            )
+            ),
         )
 
     elif method == "firstpod":
         agg_df = pl.from_pandas(
             pycytominer.aggregate(
                 dat.filter(
-                    pl.col("Metadata_Concentration") == pl.col("Metadata_MinConc")
+                    pl.col("Metadata_Concentration") == pl.col("Metadata_MinConc"),
                 ).to_pandas(),
                 strata=["Metadata_Compound"],
                 features=feat_cols,
-            )
+            ),
         )
 
     elif method == "lastpodcc":
         agg_df = pl.from_pandas(
             pycytominer.aggregate(
                 dat.filter(
-                    pl.col("Metadata_Concentration") == pl.col("Metadata_MaxConc")
+                    pl.col("Metadata_Concentration") == pl.col("Metadata_MaxConc"),
                 ).to_pandas(),
                 strata=["Metadata_Compound"],
                 features=feat_cols,
-            )
+            ),
         )
 
     # Annotate with aggregation and feature type
@@ -84,14 +85,19 @@ def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
 
 
 def aggregate_profiles(
-    prof_path: str, pod_path: str, rm_path: str, cpfeat_path: str, latent_path: str
+    prof_path: str,
+    pod_path: str,
+    rm_path: str,
+    cpfeat_path: str,
+    latent_path: str,
 ) -> None:
-    #### 1. Read in data
+    """Aggregate subset of profiles for each compound."""
+    # 1. Read in data
     profiles = pl.read_parquet(prof_path)
     pods = pl.read_parquet(pod_path)
     rot_mat = pl.read_parquet(rm_path).to_numpy()
 
-    #### 2. Process metadata
+    # 2. Process metadata
 
     # remove controls
     controls = ["DMSO", "FCCP", "Berberine chloride"]
@@ -117,17 +123,19 @@ def aggregate_profiles(
     max_conc = (
         profiles.filter(
             (pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD"))
-            & (pl.col("Metadata_Log10Dose") < pl.col("Metadata_ccPOD"))
+            & (pl.col("Metadata_Log10Dose") < pl.col("Metadata_ccPOD")),
         )
         .group_by(["Metadata_Compound"])
         .agg(pl.max("Metadata_Concentration").alias("Metadata_MaxConc"))
     )
 
     profiles = profiles.join(min_conc, on="Metadata_Compound", how="left").join(
-        max_conc, on="Metadata_Compound", how="left"
+        max_conc,
+        on="Metadata_Compound",
+        how="left",
     )
 
-    #### 3. Create latent space profiles
+    # 3. Create latent space profiles
 
     feat_cols = [col for col in profiles.columns if not col.startswith("Metadata_")]
     meta_cols = [col for col in profiles.columns if col.startswith("Metadata_")]
@@ -137,15 +145,14 @@ def aggregate_profiles(
     latent_dat = pl.DataFrame(latent_dat)
 
     new_column_names = [f"Comp{i + 1}" for i in range(len(latent_dat.columns))]
-    latent_dat = latent_dat.rename({
-        old: new for old, new in zip(latent_dat.columns, new_column_names)
-    })
+    latent_dat = latent_dat.rename({old: new for old, new in zip(latent_dat.columns, new_column_names)})
 
     latent_profiles = pl.concat(
-        [profiles.select(meta_cols), latent_dat], how="horizontal"
+        [profiles.select(meta_cols), latent_dat],
+        how="horizontal",
     )
 
-    #### 4. Aggregate profiles
+    # 4. Aggregate profiles
     methods = ["all", "allpod", "allpodcc", "firstpod", "lastpod", "lastpodcc"]
     agg_df_cpfeat = []
     agg_df_latent = []
@@ -157,6 +164,6 @@ def aggregate_profiles(
     agg_df_cpfeat = pl.concat(agg_df_cpfeat)
     agg_df_latent = pl.concat(agg_df_latent)
 
-    #### 5. Write out results
+    # 5. Write out results
     agg_df_cpfeat.write_parquet(cpfeat_path)
     agg_df_latent.write_parquet(latent_path)
