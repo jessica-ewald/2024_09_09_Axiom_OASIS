@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import polars as pl
 from tqdm import tqdm
 
@@ -68,8 +69,33 @@ def main() -> None:
     meta = meta.rename({
         "Metadata_plate": "Metadata_Plate",
         "Metadata_well": "Metadata_Well",
-    })
-    meta.write_parquet("../1_snakemake/inputs/metadata/merged_metadata.parquet")
+        "Metadata_compound_name": "Metadata_Compound",
+        "Metadata_compound_concentration_um": "Metadata_Concentration",
+    }).with_columns(
+        pl.concat_str(["Metadata_Compound", "Metadata_Concentration"], separator="_").alias("Metadata_Perturbation"),
+        pl.col("Metadata_Well")
+        .map_elements(lambda well: well if len(well) == 3 else f"{well[0]}0{well[1]}")
+        .alias("Metadata_Well"),
+    )
+
+    compounds = meta.select("Metadata_Compound").to_series().unique().to_list()
+    compounds = [i for i in compounds if i != "DMSO"]
+    meta_log10 = meta.filter(pl.col("Metadata_Compound") == "DMSO").with_columns(
+        pl.lit(0).cast(pl.Float64).alias("Metadata_Log10Conc"),
+    )
+
+    for compound in compounds:
+        temp = meta.filter(pl.col("Metadata_Compound") == compound)
+        concs = temp.select(pl.col("Metadata_Concentration")).to_series().sort().unique().to_list()
+        shift_val = np.abs(np.log10(concs[0] / 3))
+
+        temp = temp.with_columns(
+            (pl.col("Metadata_Concentration").log10() + shift_val).alias("Metadata_Log10Conc"),
+        )
+
+        meta_log10 = pl.concat([meta_log10, temp], how="vertical")
+
+    meta_log10.write_parquet("../1_snakemake/inputs/metadata/metadata.parquet")
 
 
 if __name__ == "__main__":

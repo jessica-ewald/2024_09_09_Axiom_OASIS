@@ -37,7 +37,7 @@ for (compound in compounds){
   gmd <- matrix(gmd_fit$gmd, nrow = 1)
   rownames(gmd) <- "gmd"
 
-  dose <- c(gmd_fit$Metadata_Log10Dose)
+  dose <- c(gmd_fit$Metadata_Log10Conc)
 
   gmd_pod <- scoresPOD(gmd, dose, log10.dose = TRUE, num.sds = num_sds,
                        filt.var = "SDres")
@@ -71,7 +71,7 @@ for (compound in compounds){
   cmd <- cmd_fit[, cat_cols] %>% as.matrix() %>% t()
   rownames(cmd) <- cat_cols
 
-  dose <- c(cmd_fit$Metadata_Log10Dose)
+  dose <- c(cmd_fit$Metadata_Log10Conc)
 
   cmd_pod <- scoresPOD(cmd, dose, log10.dose = TRUE, num.sds = num_sds,
                        filt.var = "SDres")

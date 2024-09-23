@@ -16,7 +16,7 @@ cc_plot_path <- args[3]
 cc_pods <- read_parquet(cc_pod_path) %>% as.data.frame()
 cc <- read_parquet(cc_path) %>% as.data.frame()
 
-highest_dose <- max(unique(cc$Metadata_Log10Dose))
+highest_dose <- max(unique(cc$Metadata_Log10Conc))
 highest_dose <- round(highest_dose + (0.025 * highest_dose), 1)
 dose <- seq(0, highest_dose, by = 0.1)
 
@@ -29,7 +29,7 @@ pdf_h <- 10
 
 #### 2. Make cell count plots
 cc_compounds <- unique(cc_pods$Metadata_Compound)
-plot_results <- data.frame(Metadata_Log10Dose = dose)
+plot_results <- data.frame(Metadata_Log10Conc = dose)
 
 for (compound in cc_compounds){
   temp_pod <- cc_pods[cc_pods$Metadata_Compound == compound, ]
@@ -54,25 +54,25 @@ for (compound in cc_compounds){
   plot_results[, compound] <- f_dose
 }
 
-plot_results <- reshape2::melt(plot_results, id.vars = c("Metadata_Log10Dose"))
+plot_results <- reshape2::melt(plot_results, id.vars = c("Metadata_Log10Conc"))
 colnames(plot_results)[2:3] <- c("Metadata_Compound", "f_dose")
 
 # Add cell count observations
-cc_values <- cc[,c("Metadata_Compound", "Metadata_Log10Dose", "Metadata_Count_Cells")]
-cc_values$Metadata_Log10Dose <- round(cc_values$Metadata_Log10Dose, 1)
+cc_values <- cc[,c("Metadata_Compound", "Metadata_Log10Conc", "Metadata_Count_Cells")]
+cc_values$Metadata_Log10Conc <- round(cc_values$Metadata_Log10Conc, 1)
 # Add DMSO
 for (compound in cc_compounds){
   cc_temp <- cc[cc$Metadata_Compound == compound, ]
   cc_plates <- unique(cc_temp$Metadata_Plate)
   
   cc_dmso <- cc[(cc$Metadata_Compound == "DMSO") & (cc$Metadata_Plate %in% cc_plates), ]
-  dmso_values <- cc_dmso[,c("Metadata_Compound", "Metadata_Log10Dose", "Metadata_Count_Cells")]
+  dmso_values <- cc_dmso[,c("Metadata_Compound", "Metadata_Log10Conc", "Metadata_Count_Cells")]
   dmso_values$Metadata_Compound <- compound
-  dmso_values$Metadata_Log10Dose <- round(dmso_values$Metadata_Log10Dose, 1)
+  dmso_values$Metadata_Log10Conc <- round(dmso_values$Metadata_Log10Conc, 1)
   
   cc_values <- rbind(cc_values, dmso_values)
 }
-plot_results <- merge(plot_results, cc_values, by=c("Metadata_Compound", "Metadata_Log10Dose"), all.x = TRUE, all.y = FALSE)
+plot_results <- merge(plot_results, cc_values, by=c("Metadata_Compound", "Metadata_Log10Conc"), all.x = TRUE, all.y = FALSE)
 
 # Add cell count pods
 cc_pods <- cc_pods[cc_pods$all.pass == TRUE, c("Metadata_Compound", "bmdl", "bmd", "bmdu")]
@@ -97,7 +97,7 @@ pdf(cc_plot_path, width = pdf_w, height = pdf_h)
 for (i in 1:n_pages) {
   # Use tryCatch to handle errors in plot creation
   tryCatch({
-    p <- ggplot(plot_results, aes(x = Metadata_Log10Dose)) +
+    p <- ggplot(plot_results, aes(x = Metadata_Log10Conc)) +
       geom_point(aes(y = Metadata_Count_Cells)) +
       geom_line(aes(y = f_dose)) +
 

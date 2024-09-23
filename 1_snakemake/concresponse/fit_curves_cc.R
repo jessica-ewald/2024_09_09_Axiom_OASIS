@@ -36,7 +36,7 @@ for (compound in compounds){
   cc <- matrix(cc_fit$Metadata_Count_Cells, nrow = 1)
   rownames(cc) <- "cc"
 
-  dose <- c(cc_fit$Metadata_Log10Dose)
+  dose <- c(cc_fit$Metadata_Log10Conc)
 
   cc_pod <- scoresPOD(cc, dose, log10.dose = TRUE, num.sds = num_sds)
   cc_pod$Metadata_Compound <- compound

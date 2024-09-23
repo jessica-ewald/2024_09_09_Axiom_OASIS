@@ -21,7 +21,7 @@ cc_pods <- read_parquet(cc_pod_path) %>% as.data.frame()
 cmd <- read_parquet(cmd_path) %>% as.data.frame()
 gmd <- read_parquet(gmd_path) %>% as.data.frame()
 
-highest_dose <- max(unique(cmd$Metadata_Log10Dose))
+highest_dose <- max(unique(cmd$Metadata_Log10Conc))
 highest_dose <- round(highest_dose + (0.025 * highest_dose), 1)
 dose <- seq(0, highest_dose, by = 0.1)
 
@@ -34,7 +34,7 @@ pdf_h <- 10
 
 #### 2. Make cell painting plots
 cp_compounds <- unique(cp_pods$Metadata_Compound)
-plot_results <- data.frame(Metadata_Log10Dose = dose)
+plot_results <- data.frame(Metadata_Log10Conc = dose)
 fitted_feats <- data.frame()
 for (compound in cp_compounds){
   temp_pod <- cp_pods[cp_pods$Metadata_Compound == compound, ]
@@ -61,18 +61,18 @@ for (compound in cp_compounds){
   
   # get observations
   if(feat_type == "gmd"){
-    gmd_temp <- gmd[gmd$Metadata_Compound == compound, c(feat_type, "Metadata_Log10Dose")]
+    gmd_temp <- gmd[gmd$Metadata_Compound == compound, c(feat_type, "Metadata_Log10Conc")]
     temp_plates <- unique(gmd_temp$Metadata_Plate)
     temp_dmso <- gmd[(gmd$Metadata_Compound == "DMSO") & (gmd$Metadata_Plate %in% temp_plates), 
-                     c(feat_type, "Metadata_Log10Dose")]
-    feats <- gmd_temp[, c(feat_type, "Metadata_Log10Dose")]
+                     c(feat_type, "Metadata_Log10Conc")]
+    feats <- gmd_temp[, c(feat_type, "Metadata_Log10Conc")]
     feats <- rbind(temp_dmso, feats)
   } else {
     cmd_temp <- cmd[cmd$Metadata_Compound == compound, ] 
     temp_plates <- unique(cmd_temp$Metadata_Plate)
     temp_dmso <- cmd[(cmd$Metadata_Compound == "DMSO") & (cmd$Metadata_Plate %in% temp_plates), 
-                     c(feat_type, "Metadata_Log10Dose")]
-    feats <- cmd_temp[, c(feat_type, "Metadata_Log10Dose")] 
+                     c(feat_type, "Metadata_Log10Conc")]
+    feats <- cmd_temp[, c(feat_type, "Metadata_Log10Conc")] 
     feats <- rbind(temp_dmso, feats)
   }
 
@@ -82,12 +82,12 @@ for (compound in cp_compounds){
   fitted_feats <- rbind(fitted_feats, feats)
 }
 
-plot_results <- reshape2::melt(plot_results, id.vars = c("Metadata_Log10Dose"))
+plot_results <- reshape2::melt(plot_results, id.vars = c("Metadata_Log10Conc"))
 colnames(plot_results)[2:3] <- c("Metadata_Compound", "f_dose")
 
 # merge dataframe together
-fitted_feats$Metadata_Log10Dose <- round(fitted_feats$Metadata_Log10Dose, 1)
-plot_results <- merge(plot_results, fitted_feats, by=c("Metadata_Compound", "Metadata_Log10Dose"), all.x = TRUE, all.y = FALSE)
+fitted_feats$Metadata_Log10Conc <- round(fitted_feats$Metadata_Log10Conc, 1)
+plot_results <- merge(plot_results, fitted_feats, by=c("Metadata_Compound", "Metadata_Log10Conc"), all.x = TRUE, all.y = FALSE)
 
 # Add better plotting label
 cmpd_type <- plot_results[,c("Metadata_Compound", "Observation_Type")] %>% na.omit() %>% distinct()
@@ -119,7 +119,7 @@ plot_results <- plot_results[order(plot_results$Metadata_Compound), ]
 pdf(cp_plot_path, width = pdf_w, height = pdf_h)
 for (i in 1:n_pages) {
 tryCatch({
-    p <- ggplot(plot_results, aes(x = Metadata_Log10Dose)) +
+    p <- ggplot(plot_results, aes(x = Metadata_Log10Conc)) +
 
       geom_point(aes(y = Observations)) +
       geom_line(aes(y = f_dose)) +

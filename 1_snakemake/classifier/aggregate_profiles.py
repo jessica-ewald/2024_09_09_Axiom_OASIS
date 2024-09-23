@@ -25,7 +25,7 @@ def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
         agg_df = pl.from_pandas(
             pycytominer.aggregate(
                 dat.filter(
-                    pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD"),
+                    pl.col("Metadata_Log10Conc") > pl.col("Metadata_POD"),
                 ).to_pandas(),
                 strata=["Metadata_Compound"],
                 features=feat_cols,
@@ -36,8 +36,8 @@ def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
         agg_df = pl.from_pandas(
             pycytominer.aggregate(
                 dat.filter(
-                    (pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD"))
-                    & (pl.col("Metadata_Log10Dose") < pl.col("Metadata_ccPOD")),
+                    (pl.col("Metadata_Log10Conc") > pl.col("Metadata_POD"))
+                    & (pl.col("Metadata_Log10Conc") < pl.col("Metadata_ccPOD")),
                 ).to_pandas(),
                 strata=["Metadata_Compound"],
                 features=feat_cols,
@@ -48,7 +48,7 @@ def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
         agg_df = pl.from_pandas(
             pycytominer.aggregate(
                 dat.filter(
-                    (pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD"))
+                    (pl.col("Metadata_Log10Conc") > pl.col("Metadata_POD"))
                     & (pl.col("Metadata_Concentration") == 50.0),
                 ).to_pandas(),
                 strata=["Metadata_Compound"],
@@ -115,15 +115,15 @@ def aggregate_profiles(
 
     # Identify first conc after POD and last conc below ccPOD
     min_conc = (
-        profiles.filter(pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD"))
+        profiles.filter(pl.col("Metadata_Log10Conc") > pl.col("Metadata_POD"))
         .group_by(["Metadata_Compound"])
         .agg(pl.min("Metadata_Concentration").alias("Metadata_MinConc"))
     )
 
     max_conc = (
         profiles.filter(
-            (pl.col("Metadata_Log10Dose") > pl.col("Metadata_POD"))
-            & (pl.col("Metadata_Log10Dose") < pl.col("Metadata_ccPOD")),
+            (pl.col("Metadata_Log10Conc") > pl.col("Metadata_POD"))
+            & (pl.col("Metadata_Log10Conc") < pl.col("Metadata_ccPOD")),
         )
         .group_by(["Metadata_Compound"])
         .agg(pl.max("Metadata_Concentration").alias("Metadata_MaxConc"))
