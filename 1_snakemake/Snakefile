@@ -1,4 +1,4 @@
-configfile: "./inputs/conf/mad_featselect.json"
+configfile: "./inputs/conf/cpcnn.json"
 
 WORKFLOW = config["workflow"]
 categories = config["categories"]
@@ -12,4 +12,5 @@ include: "rules/classifier.smk"
 
 rule all:
      input:
-          expand("outputs/{features}/{scenario}/profiles/raw.parquet", scenario=WORKFLOW, features=features),
+          expand("outputs/{features}/{scenario}/curves/plots/cc_plots.pdf", scenario=WORKFLOW, features=features),
+          expand("outputs/{features}/{scenario}/curves/plots/cp_plots.pdf", scenario=WORKFLOW, features=features),

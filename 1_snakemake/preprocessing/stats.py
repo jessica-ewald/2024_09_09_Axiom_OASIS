@@ -27,12 +27,12 @@ def get_feat_stats(dframe: pd.DataFrame, features=None):
 def get_plate_stats(dframe: pd.DataFrame):
     mad_fn = partial(median_abs_deviation, nan_policy="omit", axis=0)
     feat_cols = find_feat_cols(dframe)
-    dframe = dframe[feat_cols + ["Metadata_plate"]]
-    median = dframe.groupby("Metadata_plate", observed=True).median()
-    max_ = dframe.groupby("Metadata_plate", observed=True).max()
-    min_ = dframe.groupby("Metadata_plate", observed=True).min()
-    count = dframe.groupby("Metadata_plate", observed=True).count()
-    mad = dframe.groupby("Metadata_plate", observed=True).apply(mad_fn)
+    dframe = dframe[feat_cols + ["Metadata_Plate"]]
+    median = dframe.groupby("Metadata_Plate", observed=True).median()
+    max_ = dframe.groupby("Metadata_Plate", observed=True).max()
+    min_ = dframe.groupby("Metadata_Plate", observed=True).min()
+    count = dframe.groupby("Metadata_Plate", observed=True).count()
+    mad = dframe.groupby("Metadata_Plate", observed=True).apply(mad_fn)
     mad = pd.DataFrame(index=mad.index, data=np.stack(mad.values), columns=feat_cols)
 
     median["stat"] = "median"
@@ -43,8 +43,8 @@ def get_plate_stats(dframe: pd.DataFrame):
 
     stats = pd.concat([median, mad, min_, max_, count])
     stats.reset_index(inplace=True)
-    stats = stats.melt(id_vars=["Metadata_plate", "stat"], var_name="feature")
-    stats = stats.pivot(index=["Metadata_plate", "feature"], columns="stat", values="value")
+    stats = stats.melt(id_vars=["Metadata_Plate", "stat"], var_name="feature")
+    stats = stats.pivot(index=["Metadata_Plate", "feature"], columns="stat", values="value")
     stats.reset_index(inplace=True)
     stats["abs_coef_var"] = (stats["mad"] / stats["median"]).fillna(0).abs().replace(np.inf, 0)
     stats = stats.astype({
@@ -57,12 +57,6 @@ def get_plate_stats(dframe: pd.DataFrame):
         "feature": "category",
     })
     return stats
-
-
-def add_metadata(stats: pd.DataFrame, meta: pd.DataFrame):
-    parts = stats["feature"].str.split("_", expand=True)
-    stats["compartment"] = parts[0].astype("category")
-    stats["family"] = parts[range(3)].apply("_".join, axis=1).astype("category")
 
 
 def remove_nan_infs_columns(dframe: pd.DataFrame) -> pd.DataFrame:
@@ -84,7 +78,6 @@ def compute_negcon_stats(parquet_path, neg_stats_path):
     logger.info("computing stats for negcons")
     neg_stats = get_plate_stats(negcon)
     logger.info("stats done.")
-    add_metadata(neg_stats, dframe[find_meta_cols(dframe)])
     neg_stats.to_parquet(neg_stats_path)
 
 
@@ -97,12 +90,12 @@ def select_variant_features(parquet_path, neg_stats_path, variant_feats_path):
 
     # Select variant_features
     neg_stats = neg_stats.query("mad!=0 and abs_coef_var>1e-3")
-    groups = neg_stats.groupby("Metadata_plate", observed=True)["feature"]
+    groups = neg_stats.groupby("Metadata_Plate", observed=True)["feature"]
     variant_features = set.intersection(*groups.agg(set).tolist())
 
     # Select plates with variant features
     neg_stats = neg_stats.query("feature in @variant_features")
-    dframe = dframe.query("Metadata_plate in @neg_stats.Metadata_Plate")
+    dframe = dframe.query("Metadata_Plate in @neg_stats.Metadata_Plate")
 
     # Filter features
     variant_features = sorted(variant_features)

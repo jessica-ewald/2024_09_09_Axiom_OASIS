@@ -12,19 +12,9 @@ rule write_parquet:
         pp.io.write_parquet(config["input_path_profiles"], config["input_path_metadata"], *output)
 
 
-rule filter_cell_count:
-    input: 
-        "outputs/{features}/{scenario}/profiles/raw.parquet",
-    output:
-        "outputs/{features}/{scenario}/profiles/raw_ccfilt.parquet",
-    run:
-        pp.io.filter_cell_count(*input, *output)
-
-
-
 rule compute_negcon_stats:
     input:
-        "outputs/{features}/{scenario}/profiles/raw_ccfilt.parquet",
+        "inputs/profiles/{features}/raw.parquet",
     output:
         "outputs/{features}/{scenario}/profiles/neg_stats.parquet",
     run:
@@ -33,7 +23,7 @@ rule compute_negcon_stats:
 
 rule select_variant_feats:
     input:
-        "outputs/{features}/{scenario}/profiles/raw_ccfilt.parquet",
+        "inputs/profiles/{features}/raw.parquet",
         "outputs/{features}/{scenario}/profiles/neg_stats.parquet",
     output:
         "outputs/{features}/{scenario}/profiles/variant_feats.parquet",
