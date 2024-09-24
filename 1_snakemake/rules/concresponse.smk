@@ -10,21 +10,28 @@ rule compute_distances:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
-        "outputs/{features}/{scenario}/distances.parquet",
-    shell:
-        "Rscript concresponse/compute_distances.R {input} {output} {params.cover_var} {params.treatment} {params.distances}"
-
-rule prep_gmd:
-    input:
-        "outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet",
-    output:
-        "outputs/{features}/{scenario}/gmd/global_rot.parquet",
-        "outputs/{features}/{scenario}/gmd/global_inv.parquet",
+        expand("outputs/{{features}}/{{scenario}}/distances/{method}.parquet", method=config["distances"]),
     params:
         cover_var=config["cover_var"],
         treatment=config["treatment"],
+        distances=config["distances"],
     shell:
-        "Rscript concresponse/prep_gmd.R {input} {output} {params.cover_var} {params.treatment}"
+        """
+        for method in {params.distances}; do
+            method_name=$(echo $method | tr -d '[],"') 
+            Rscript concresponse/compute_distances.R {input} outputs/{wildcards.features}/{wildcards.scenario}/distances/${{method_name}}.parquet {params.cover_var} {params.treatment} ${{method_name}}
+        done
+        """
+
+rule compile_distances:
+    input:
+        lambda wildcards: [f"outputs/{wildcards.features}/{wildcards.scenario}/distances/{method}.parquet" for method in config["distances"]],
+    output:
+        "outputs/{features}/{scenario}/distances/distances.parquet",
+    params:
+        distances=config["distances"],
+    shell:
+        "Rscript concresponse/compile_distances.R {input} {output} {params.distances}"
 
 rule prep_cmd:
     input:
@@ -39,19 +46,6 @@ rule prep_cmd:
         treatment=config["treatment"],
     shell:
         "Rscript concresponse/prep_cmd.R {input} {output} {params.cover_var} {params.treatment}"
-
-rule compute_gmd:
-    input:
-        "outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet",
-        "outputs/{features}/{scenario}/gmd/global_rot.parquet",
-        "outputs/{features}/{scenario}/gmd/global_inv.parquet",
-    output:
-        "outputs/{features}/{scenario}/gmd/gmd.parquet",
-    params:
-        compound=config["compound"],
-        ctrl=config["control"],
-    shell:
-        "Rscript concresponse/compute_gmd.R {input} {output} {params.compound} {params.ctrl}"
 
 rule compute_cmd:
     input:

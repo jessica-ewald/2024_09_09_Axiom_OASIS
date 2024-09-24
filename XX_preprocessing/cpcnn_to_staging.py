@@ -15,11 +15,16 @@ def main() -> None:
         f"{path_prefix}/prod_30",
     ]
     subdir_to_parent = {}
-
     for parent_dir in parent_directories:
         for root, dirs, files in os.walk(parent_dir):
             for sub_dir in dirs:
                 subdir_to_parent[sub_dir] = os.path.basename(root)
+
+    # Hardcode exceptions
+    subdir_to_parent["plate_41002908"] = "prod_27"
+    subdir_to_parent["plate_41002960"] = "prod_30"
+    subdir_to_parent["plate_41002687"] = "prod_25"
+    subdir_to_parent["plate_41002891"] = "prod_26"
 
     plates = os.listdir(local_prefix)
     for plate in plates:

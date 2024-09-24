@@ -3,7 +3,7 @@ import os
 import polars as pl
 
 
-def process_dino_plate(input_profile_path: str, input_meta_path: str) -> pl.DataFrame:
+def process_dino_plate(input_profile_path: str) -> pl.DataFrame:
     """Reformat Dino features.
 
     Returns
@@ -30,7 +30,7 @@ def process_dino_plate(input_profile_path: str, input_meta_path: str) -> pl.Data
     feat_names = []
     for nm in channel_nms:
         feat_names += [f"{nm}_{i:03}" for i in range(1, 769)]
-    all_cols = ["Metadata_image_id", *feat_names]
+    all_cols = ["Metadata_well_id", *feat_names]
 
     # Process embeddings
     dat = pl.read_parquet(input_profile_path)
@@ -45,18 +45,9 @@ def process_dino_plate(input_profile_path: str, input_meta_path: str) -> pl.Data
     data.columns = feat_names
 
     data = data.with_columns(
-        (pl.Series(name="Metadata_image_id", values=dat.select("image_id").to_series())),
+        (pl.Series(name="Metadata_well_id", values=dat.select("well_id").to_series())),
     )
-    data = data.select(all_cols)
-
-    # Compute median feature value per well
-    meta_cols = [i for i in data.columns if "Metadata_" in i]
-    feat_cols = [i for i in data.columns if "Metadata_" not in i]
-
-    return data.group_by("Metadata_well").agg([
-        pl.first(meta_cols).exclude("Metadata_image_id"),
-        pl.median(feat_cols),
-    ])
+    return data.select(all_cols)
 
 
 def main() -> None:
@@ -65,9 +56,9 @@ def main() -> None:
     Merge Dino embeddings from each plate into one file and add metadata.
 
     """
-    input_profile_path = "/Users/jewald/repos/2024_09_09_Axiom_OASIS/1_snakemake/inputs/profiles/dino/cpg0037-oasis/axiom/workspace/scratch"
-    meta_path = "/Users/jewald/repos/2024_09_09_Axiom_OASIS/1_snakemake/inputs/metadata/metadata.parquet"
-    output_profile_path = "/Users/jewald/repos/2024_09_09_Axiom_OASIS/1_snakemake/inputs/profiles/dino/raw.parquet"
+    input_profile_path = "../1_snakemake/inputs/profiles/dino/cpg0037-oasis/axiom/workspace/scratch"
+    meta_path = "../1_snakemake/inputs/metadata/metadata.parquet"
+    output_profile_path = "../1_snakemake/inputs/profiles/dino/raw.parquet"
 
     meta = pl.read_parquet(meta_path)
 
@@ -75,16 +66,22 @@ def main() -> None:
     profiles = []
     for batch in batches:
         batch_prof_path = f"{input_profile_path}/{batch}"
-        batch_meta_path = f"{meta_path}/{batch}"
-
         plates = os.listdir(batch_prof_path)
         for plate in plates:
-            meta_path = f"{batch_meta_path}/{plate}/metadata.parquet"
             prof_path = f"{batch_prof_path}/{plate}/dinov2_b_fieldnorm.parquet"
-            profiles.append(process_dino_plate(prof_path, meta_path))
+            profiles.append(process_dino_plate(prof_path))
 
     data = pl.concat(profiles, how="vertical")
-    data = data.join(meta, on=["Metadata_Plate", "Metadata_Well"])
+    data = data.join(meta, on="Metadata_well_id")
+
+    # Compute median feature value per well
+    meta_cols = [i for i in data.columns if "Metadata_" in i]
+    feat_cols = [i for i in data.columns if "Metadata_" not in i]
+
+    data = data.group_by(["Metadata_Plate", "Metadata_Well"]).agg([
+        pl.first(meta_cols).exclude("Metadata_well_id"),
+        pl.median(feat_cols),
+    ])
 
     data.write_parquet(output_profile_path)
 
