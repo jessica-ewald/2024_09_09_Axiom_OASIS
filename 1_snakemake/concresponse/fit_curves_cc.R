@@ -11,19 +11,17 @@ dat_path <- args[1]
 output_path <- args[2]
 num_sds <- args[3]
 
-pos_cons <- c("Berberine chloride", "FCCP")
 ctrl <- "DMSO"
 
 
 ######## 2. Calculate BMDs from cell counts
 dat <- read_parquet(dat_path) %>% as.data.frame()
-dat <- dat[!(dat$Metadata_SampleType %in% pos_cons), ]
 
 compounds <- unique(dat$Metadata_Compound)
 compounds <- compounds[compounds != ctrl]
 
-cc_dmso <- dat[dat$Metadata_SampleType == ctrl, ]
-cc_comp <- dat[dat$Metadata_SampleType != ctrl, ]
+cc_dmso <- dat[dat$Metadata_Compound == ctrl, ]
+cc_comp <- dat[dat$Metadata_Compound != ctrl, ]
 
 bmd_res <- data.frame()
 for (compound in compounds){

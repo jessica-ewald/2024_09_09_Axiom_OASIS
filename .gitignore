@@ -169,3 +169,4 @@ cython_debug/
 1_snakemake/outputs/
 
 test.ipynb
+s3_credentials.sh

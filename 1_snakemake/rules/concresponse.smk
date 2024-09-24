@@ -6,6 +6,14 @@ rule filter_cc:
     shell:
         "Rscript concresponse/filter_cc.R {input} {output}"
 
+rule compute_distances:
+    input:
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+    output:
+        "outputs/{features}/{scenario}/distances.parquet",
+    shell:
+        "Rscript concresponse/compute_distances.R {input} {output} {params.cover_var} {params.treatment} {params.distances}"
+
 rule prep_gmd:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet",
@@ -60,20 +68,9 @@ rule compute_cmd:
     shell:
         "Rscript concresponse/compute_cmd.R {input} {output} {params.compound} {params.ctrl}"
 
-rule filter_md:
-    input:
-        "outputs/{features}/{scenario}/gmd/gmd.parquet",
-        "outputs/{features}/{scenario}/cmd/cmd.parquet",
-    output:
-        "outputs/{features}/{scenario}/gmd/gmd_filt.parquet",
-        "outputs/{features}/{scenario}/cmd/cmd_filt.parquet",
-    shell:
-        "Rscript concresponse/filter_md.R {input} {output}"
-
 rule fit_curves:
     input:
-        "outputs/{features}/{scenario}/gmd/gmd_filt.parquet",
-        "outputs/{features}/{scenario}/cmd/cmd_filt.parquet",
+        "outputs/{features}/{scenario}/distances.parquet",
     output:
         "outputs/{features}/{scenario}/curves/bmds.parquet",
     params:
@@ -116,8 +113,7 @@ rule plot_cp_curve_fits:
     input:
         "outputs/{features}/{scenario}/curves/pods.parquet",
         "outputs/{features}/{scenario}/curves/ccpods.parquet",
-        "outputs/{features}/{scenario}/gmd/gmd_filt.parquet",
-        "outputs/{features}/{scenario}/cmd/cmd_filt.parquet",
+        "outputs/{features}/{scenario}/distances.parquet",
     output:
         "outputs/{features}/{scenario}/curves/plots/cp_plots.pdf",
     shell:

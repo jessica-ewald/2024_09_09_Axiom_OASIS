@@ -5,7 +5,7 @@ import polars as pl
 from tqdm import tqdm
 
 meta_keep = [
-    "image_id",
+    "well_id",
     "source",
     "plate",
     "compound_concentration_um",
@@ -16,13 +16,13 @@ meta_keep = [
     "compound_pathway",
     "compound_biological_activity",
     "well",
-    "microscope",
     "mtt_lumi",
     "ldh_abs_signal",
     "ldh_abs_background",
     "ldh_abs",
     "mtt_normalized",
     "ldh_normalized",
+    "OASIS_ID",
 ]
 
 batches = ["prod_25", "prod_26", "prod_27", "prod_30"]
@@ -57,6 +57,7 @@ def main() -> None:
     # Process metadata
     meta_nms = [f"Metadata_{i}" for i in meta_keep]
     meta_path = "../1_snakemake/inputs/metadata/cpg0037-oasis/axiom/workspace/scratch/"
+    cc_path = "../1_snakemake/inputs/metadata/cc.parquet"
     meta = []
     for batch in batches:
         batch_path = f"{meta_path}/{batch}"
@@ -94,6 +95,14 @@ def main() -> None:
         )
 
         meta_log10 = pl.concat([meta_log10, temp], how="vertical")
+
+    cc = pl.read_parquet(cc_path)
+    meta_log10 = meta_log10.join(cc, on=["Metadata_Plate", "Metadata_Well"])
+
+    # Filter out plates with different microscope
+    meta_log10 = meta_log10.filter(
+        ~pl.col("Metadata_Plate").is_in(["plate_41002698", "plate_41002695", "plate_41002696"]),
+    )
 
     meta_log10.write_parquet("../1_snakemake/inputs/metadata/metadata.parquet")
 
