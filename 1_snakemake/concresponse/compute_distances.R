@@ -33,7 +33,7 @@ if ("gmd" %in% methods) {
     plate_dat <- all_dat[all_dat$Metadata_Plate == plate, feat_cols]
     plate_dat <- as.matrix(plate_dat)
     plate_meta <- all_dat[all_dat$Metadata_Plate == plate, meta_cols]
-    plate_labels <- plate_meta[, compound] %>% c()
+    plate_labels <- plate_meta[, "Metadata_Compound"] %>% c()
 
     gmd <- compute_gmd(plate_dat, gmd_prep$rot_mat, gmd_prep$inv_cov,
                        plate_labels, control)
