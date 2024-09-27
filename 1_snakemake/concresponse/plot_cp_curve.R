@@ -11,17 +11,14 @@ args <- commandArgs(trailingOnly = TRUE)
 
 cp_pod_path <- args[1]
 cc_pod_path <- args[2]
-gmd_path <- args[3]
-cmd_path <- args[4]
-
-cp_plot_path <- args[5]
+dist_path <- args[3]
+cp_plot_path <- args[4]
 
 cp_pods <- read_parquet(cp_pod_path) %>% as.data.frame()
 cc_pods <- read_parquet(cc_pod_path) %>% as.data.frame()
-cmd <- read_parquet(cmd_path) %>% as.data.frame()
-gmd <- read_parquet(gmd_path) %>% as.data.frame()
+dat <- read_parquet(dist_path) %>% as.data.frame()
 
-highest_dose <- max(unique(cmd$Metadata_Log10Conc))
+highest_dose <- max(unique(dat$Metadata_Log10Conc))
 highest_dose <- round(highest_dose + (0.025 * highest_dose), 1)
 dose <- seq(0, highest_dose, by = 0.1)
 
@@ -38,7 +35,6 @@ plot_results <- data.frame(Metadata_Log10Conc = dose)
 fitted_feats <- data.frame()
 for (compound in cp_compounds){
   temp_pod <- cp_pods[cp_pods$Metadata_Compound == compound, ]
-  
   feat_type <- temp_pod$gene.id
   model <- temp_pod$mod.name
   b <- temp_pod$b
@@ -60,21 +56,12 @@ for (compound in cp_compounds){
   plot_results[, compound] <- f_dose
   
   # get observations
-  if(feat_type == "gmd"){
-    gmd_temp <- gmd[gmd$Metadata_Compound == compound, c(feat_type, "Metadata_Log10Conc")]
-    temp_plates <- unique(gmd_temp$Metadata_Plate)
-    temp_dmso <- gmd[(gmd$Metadata_Compound == "DMSO") & (gmd$Metadata_Plate %in% temp_plates), 
-                     c(feat_type, "Metadata_Log10Conc")]
-    feats <- gmd_temp[, c(feat_type, "Metadata_Log10Conc")]
-    feats <- rbind(temp_dmso, feats)
-  } else {
-    cmd_temp <- cmd[cmd$Metadata_Compound == compound, ] 
-    temp_plates <- unique(cmd_temp$Metadata_Plate)
-    temp_dmso <- cmd[(cmd$Metadata_Compound == "DMSO") & (cmd$Metadata_Plate %in% temp_plates), 
-                     c(feat_type, "Metadata_Log10Conc")]
-    feats <- cmd_temp[, c(feat_type, "Metadata_Log10Conc")] 
-    feats <- rbind(temp_dmso, feats)
-  }
+  dat_temp <- dat[dat$Metadata_Compound == compound, ]
+  temp_plates <- unique(dat_temp$Metadata_Plate)
+  temp_dmso <- dat[(dat$Metadata_Compound == "DMSO") & (dat$Metadata_Plate %in% temp_plates), 
+                   c(feat_type, "Metadata_Log10Conc")]
+  feats <- dat_temp[, c(feat_type, "Metadata_Log10Conc")]
+  feats <- rbind(temp_dmso, feats)
 
   colnames(feats)[1] <- "Observations"
   feats$Metadata_Compound <- compound

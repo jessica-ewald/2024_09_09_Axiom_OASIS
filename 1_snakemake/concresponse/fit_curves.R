@@ -31,12 +31,12 @@ for (compound in compounds){
   dmso_fit <- dat_dmso[dat_dmso$Metadata_Plate %in% cmpd_plates, ]
   dat_fit <- rbind(dmso_fit, comp_fit)
   dat_fit <- dat_fit[order(dat_fit$Metadata_Concentration), ]
-  
+
   dat_mat <- t(dat_fit[,feat_cols])
   rownames(dat_mat) <- feat_cols
-  
+
   dose <- c(dat_fit$Metadata_Log10Conc)
-  
+
   pod <- scoresPOD(dat_mat, dose, log10.dose = TRUE, num.sds = num_sds,
                    filt.var = "SDres")
   if (!is.null(pod)) {
