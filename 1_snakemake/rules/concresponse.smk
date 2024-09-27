@@ -6,11 +6,11 @@ rule filter_cc:
     shell:
         "Rscript concresponse/filter_cc.R {input} {output}"
 
-rule compute_distances:
+rule compute_distances_R:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
-        expand("outputs/{{features}}/{{scenario}}/distances/{method}.parquet", method=config["distances"]),
+        expand("outputs/{{features}}/{{scenario}}/distances/{method}.parquet", method=config["distances_R"]),
     params:
         cover_var=config["cover_var"],
         treatment=config["treatment"],
@@ -24,7 +24,19 @@ rule compute_distances:
         done
         """
 
-distances = distances_R + distances_python
+rule compute_distances_python:
+    input:
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+    output:
+        expand("outputs/{{features}}/{{scenario}}/distances/{method}.parquet", method=config["distances_python"]),
+    params:
+        distances=config["distances_python"],
+    run:
+        output_files = list(output)
+        cr.ap.ap(*input, output_files, params.distances)
+
+
+distances = config["distances_R"] + config["distances_python"]
 rule compile_distances:
     input:
         lambda wildcards: [f"outputs/{wildcards.features}/{wildcards.scenario}/distances/{method}.parquet" for method in distances],
@@ -32,8 +44,9 @@ rule compile_distances:
         "outputs/{features}/{scenario}/distances/distances.parquet",
     params:
         distances=distances,
-    shell:
-        "Rscript concresponse/compile_distances.R {input} {output} {params.distances}"
+    run:
+        input_files = list(input)
+        cr.compile_dist.compile(input_files, *output, params.distances)
 
 
 rule fit_curves:
