@@ -24,6 +24,7 @@ treatment_labels <- all_dat[, treatment] %>% c()
 
 dat <- all_dat[, feat_cols] %>% as.matrix()
 
+
 ############## 1. gmd
 if ("gmd" %in% methods) {
   source("./concresponse/gmd_functions.R")
@@ -50,6 +51,28 @@ if ("gmd" %in% methods) {
 ############## 2. cmd
 if ("cmd" %in% methods) {
   source("./concresponse/cmd_functions.R")
-}
+  cmd_df <- data.frame()
+  for (category in categories) {
+    print(category)
+    # NEED STEP TO GET CATEGORY FEATURES - WILL DIFFER DEPENDING ON DATA TYPE
+    category_cols <- "BLANK"
+    category_dat <- dat[, category_cols]
+    category_res <- compute_matrices(category_dat, cover_var, treatment_labels)
 
-############## 3. ap
+    plates <- unique(all_dat$Metadata_Plate)
+    for (plate in plates) {
+      plate_dat <- all_dat[all_dat$Metadata_Plate == plate, category_cols]
+      plate_dat <- as.matrix(plate_dat)
+      plate_meta <- all_dat[all_dat$Metadata_Plate == plate, meta_cols]
+      plate_labels <- plate_meta[, "Metadata_Compound"] %>% c()
+
+      cmd <- compute_cmd(plate_dat, category_res$rot_mat,
+                         category_res$inv, plate_labels, "DMSO")
+      plate_meta$Metadata_Category <- category
+      plate_meta[, "Distance"] <- cmd
+      cmd_df <- rbind(cmd_df, plate_meta)
+    }
+  }
+  ## NEED STEP TO CAST meta X Metadata_Category, with Distance as value variable
+  write_parquet(cmd_df, output_dist)
+}

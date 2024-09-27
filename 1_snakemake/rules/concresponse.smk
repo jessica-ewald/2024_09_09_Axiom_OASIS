@@ -24,44 +24,17 @@ rule compute_distances:
         done
         """
 
+distances = distances_R + distances_python
 rule compile_distances:
     input:
-        lambda wildcards: [f"outputs/{wildcards.features}/{wildcards.scenario}/distances/{method}.parquet" for method in config["distances"]],
+        lambda wildcards: [f"outputs/{wildcards.features}/{wildcards.scenario}/distances/{method}.parquet" for method in distances],
     output:
         "outputs/{features}/{scenario}/distances/distances.parquet",
     params:
-        distances=config["distances"],
+        distances=distances,
     shell:
         "Rscript concresponse/compile_distances.R {input} {output} {params.distances}"
 
-rule prep_cmd:
-    input:
-        expand("outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet", scenario=WORKFLOW, features=features),
-    output:
-        expand("outputs/{features}/{scenario}/cmd/{category}_rot.parquet",
-               scenario=WORKFLOW, category=categories, features=features),
-        expand("outputs/{features}/{scenario}/cmd/{category}_inv.parquet",
-               scenario=WORKFLOW, category=categories, features=features)
-    params:
-        cover_var=config["cover_var"],
-        treatment=config["treatment"],
-    shell:
-        "Rscript concresponse/prep_cmd.R {input} {output} {params.cover_var} {params.treatment}"
-
-rule compute_cmd:
-    input:
-        "outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet",
-        expand("outputs/{features}/{scenario}/cmd/{category}_rot.parquet",
-               scenario=WORKFLOW, category=categories, features=features),
-        expand("outputs/{features}/{scenario}/cmd/{category}_inv.parquet",
-               scenario=WORKFLOW, category=categories, features=features)
-    output:
-        "outputs/{features}/{scenario}/cmd/cmd.parquet",
-    params:
-        compound=config["compound"],
-        ctrl=config["control"],
-    shell:
-        "Rscript concresponse/compute_cmd.R {input} {output} {params.compound} {params.ctrl}"
 
 rule fit_curves:
     input:
