@@ -12,4 +12,4 @@ include: "rules/classifier.smk"
 
 rule all:
      input:
-          expand("outputs/{features}/{scenario}/distances/distances.parquet", scenario=WORKFLOW, features=features),
+          expand("outputs/{features}/{scenario}/curves/plots/cp_plots.pdf", scenario=WORKFLOW, features=features),

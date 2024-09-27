@@ -11,8 +11,6 @@ treatment <- args[4]
 categories <- args[5]
 methods <- args[6]
 
-save.image("/Users/jewald/Desktop/compute_distances.RData")
-
 # Process data
 all_dat <- read_parquet(input_file) %>% as.data.frame()
 
@@ -41,7 +39,8 @@ if ("gmd" %in% methods) {
 
     gmd <- compute_gmd(plate_dat, gmd_prep$rot, gmd_prep$inv_cov,
                        plate_labels, control)
-    plate_meta$gmd <- gmd
+    plate_meta$Metadata_Distance <- "gmd"
+    plate_meta$Distance <- gmd
     gmd_df <- rbind(gmd_df, plate_meta)
   }
   write_parquet(gmd_df, output_dist)
@@ -68,11 +67,11 @@ if ("cmd" %in% methods) {
 
       cmd <- compute_cmd(plate_dat, category_res$rot_mat,
                          category_res$inv, plate_labels, "DMSO")
-      plate_meta$Metadata_Category <- category
-      plate_meta[, "Distance"] <- cmd
+      plate_meta$Metadata_Distance <- category
+      plate_meta$Distance <- cmd
       cmd_df <- rbind(cmd_df, plate_meta)
     }
   }
-  ## NEED STEP TO CAST meta X Metadata_Category, with Distance as value variable
+  ## NEED STEP TO CAST meta X Metadata_Distance, with Distance as value variable
   write_parquet(cmd_df, output_dist)
 }

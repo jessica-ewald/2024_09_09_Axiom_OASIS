@@ -1,11 +1,3 @@
-rule filter_cc:
-    input:
-        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
-    output:
-        "outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet",
-    shell:
-        "Rscript concresponse/filter_cc.R {input} {output}"
-
 rule compute_distances_R:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
@@ -42,16 +34,14 @@ rule compile_distances:
         lambda wildcards: [f"outputs/{wildcards.features}/{wildcards.scenario}/distances/{method}.parquet" for method in distances],
     output:
         "outputs/{features}/{scenario}/distances/distances.parquet",
-    params:
-        distances=distances,
     run:
         input_files = list(input)
-        cr.compile_dist.compile(input_files, *output, params.distances)
+        cr.compile_dist.compile_dist(input_files, *output)
 
 
 rule fit_curves:
     input:
-        "outputs/{features}/{scenario}/distances.parquet",
+        "outputs/{features}/{scenario}/distances/distances.parquet",
     output:
         "outputs/{features}/{scenario}/curves/bmds.parquet",
     params:
@@ -61,7 +51,7 @@ rule fit_curves:
 
 rule fit_curves_cc:
     input:
-        "outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet",
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
         "outputs/{features}/{scenario}/curves/ccpods.parquet",
     params:
@@ -83,7 +73,7 @@ rule select_pod:
 rule plot_cc_curve_fits:
     input:
         "outputs/{features}/{scenario}/curves/ccpods.parquet",
-        "outputs/{features}/{scenario}/profiles/{scenario}_filtcc.parquet",
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
         "outputs/{features}/{scenario}/curves/plots/cc_plots.pdf",
     shell:
@@ -94,7 +84,7 @@ rule plot_cp_curve_fits:
     input:
         "outputs/{features}/{scenario}/curves/pods.parquet",
         "outputs/{features}/{scenario}/curves/ccpods.parquet",
-        "outputs/{features}/{scenario}/distances.parquet",
+        "outputs/{features}/{scenario}/distances/distances.parquet",
     output:
         "outputs/{features}/{scenario}/curves/plots/cp_plots.pdf",
     shell:
