@@ -27,7 +27,6 @@ prep_gmd <- function(dat, cover_var, treatment_labels) {
 
 }
 
-
 compute_gmd <- function(dat, rot_mat, inv_cov, treatment, control) {
   # get PC scores using loadings and number PCs computed previously
   dat <- dat %*% rot_mat
@@ -40,7 +39,7 @@ compute_gmd <- function(dat, rot_mat, inv_cov, treatment, control) {
 
   # compute the Mahalanobis distance
   gmd <- apply(delta, 1, function(x) {
-    gmd_util(x, inv_cov)
+    gmd_util(x, as.matrix(inv_cov))
   })
 
   return(gmd)

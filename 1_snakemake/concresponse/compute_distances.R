@@ -8,7 +8,10 @@ input_file <- args[1]
 output_dist <- args[2]
 cover_var <- args[3]
 treatment <- args[4]
-methods <- args[5]
+categories <- args[5]
+methods <- args[6]
+
+save.image("/Users/jewald/Desktop/compute_distances.RData")
 
 # Process data
 all_dat <- read_parquet(input_file) %>% as.data.frame()
@@ -35,24 +38,18 @@ if ("gmd" %in% methods) {
     plate_meta <- all_dat[all_dat$Metadata_Plate == plate, meta_cols]
     plate_labels <- plate_meta[, "Metadata_Compound"] %>% c()
 
-    gmd <- compute_gmd(plate_dat, gmd_prep$rot_mat, gmd_prep$inv_cov,
+    gmd <- compute_gmd(plate_dat, gmd_prep$rot, gmd_prep$inv_cov,
                        plate_labels, control)
     plate_meta$gmd <- gmd
     gmd_df <- rbind(gmd_df, plate_meta)
-
-    # Add gmd to dist dataframe
-    if (dim(dist_df)[1] == 0) {
-      dist_df <- gmd_df
-    } else {
-      dist_df <- merge(dist_df, gmd_df, by = meta_cols, all = TRUE)
-    }
   }
-
-  write_parquet(dist_df, output_dist)
+  write_parquet(gmd_df, output_dist)
 }
 
 
 ############## 2. cmd
-
+if ("cmd" %in% methods) {
+  source("./concresponse/cmd_functions.R")
+}
 
 ############## 3. ap

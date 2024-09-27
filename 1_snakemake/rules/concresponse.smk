@@ -14,12 +14,13 @@ rule compute_distances:
     params:
         cover_var=config["cover_var"],
         treatment=config["treatment"],
-        distances=config["distances"],
+        categories=config["categories"],
+        distances=config["distances_R"],
     shell:
         """
         for method in {params.distances}; do
             method_name=$(echo $method | tr -d '[],"') 
-            Rscript concresponse/compute_distances.R {input} outputs/{wildcards.features}/{wildcards.scenario}/distances/${{method_name}}.parquet {params.cover_var} {params.treatment} ${{method_name}}
+            Rscript concresponse/compute_distances.R {input} outputs/{wildcards.features}/{wildcards.scenario}/distances/${{method_name}}.parquet {params.cover_var} {params.treatment} {params.categories} ${{method_name}}
         done
         """
 
