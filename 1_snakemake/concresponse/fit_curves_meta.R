@@ -10,6 +10,7 @@ args <- commandArgs(trailingOnly = TRUE)
 dat_path <- args[1]
 output_path <- args[2]
 num_sds <- args[3]
+meta_nm <- args[4]
 
 ctrl <- "DMSO"
 
@@ -31,7 +32,7 @@ for (compound in compounds){
   cc_fit <- rbind(cc_dmso_fit, cc_comp_fit)
   cc_fit <- cc_fit[order(cc_fit$Metadata_Concentration), ]
 
-  cc <- matrix(cc_fit$Metadata_Count_Cells, nrow = 1)
+  cc <- matrix(c(cc_fit[, meta_nm]), nrow = 1)
   rownames(cc) <- "cc"
 
   dose <- c(cc_fit$Metadata_Log10Conc)

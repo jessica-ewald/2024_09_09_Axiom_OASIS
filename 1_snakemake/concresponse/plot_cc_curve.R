@@ -12,6 +12,7 @@ args <- commandArgs(trailingOnly = TRUE)
 cc_pod_path <- args[1]
 cc_path <- args[2]
 cc_plot_path <- args[3]
+meta_nm <- args[4]
 
 cc_pods <- read_parquet(cc_pod_path) %>% as.data.frame()
 cc <- read_parquet(cc_path) %>% as.data.frame()
@@ -58,28 +59,32 @@ plot_results <- reshape2::melt(plot_results, id.vars = c("Metadata_Log10Conc"))
 colnames(plot_results)[2:3] <- c("Metadata_Compound", "f_dose")
 
 # Add cell count observations
-cc_values <- cc[,c("Metadata_Compound", "Metadata_Log10Conc", "Metadata_Count_Cells")]
+cc_values <- cc[, c("Metadata_Compound", "Metadata_Log10Conc", meta_nm)]
 cc_values$Metadata_Log10Conc <- round(cc_values$Metadata_Log10Conc, 1)
 # Add DMSO
 for (compound in cc_compounds){
   cc_temp <- cc[cc$Metadata_Compound == compound, ]
   cc_plates <- unique(cc_temp$Metadata_Plate)
-  
+
   cc_dmso <- cc[(cc$Metadata_Compound == "DMSO") & (cc$Metadata_Plate %in% cc_plates), ]
-  dmso_values <- cc_dmso[,c("Metadata_Compound", "Metadata_Log10Conc", "Metadata_Count_Cells")]
+  dmso_values <- cc_dmso[, c("Metadata_Compound", "Metadata_Log10Conc", meta_nm)]
   dmso_values$Metadata_Compound <- compound
   dmso_values$Metadata_Log10Conc <- round(dmso_values$Metadata_Log10Conc, 1)
-  
+
   cc_values <- rbind(cc_values, dmso_values)
 }
-plot_results <- merge(plot_results, cc_values, by=c("Metadata_Compound", "Metadata_Log10Conc"), all.x = TRUE, all.y = FALSE)
+plot_results <- merge(plot_results, cc_values,
+                      by = c("Metadata_Compound", "Metadata_Log10Conc"),
+                      all.x = TRUE, all.y = FALSE)
 
 # Add cell count pods
-cc_pods <- cc_pods[cc_pods$all.pass == TRUE, c("Metadata_Compound", "bmdl", "bmd", "bmdu")]
+cc_pods <- cc_pods[cc_pods$all.pass == TRUE,
+                   c("Metadata_Compound", "bmdl", "bmd", "bmdu")]
 cc_pods$bmdl <- round(cc_pods$bmdl, 1)
 cc_pods$bmd <- round(cc_pods$bmd, 1)
 cc_pods$bmdu <- round(cc_pods$bmdu, 1)
-plot_results <- merge(plot_results, cc_pods, by = "Metadata_Compound", all.x = TRUE, all.y = FALSE)
+plot_results <- merge(plot_results, cc_pods, by = "Metadata_Compound",
+                      all.x = TRUE, all.y = FALSE)
 
 # Remove duplicated bmd values
 for (compound in cc_compounds){
@@ -98,15 +103,20 @@ for (i in 1:n_pages) {
   # Use tryCatch to handle errors in plot creation
   tryCatch({
     p <- ggplot(plot_results, aes(x = Metadata_Log10Conc)) +
-      geom_point(aes(y = Metadata_Count_Cells)) +
+      geom_point(aes(y = .data[[meta_nm]])) +
       geom_line(aes(y = f_dose)) +
 
-      geom_vline(aes(xintercept = bmdl), linetype = "dashed", color = "red", na.rm = TRUE) +
-      geom_vline(aes(xintercept = bmd), linetype = "solid", color = "red", na.rm = TRUE) +
-      geom_vline(aes(xintercept = bmdu), linetype = "dashed", color = "red", na.rm = TRUE) +
+      geom_vline(aes(xintercept = bmdl),
+                 linetype = "dashed", color = "red", na.rm = TRUE) +
+      geom_vline(aes(xintercept = bmd),
+                 linetype = "solid", color = "red", na.rm = TRUE) +
+      geom_vline(aes(xintercept = bmdu),
+                 linetype = "dashed", color = "red", na.rm = TRUE) +
 
       xlim(0, highest_dose) +
-      facet_wrap_paginate(~ Metadata_Compound, ncol = n_cols, nrow = n_rows, page = i, scales = "free_y") +
+      facet_wrap_paginate(~ Metadata_Compound,
+                          ncol = n_cols, nrow = n_rows, page = i,
+                          scales = "free_y") +
       theme_bw()
 
     # Print the plot to the PDF

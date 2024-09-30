@@ -55,10 +55,32 @@ rule fit_curves_cc:
     output:
         "outputs/{features}/{scenario}/curves/ccpods.parquet",
     params:
-        num_sds = config['num_sds']
+        num_sds = config['num_sds'],
+        meta_nm = "Metadata_Count_Cells"
     shell:
-        "Rscript concresponse/fit_curves_cc.R {input} {output} {params.num_sds}"
+        "Rscript concresponse/fit_curves_meta.R {input} {output} {params.num_sds} {params.meta_nm}"
 
+rule fit_curves_mtt:
+    input:
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+    output:
+        "outputs/{features}/{scenario}/curves/mttpods.parquet",
+    params:
+        num_sds = config['num_sds'],
+        meta_nm = "Metadata_mtt_normalized"
+    shell:
+        "Rscript concresponse/fit_curves_meta.R {input} {output} {params.num_sds} {params.meta_nm}"
+
+rule fit_curves_ldh:
+    input:
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+    output:
+        "outputs/{features}/{scenario}/curves/ldhpods.parquet",
+    params:
+        num_sds = config['num_sds'],
+        meta_nm = "Metadata_ldh_abs_signal"
+    shell:
+        "Rscript concresponse/fit_curves_meta.R {input} {output} {params.num_sds} {params.meta_nm}"
 
 rule select_pod:
     input:
@@ -76,8 +98,32 @@ rule plot_cc_curve_fits:
         "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
         "outputs/{features}/{scenario}/curves/plots/cc_plots.pdf",
+    params:
+        meta_nm = "Metadata_Count_Cells"
     shell:
-        "Rscript concresponse/plot_cc_curve.R {input} {output}"
+        "Rscript concresponse/plot_cc_curve.R {input} {output} {params.meta_nm}"
+
+rule plot_mtt_curve_fits:
+    input:
+        "outputs/{features}/{scenario}/curves/mttpods.parquet",
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+    output:
+        "outputs/{features}/{scenario}/curves/plots/mtt_plots.pdf",
+    params:
+        meta_nm = "Metadata_mtt_normalized"
+    shell:
+        "Rscript concresponse/plot_cc_curve.R {input} {output} {params.meta_nm}"
+
+rule plot_ldh_curve_fits:
+    input:
+        "outputs/{features}/{scenario}/curves/ldhpods.parquet",
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+    output:
+        "outputs/{features}/{scenario}/curves/plots/ldh_plots.pdf",
+    params:
+        meta_nm = "Metadata_ldh_abs_signal"
+    shell:
+        "Rscript concresponse/plot_cc_curve.R {input} {output} {params.meta_nm}"
 
 
 rule plot_cp_curve_fits:
