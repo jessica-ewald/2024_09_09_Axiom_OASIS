@@ -4,10 +4,9 @@ Use CPG index to download all Axiom Dino profiles.
 
 """  # noqa: CPY001, INP001
 
-from pathlib import Path
+import re
 
-import polars as pl
-from cpgdata.utils import download_s3_files, parallel
+from sh import aws
 
 
 def main() -> None:
@@ -16,30 +15,19 @@ def main() -> None:
     Read in index file, download data.
 
     """
-    index_dir = Path("../1_snakemake/inputs/cpg_index")
-    prof_dir = Path("../1_snakemake/inputs/profiles/dino")
-    ncores = 10
+    aws_path = "s3://cellpainting-gallery/cpg0037-oasis/axiom/workspace_dl/profiles/dinov2_b_vitl14_fieldnorm_825c11"
+    batches = ["prod_25", "prod_26", "prod_27", "prod_30"]
 
-    index_files = list(index_dir.glob("*.parquet"))
+    prof_dir = "../1_snakemake/inputs/profiles/dino/plates"
 
     # get Dino embedding paths
-    index_df = pl.scan_parquet(index_files)
-    index_df = (
-        index_df.filter(pl.col("dataset_id").eq("cpg0037-oasis"))
-        .filter(pl.col("obj_key").str.contains("scratch"))
-        .filter(pl.col("obj_key").str.contains("dinov2"))
-        .select("key")
-        .collect()
-    )
+    for batch in batches:
+        batch_path = f"{aws_path}/{batch}/"
+        aws_output = aws("s3", "ls", batch_path)
+        plates = re.findall(r"plate_\d{8}", aws_output)
 
-    # Download files
-    download_keys = list(index_df.to_dict()["key"])
-    parallel(
-        download_keys,
-        download_s3_files,
-        ["cellpainting-gallery", prof_dir],
-        jobs=ncores,
-    )
+        for plate in plates:
+            aws("s3", "cp", f"{batch_path}{plate}/{plate}.parquet", f"{prof_dir}/{plate}.parquet")
 
 
 if __name__ == "__main__":

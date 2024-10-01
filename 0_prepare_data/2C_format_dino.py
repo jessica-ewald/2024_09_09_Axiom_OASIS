@@ -56,20 +56,17 @@ def main() -> None:
     Merge Dino embeddings from each plate into one file and add metadata.
 
     """
-    input_profile_path = "../1_snakemake/inputs/profiles/dino/cpg0037-oasis/axiom/workspace/scratch"
+    input_profile_path = "../1_snakemake/inputs/profiles/dino/plates"
     meta_path = "../1_snakemake/inputs/metadata/metadata.parquet"
     output_profile_path = "../1_snakemake/inputs/profiles/dino/raw.parquet"
 
     meta = pl.read_parquet(meta_path)
 
-    batches = os.listdir(input_profile_path)
     profiles = []
-    for batch in batches:
-        batch_prof_path = f"{input_profile_path}/{batch}"
-        plates = os.listdir(batch_prof_path)
-        for plate in plates:
-            prof_path = f"{batch_prof_path}/{plate}/dinov2_b_fieldnorm.parquet"
-            profiles.append(process_dino_plate(prof_path))
+    plates = os.listdir(input_profile_path)
+    for plate in plates:
+        prof_path = f"{input_profile_path}/{plate}"
+        profiles.append(process_dino_plate(prof_path))
 
     data = pl.concat(profiles, how="vertical")
     data = data.join(meta, on="Metadata_well_id")
