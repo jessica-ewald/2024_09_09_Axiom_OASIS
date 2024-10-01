@@ -10,22 +10,23 @@ meta_keep = [
     "plate",
     "compound_concentration_um",
     "compound_name",
-    "compound_scode",
-    "compound_smiles",
     "compound_target",
     "compound_pathway",
-    "compound_biological_activity",
+    "compound_research_area",
+    "compound_clinical_information",
     "well",
+    "row",
+    "col",
     "mtt_lumi",
     "ldh_abs_signal",
     "ldh_abs_background",
     "ldh_abs",
     "mtt_normalized",
     "ldh_normalized",
+    "mtt_ridge_norm",
+    "ldh_ridge_norm",
     "OASIS_ID",
 ]
-
-batches = ["prod_25", "prod_26", "prod_27", "prod_30"]
 
 
 def process_meta(input_meta_path: str, meta_nms: list) -> pl.DataFrame:
@@ -56,16 +57,15 @@ def main() -> None:
     """
     # Process metadata
     meta_nms = [f"Metadata_{i}" for i in meta_keep]
-    meta_path = "../1_snakemake/inputs/metadata/cpg0037-oasis/axiom/workspace/scratch/"
+    meta_path = "../1_snakemake/inputs/metadata/biochem"
     cc_path = "../1_snakemake/inputs/metadata/cc.parquet"
     meta = []
-    for batch in batches:
-        batch_path = f"{meta_path}/{batch}"
 
-        plates = os.listdir(batch_path)
-        for plate in tqdm(plates):
-            plate_path = f"{batch_path}/{plate}/biochem.parquet"
-            meta.append(process_meta(plate_path, meta_nms))
+    plates = os.listdir(meta_path)
+    for plate in tqdm(plates):
+        plate_path = f"{meta_path}/{plate}"
+        meta.append(process_meta(plate_path, meta_nms))
+
     meta = pl.concat(meta, how="vertical_relaxed")
     meta = meta.rename({
         "Metadata_plate": "Metadata_Plate",
