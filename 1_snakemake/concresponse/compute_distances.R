@@ -45,7 +45,8 @@ if ("gmd" %in% methods) {
       plate_meta <- all_dat[all_dat$Metadata_Plate == plate, meta_cols]
       plate_labels <- plate_meta[, "Metadata_Compound"] %>% c()
 
-      gmd <- compute_gmd(plate_dat, gmd_prep$rot, gmd_prep$inv_cov,
+      gmd <- compute_gmd(plate_dat, as.matrix(gmd_prep$rot),
+                         as.matrix(gmd_prep$inv_cov),
                          plate_labels, "DMSO")
       plate_meta$Metadata_Distance <- "gmd"
       plate_meta$Distance <- gmd
