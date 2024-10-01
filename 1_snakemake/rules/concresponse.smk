@@ -6,7 +6,7 @@ rule compute_distances_R:
     params:
         cover_var=config["cover_var"],
         treatment=config["treatment"],
-        categories=config["categories"],
+        categories=",".join(config["categories"]),
         distances=config["distances_R"],
     shell:
         """
