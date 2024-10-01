@@ -101,7 +101,7 @@ rule plot_cc_curve_fits:
     params:
         meta_nm = "Metadata_Count_Cells"
     shell:
-        "Rscript concresponse/plot_cc_curve.R {input} {output} {params.meta_nm}"
+        "Rscript concresponse/plot_meta_curve.R {input} {output} {params.meta_nm}"
 
 rule plot_mtt_curve_fits:
     input:
@@ -112,7 +112,7 @@ rule plot_mtt_curve_fits:
     params:
         meta_nm = "Metadata_mtt_normalized"
     shell:
-        "Rscript concresponse/plot_cc_curve.R {input} {output} {params.meta_nm}"
+        "Rscript concresponse/plot_meta_curve.R {input} {output} {params.meta_nm}"
 
 rule plot_ldh_curve_fits:
     input:
@@ -123,7 +123,7 @@ rule plot_ldh_curve_fits:
     params:
         meta_nm = "Metadata_ldh_abs_signal"
     shell:
-        "Rscript concresponse/plot_cc_curve.R {input} {output} {params.meta_nm}"
+        "Rscript concresponse/plot_meta_curve.R {input} {output} {params.meta_nm}"
 
 
 rule plot_cp_curve_fits:

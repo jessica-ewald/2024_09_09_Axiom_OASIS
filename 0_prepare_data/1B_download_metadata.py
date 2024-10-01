@@ -1,13 +1,12 @@
 """Download Axiom metadata.
 
-Use CPG index to download all Axiom platemap and biochem metadata.
+Download all Axiom platemap and biochem metadata.
 
 """  # noqa: CPY001, INP001
 
-from pathlib import Path
+import re
 
-import polars as pl
-from cpgdata.utils import download_s3_files, parallel
+from sh import aws
 
 
 def main() -> None:
@@ -16,30 +15,19 @@ def main() -> None:
     Read in index file, download data.
 
     """
-    index_dir = Path("../1_snakemake/inputs/cpg_index")
-    prof_dir = Path("../1_snakemake/inputs/metadata")
-    ncores = 10
+    aws_path = "s3://cellpainting-gallery/cpg0037-oasis/axiom/workspace/metadata"
+    local_meta = "../1_snakemake/inputs/metadata"
+    batches = ["prod_25", "prod_26", "prod_27", "prod_30"]
 
-    index_files = list(index_dir.glob("*.parquet"))
+    # get metadata (both biochem.parquet and metadata.parquet)
+    for batch in batches:
+        batch_path = f"{aws_path}/{batch}/"
+        aws_output = aws("s3", "ls", batch_path)
+        plates = re.findall(r"plate_\d{8}", aws_output)
 
-    # get metadata paths (both biochem.parquet and metadata.parquet)
-    index_df = pl.scan_parquet(index_files)
-    index_df = (
-        index_df.filter(pl.col("dataset_id").eq("cpg0037-oasis"))
-        .filter(pl.col("obj_key").str.contains("scratch"))
-        .filter(pl.col("obj_key").str.contains("biochem"))
-        .select("key")
-        .collect()
-    )
-
-    # Download files
-    download_keys = list(index_df.to_dict()["key"])
-    parallel(
-        download_keys,
-        download_s3_files,
-        ["cellpainting-gallery", prof_dir],
-        jobs=ncores,
-    )
+        for plate in plates:
+            aws("s3", "cp", f"{batch_path}{plate}/metadata.parquet", f"{local_meta}/metadata/metadata_{plate}.parquet")
+            aws("s3", "cp", f"{batch_path}{plate}/biochem.parquet", f"{local_meta}/biochem/biochem_{plate}.parquet")
 
 
 if __name__ == "__main__":
