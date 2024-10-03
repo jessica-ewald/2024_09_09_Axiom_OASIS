@@ -76,7 +76,13 @@ if ("cmd" %in% methods) {
     if (feat_type == "dino") {
       category_cols <- colnames(dat)[grepl(category, colnames(dat))]
     } else {
-      category_cols <- "WRITE HERE"
+      feat_cols <- colnames(dat)[!grepl("Metadata", colnames(dat))]
+      noimg_cols <- feat_cols[!grepl("Image", feat_cols)]
+      cat_vals <- str_split(category, "_")
+      compartment <- cat_vals[[1]][1]
+      channel <- cat_vals[[1]][2]
+      compartment_cols <- noimg_cols[grepl(compartment, noimg_cols)]
+      category_cols <- compartment_cols[grepl(channel, compartment_cols)]
     }
 
     # Extract category profile
