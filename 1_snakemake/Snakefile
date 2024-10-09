@@ -1,4 +1,4 @@
-configfile: "./inputs/conf/cellprofiler.json"
+configfile: "./inputs/conf/dino.json"
 
 WORKFLOW = config["workflow"]
 categories = config["categories"]
