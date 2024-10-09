@@ -12,7 +12,5 @@ include: "rules/classifier.smk"
 
 rule all:
      input:
-          expand("outputs/{features}/{scenario}/curves/plots/mtt_plots.pdf", scenario=WORKFLOW, features=features),
-          expand("outputs/{features}/{scenario}/curves/plots/ldh_plots.pdf", scenario=WORKFLOW, features=features),
-          expand("outputs/{features}/{scenario}/curves/plots/cc_plots.pdf", scenario=WORKFLOW, features=features),
-          expand("outputs/{features}/{scenario}/curves/plots/cp_plots.pdf", scenario=WORKFLOW, features=features),
+          expand("outputs/{features}/{scenario}/classifier_results/predictions_continuous.parquet", scenario=WORKFLOW, features=features),
+          expand("outputs/{features}/{scenario}/classifier_results/plots_continuous.pdf", scenario=WORKFLOW, features=features),

@@ -23,3 +23,13 @@ rule classify:
 
     run:
         cl.classify.classify(*input, *output)
+
+
+rule predict_continuous:
+    input:
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet"
+    output:
+        "outputs/{features}/{scenario}/classifier_results/predictions_continuous.parquet",
+        "outputs/{features}/{scenario}/classifier_results/plots_continuous.pdf",
+    run:
+        cl.regression.predict_continuous(*input, *output)
