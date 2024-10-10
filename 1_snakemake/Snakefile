@@ -1,4 +1,4 @@
-configfile: "./inputs/conf/cpcnn.json"
+configfile: "./inputs/conf/cellprofiler.json"
 
 WORKFLOW = config["workflow"]
 categories = config["categories"]

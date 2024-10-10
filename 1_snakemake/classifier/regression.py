@@ -69,8 +69,9 @@ def mse_per_bin(dat: pl.DataFrame, n_bins: int, variable: str) -> (pl.DataFrame,
     mse_values = []
     for i in range(len(bins) - 1):
         bin_mid = (bins[i] + bins[i + 1]) / 2
-        bin_midpoints.append(bin_mid)
-        mse_values.append(mse_per_bin["mse"][i])
+        if i in mse_per_bin["Observed_bins"]:
+            bin_midpoints.append(bin_mid)
+            mse_values.append(mse_per_bin["mse"][i])
 
     mse_df = pd.DataFrame({
         "bin_mid": bin_midpoints,
@@ -84,6 +85,7 @@ def make_plots(pred: pl.DataFrame, output_path: str) -> None:
     """Plot observed vs. predicted and mse per bin."""
     ldh, mse_ldh = mse_per_bin(pred, 10, "Metadata_ldh_normalized")
     mtt, mse_mtt = mse_per_bin(pred, 10, "Metadata_mtt_normalized")
+    cc, mse_cc = mse_per_bin(pred, 10, "Metadata_Count_Cells")
 
     # TODO add R2 to overall plot
     mpl.use("Agg")
@@ -136,10 +138,37 @@ def make_plots(pred: pl.DataFrame, output_path: str) -> None:
         )
         pdf.savefig(plot4.draw())
 
+        plot5 = (
+            ggplot(cc, aes(x="Observed", y="Predicted"))
+            + geom_point(alpha=0.6)
+            + labs(
+                x="Observed",
+                y="Predicted",
+                title="Observed vs Predicted cell count",
+            )
+            + theme_bw()
+        )
+        pdf.savefig(plot5.draw())
+
+        plot6 = (
+            ggplot(mse_cc, aes(x="bin_mid", y="mse"))
+            + geom_line()
+            + theme_bw()
+            + labs(
+                x="Observed cell count (bin)",
+                y="MSE",
+            )
+        )
+        pdf.savefig(plot6.draw())
+
 
 def predict_continuous(prof_path: str, prediction_path: str, plot_path: str) -> None:
     """Train XGBoost regression models and plot results."""
     profiles = pl.read_parquet(prof_path)
+    profiles = profiles.with_columns(
+        (pl.col("Metadata_ldh_normalized") / pl.col("Metadata_Count_Cells")).alias("Metadata_ldh_cc"),
+        (pl.col("Metadata_mtt_normalized") / pl.col("Metadata_Count_Cells")).alias("Metadata_mtt_cc"),
+    )
     feat_cols = [i for i in profiles.columns if "Metadata" not in i]
     id_cols = ["Metadata_Plate", "Metadata_Well", "Metadata_Compound", "Metadata_Log10Conc"]
 
@@ -158,8 +187,18 @@ def predict_continuous(prof_path: str, prediction_path: str, plot_path: str) -> 
         pl.lit("Metadata_mtt_normalized").alias("Variable_Name"),
     )
 
+    cc = xgboost_regression(profiles, "Metadata_Count_Cells", feat_cols, id_cols)
+    cc = cc.with_columns(
+        pl.lit("Metadata_Count_Cells").alias("Variable_Name"),
+    )
+    cc_cols = cc.columns
+    cc = cc.with_columns(
+        pl.col("Observed").cast(pl.Float32).alias("Observed"),
+        pl.col("Predicted").cast(pl.Float32).alias("Predicted"),
+    ).select(cc_cols)
+
     # Write out predictions
-    prediction_df = pl.concat([ldh, mtt], how="vertical")
+    prediction_df = pl.concat([ldh, mtt, cc], how="vertical_relaxed")
     prediction_df.write_parquet(prediction_path)
 
     # Analyze results
