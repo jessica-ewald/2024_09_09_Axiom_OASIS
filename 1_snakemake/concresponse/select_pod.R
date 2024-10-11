@@ -15,7 +15,7 @@ pod_path <- args[3]
 bmd <- read_parquet(bmd_path) %>% as.data.table()
 
 bmd <- bmd[all.pass == TRUE]
-bmd <- bmd[SDres < 6]
+bmd <- bmd[SDres < 6] # where did I get this filter from??
 
 min_bmd <- bmd[,
                .SD[bmd == min(bmd)],
@@ -35,7 +35,6 @@ colnames(cc)[2] <- "cc_POD"
 
 min_bmd <- merge(min_bmd, cc, by = "Metadata_Compound")
 min_bmd$PAC_below_cc_POD <- min_bmd$bmd < min_bmd$cc_POD
-# Could consider using BMD CI to filter more aggressively
 
 
 ######## 4. Write out results

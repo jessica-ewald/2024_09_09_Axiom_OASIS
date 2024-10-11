@@ -34,7 +34,7 @@ dat <- all_dat[, feat_cols] %>% as.matrix()
 if ("gmd" %in% methods) {
   source("./concresponse/gmd_functions.R")
 
-  if (!file.exists(output_dist)) {
+  #if (!file.exists(output_dist)) {
     gmd_prep <- prep_gmd(dat, cover_var, treatment_labels)
 
     plates <- unique(all_dat$Metadata_Plate)
@@ -53,7 +53,7 @@ if ("gmd" %in% methods) {
       gmd_df <- rbind(gmd_df, plate_meta)
     }
     write_parquet(gmd_df, output_dist)
-  }
+  #}
 }
 
 

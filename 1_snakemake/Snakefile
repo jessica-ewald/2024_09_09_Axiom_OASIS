@@ -1,4 +1,4 @@
-configfile: "./inputs/conf/cellprofiler.json"
+configfile: "./inputs/conf/cpcnn.json"
 
 WORKFLOW = config["workflow"]
 categories = config["categories"]
@@ -12,5 +12,4 @@ include: "rules/classifier.smk"
 
 rule all:
      input:
-          expand("outputs/{features}/{scenario}/classifier_results/predictions_continuous.parquet", scenario=WORKFLOW, features=features),
-          expand("outputs/{features}/{scenario}/classifier_results/plots_continuous.pdf", scenario=WORKFLOW, features=features),
+          expand("outputs/{features}/{scenario}/aggregated_profiles/agg.parquet", scenario=WORKFLOW, features=features),

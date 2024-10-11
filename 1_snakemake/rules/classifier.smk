@@ -2,11 +2,9 @@ rule create_classifier_profiles:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
         "outputs/{features}/{scenario}/curves/pods.parquet",
-        "outputs/{features}/{scenario}/gmd/global_rot.parquet",
 
     output:
-        "outputs/{features}/{scenario}/aggregated_profiles/cpfeat.parquet",
-        "outputs/{features}/{scenario}/aggregated_profiles/latent.parquet",
+        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
 
     run:
         cl.aggregate_profiles.aggregate_profiles(*input, *output)
@@ -14,8 +12,7 @@ rule create_classifier_profiles:
 
 rule classify:
     input:
-        "outputs/{features}/{scenario}/aggregated_profiles/cpfeat.parquet",
-        "outputs/{features}/{scenario}/aggregated_profiles/latent.parquet",
+        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
         # LABELS
 
     output:

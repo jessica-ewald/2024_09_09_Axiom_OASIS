@@ -1,6 +1,5 @@
 import logging
 
-import numpy as np
 import polars as pl
 import pycytominer
 
@@ -87,20 +86,17 @@ def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
 def aggregate_profiles(
     prof_path: str,
     pod_path: str,
-    rm_path: str,
-    cpfeat_path: str,
-    latent_path: str,
+    agg_path: str,
 ) -> None:
     """Aggregate subset of profiles for each compound."""
     # 1. Read in data
     profiles = pl.read_parquet(prof_path)
     pods = pl.read_parquet(pod_path)
-    rot_mat = pl.read_parquet(rm_path).to_numpy()
 
     # 2. Process metadata
 
     # remove controls
-    controls = ["DMSO", "FCCP", "Berberine chloride"]
+    controls = ["DMSO"]
     profiles = profiles.filter(~pl.col("Metadata_Compound").is_in(controls))
 
     # Add POD
@@ -135,35 +131,14 @@ def aggregate_profiles(
         how="left",
     )
 
-    # 3. Create latent space profiles
-
-    feat_cols = [col for col in profiles.columns if not col.startswith("Metadata_")]
-    meta_cols = [col for col in profiles.columns if col.startswith("Metadata_")]
-
-    latent_dat = profiles.select(feat_cols).to_numpy()
-    latent_dat = np.dot(latent_dat, rot_mat)
-    latent_dat = pl.DataFrame(latent_dat)
-
-    new_column_names = [f"Comp{i + 1}" for i in range(len(latent_dat.columns))]
-    latent_dat = latent_dat.rename({old: new for old, new in zip(latent_dat.columns, new_column_names)})
-
-    latent_profiles = pl.concat(
-        [profiles.select(meta_cols), latent_dat],
-        how="horizontal",
-    )
-
-    # 4. Aggregate profiles
+    # 3. Aggregate profiles
     methods = ["all", "allpod", "allpodcc", "firstpod", "lastpod", "lastpodcc"]
-    agg_df_cpfeat = []
-    agg_df_latent = []
+    agg_df = []
 
     for method in methods:
-        agg_df_cpfeat.append(aggregate_compound(method, profiles))
-        agg_df_latent.append(aggregate_compound(method, latent_profiles))
+        agg_df.append(aggregate_compound(method, profiles))
 
-    agg_df_cpfeat = pl.concat(agg_df_cpfeat)
-    agg_df_latent = pl.concat(agg_df_latent)
+    agg_df = pl.concat(agg_df)
 
-    # 5. Write out results
-    agg_df_cpfeat.write_parquet(cpfeat_path)
-    agg_df_latent.write_parquet(latent_path)
+    # 4. Write out results
+    agg_df.write_parquet(agg_path)
