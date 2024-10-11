@@ -1,15 +1,17 @@
-configfile: "./inputs/conf/cpcnn.json"
-
-WORKFLOW = config["workflow"]
-categories = config["categories"]
-features = config["features"]
+configfile: "./inputs/conf/dino.json"
 
 # Load rules
 include: "rules/common.smk"
 include: "rules/processing.smk"
 include: "rules/concresponse.smk"
 include: "rules/classifier.smk"
+include: "rules/visualize.smk"
+
+# Define wildcards
+scenario = config["workflow"]
+categories = config["categories"]
+features = config["features"]
 
 rule all:
      input:
-          expand("outputs/{features}/{scenario}/aggregated_profiles/agg.parquet", scenario=WORKFLOW, features=features),
+          f"outputs/dino/mad_featselect/figures/umaps.pdf"

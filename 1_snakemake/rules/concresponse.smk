@@ -1,8 +1,8 @@
 rule compute_distances_R:
     input:
-        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+        f"outputs/{features}/{scenario}/profiles/{{pipeline}}.parquet",
     output:
-        expand("outputs/{{features}}/{{scenario}}/distances/{method}.parquet", method=config["distances_R"]),
+        expand("outputs/{features}/{scenario}/distances/{method}.parquet", method=config["distances_R"], features=config["features"], scenario=config["workflow"]),
     params:
         cover_var=config["cover_var"],
         treatment=config["treatment"],
@@ -18,9 +18,9 @@ rule compute_distances_R:
 
 rule compute_distances_python:
     input:
-        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+        f"outputs/{features}/{scenario}/profiles/{{pipeline}}.parquet",
     output:
-        expand("outputs/{{features}}/{{scenario}}/distances/{method}.parquet", method=config["distances_python"]),
+        expand("outputs/{features}/{scenario}/distances/{method}.parquet", method=config["distances_python"], features=config["features"], scenario=config["workflow"]),
     params:
         distances=config["distances_python"],
     run:
@@ -31,9 +31,9 @@ rule compute_distances_python:
 distances = config["distances_R"] + config["distances_python"]
 rule compile_distances:
     input:
-        lambda wildcards: [f"outputs/{wildcards.features}/{wildcards.scenario}/distances/{method}.parquet" for method in distances],
+        [f"outputs/{features}/{scenario}/distances/{method}.parquet" for method in distances],
     output:
-        "outputs/{features}/{scenario}/distances/distances.parquet",
+        f"outputs/{features}/{scenario}/distances/distances.parquet",
     run:
         input_files = list(input)
         cr.compile_dist.compile_dist(input_files, *output)
@@ -41,9 +41,9 @@ rule compile_distances:
 
 rule fit_curves:
     input:
-        "outputs/{features}/{scenario}/distances/distances.parquet",
+        f"outputs/{features}/{scenario}/distances/distances.parquet",
     output:
-        "outputs/{features}/{scenario}/curves/bmds.parquet",
+        f"outputs/{features}/{scenario}/curves/bmds.parquet",
     params:
         num_sds = config['num_sds']
     shell:
@@ -51,9 +51,9 @@ rule fit_curves:
 
 rule fit_curves_cc:
     input:
-        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+        f"outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
-        "outputs/{features}/{scenario}/curves/ccpods.parquet",
+        f"outputs/{features}/{scenario}/curves/ccpods.parquet",
     params:
         num_sds = config['num_sds'],
         meta_nm = "Metadata_Count_Cells"
@@ -62,9 +62,9 @@ rule fit_curves_cc:
 
 rule fit_curves_mtt:
     input:
-        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+        f"outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
-        "outputs/{features}/{scenario}/curves/mttpods.parquet",
+        f"outputs/{features}/{scenario}/curves/mttpods.parquet",
     params:
         num_sds = config['num_sds'],
         meta_nm = "Metadata_mtt_normalized"
@@ -73,9 +73,9 @@ rule fit_curves_mtt:
 
 rule fit_curves_ldh:
     input:
-        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+        f"outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
-        "outputs/{features}/{scenario}/curves/ldhpods.parquet",
+        f"outputs/{features}/{scenario}/curves/ldhpods.parquet",
     params:
         num_sds = config['num_sds'],
         meta_nm = "Metadata_ldh_abs_signal"
@@ -84,20 +84,20 @@ rule fit_curves_ldh:
 
 rule select_pod:
     input:
-        "outputs/{features}/{scenario}/curves/bmds.parquet",
-        "outputs/{features}/{scenario}/curves/ccpods.parquet",
+        f"outputs/{features}/{scenario}/curves/bmds.parquet",
+        f"outputs/{features}/{scenario}/curves/ccpods.parquet",
     output:
-        "outputs/{features}/{scenario}/curves/pods.parquet",
+        f"outputs/{features}/{scenario}/curves/pods.parquet",
     shell:
         "Rscript concresponse/select_pod.R {input} {output}"
 
 
 rule plot_cc_curve_fits:
     input:
-        "outputs/{features}/{scenario}/curves/ccpods.parquet",
-        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+        f"outputs/{features}/{scenario}/curves/ccpods.parquet",
+        f"outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
-        "outputs/{features}/{scenario}/curves/plots/cc_plots.pdf",
+        f"outputs/{features}/{scenario}/curves/plots/cc_plots.pdf",
     params:
         meta_nm = "Metadata_Count_Cells"
     shell:
@@ -105,10 +105,10 @@ rule plot_cc_curve_fits:
 
 rule plot_mtt_curve_fits:
     input:
-        "outputs/{features}/{scenario}/curves/mttpods.parquet",
-        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+        f"outputs/{features}/{scenario}/curves/mttpods.parquet",
+        f"outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
-        "outputs/{features}/{scenario}/curves/plots/mtt_plots.pdf",
+        f"outputs/{features}/{scenario}/curves/plots/mtt_plots.pdf",
     params:
         meta_nm = "Metadata_mtt_normalized"
     shell:
@@ -116,10 +116,10 @@ rule plot_mtt_curve_fits:
 
 rule plot_ldh_curve_fits:
     input:
-        "outputs/{features}/{scenario}/curves/ldhpods.parquet",
-        "outputs/{features}/{scenario}/profiles/{scenario}.parquet",
+        f"outputs/{features}/{scenario}/curves/ldhpods.parquet",
+        f"outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
-        "outputs/{features}/{scenario}/curves/plots/ldh_plots.pdf",
+        f"outputs/{features}/{scenario}/curves/plots/ldh_plots.pdf",
     params:
         meta_nm = "Metadata_ldh_abs_signal"
     shell:
@@ -128,10 +128,10 @@ rule plot_ldh_curve_fits:
 
 rule plot_cp_curve_fits:
     input:
-        "outputs/{features}/{scenario}/curves/pods.parquet",
-        "outputs/{features}/{scenario}/curves/ccpods.parquet",
-        "outputs/{features}/{scenario}/distances/distances.parquet",
+        f"outputs/{features}/{scenario}/curves/pods.parquet",
+        f"outputs/{features}/{scenario}/curves/ccpods.parquet",
+        f"outputs/{features}/{scenario}/distances/distances.parquet",
     output:
-        "outputs/{features}/{scenario}/curves/plots/cp_plots.pdf",
+        f"outputs/{features}/{scenario}/curves/plots/cp_plots.pdf",
     shell:
         "Rscript concresponse/plot_cp_curve.R {input} {output}"
