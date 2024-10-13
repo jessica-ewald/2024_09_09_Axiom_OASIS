@@ -12,10 +12,13 @@ pod_path <- args[3]
 
 
 ######## 2. Select POD as minimum BMD across gmd and all categories
-bmd <- read_parquet(bmd_path) %>% as.data.table()
+bmd <- read_parquet(bmd_path) %>% as.data.frame()
+# This is what the SD of residuals must be less than
+bmd$res.thresh <- 3 * bmd$SDctrl
+bmd <- as.data.table(bmd)
 
 bmd <- bmd[all.pass == TRUE]
-bmd <- bmd[SDres < 6] # where did I get this filter from??
+bmd <- bmd[SDres < res.thresh] # Filter by the SD of the residual
 
 min_bmd <- bmd[,
                .SD[bmd == min(bmd)],

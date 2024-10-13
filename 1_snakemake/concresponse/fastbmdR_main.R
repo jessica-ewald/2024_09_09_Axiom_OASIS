@@ -519,26 +519,27 @@ PerformBMDCalc <- function(fitObj, ncpus = 1, num.sds = 1, bmr.method = "sample.
     one_sided_pval <- (1 - pnorm(abs(num.sds)))
     bmr.mode <- "ctrl.quantile"
   }
-  
+
   # function to calculate the bmd from the best fit model
   ################################################################
   bmdoneitem <- function(i) 
   {
     # determine if adverse direction is increasing or decreasing
     adv.incr <- dfitall[i, "adv.incr"];
-    
+
     # get best fit model type
     mod.name <- as.character(dfitall[i, "mod.name"])
-    
+
     # get data for fitting
     signal <- data[i, ]
     dset <- data.frame(signal = signal, dose = dose)
     dset <- na.omit(dset)
-    
+    ctrl_vals <- signal[dose == 0]
+    SDctrl <- sd(ctrl_vals)
+
     # compute the BMR
     if(bmr.mode == "ctrl.quantile"){
       # specify quantile-based bmr
-      ctrl_vals <- signal[dose == 0]
       if(adv.incr == TRUE){
         bmr <- quantile(ctrl_vals, (1-one_sided_pval), na.rm = TRUE)
       } else {
@@ -551,14 +552,14 @@ PerformBMDCalc <- function(fitObj, ncpus = 1, num.sds = 1, bmr.method = "sample.
         bmr <- as.vector(dfitall[i, bmr.mode]) - num.sds*as.vector(dfitall[i, "SDres"])
       }
     }
-    
+
     # get parameters
     b <- as.numeric(as.vector(dfitall[i, "b"]))
     c <- as.numeric(as.vector(dfitall[i, "c"]))
     d <- as.numeric(as.vector(dfitall[i, "d"]))
     e <- as.numeric(as.vector(dfitall[i, "e"]))
     f <- as.numeric(as.vector(dfitall[i, "f"]))
-    
+
     # fit re-parametrized model
     switch(mod.name,
            Lin = {
@@ -650,8 +651,8 @@ PerformBMDCalc <- function(fitObj, ncpus = 1, num.sds = 1, bmr.method = "sample.
       bmd.res <- c(9999, NA, NA)
     }
     
-    bmd.res <- c(bmd.res, mod.name, bmr)
-    names(bmd.res) <- c("bmd", "bmdl", "bmdu", "mod.name", "bmr")
+    bmd.res <- c(bmd.res, mod.name, bmr, SDctrl)
+    names(bmd.res) <- c("bmd", "bmdl", "bmdu", "mod.name", "bmr", "SDctrl")
     return(bmd.res)
     
   } ##################################### end of bmdoneitem
@@ -673,9 +674,10 @@ PerformBMDCalc <- function(fitObj, ncpus = 1, num.sds = 1, bmr.method = "sample.
   dres$bmdu <- as.numeric(as.character(dres$bmdu))
   dres$id <- as.character(item)
   dres$bmr <- as.numeric(as.character(dres$bmr))
+  dres$SDctrl <- as.numeric(as.character(dres$SDctrl))
   
   # change order of columns
-  dres <- dres[, c("id", "mod.name", "bmd", "bmdl", "bmdu", "bmr")]
+  dres <- dres[, c("id", "mod.name", "bmd", "bmdl", "bmdu", "bmr", "SDctrl")]
   
   # does bmdcalc converge for bmd, bmdl, and bmdu?
   dres$conv.pass <- rowSums(is.na(dres)) == 0

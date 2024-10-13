@@ -83,7 +83,6 @@ def make_umaps(prof_path: str, morph_pod: str, cc_pod: str, ldh_pod: str, mtt_po
     # Plot UMAPs (only bioactive samples)
     bioactive_mask = adata.obs["Metadata_Bioactive"]
     adata_bioactive = adata[bioactive_mask].copy()
-    print(f"Bioactive samples: {adata_bioactive.shape}")
 
     sc.pp.neighbors(adata_bioactive)
     sc.tl.umap(adata_bioactive)
@@ -91,7 +90,6 @@ def make_umaps(prof_path: str, morph_pod: str, cc_pod: str, ldh_pod: str, mtt_po
     # Plot UMAPs (only bioactive & non-cytotoxic samples)
     nocytotox_mask = adata_bioactive.obs["Metadata_No_Cytotox"]
     adata_nocytotox = adata_bioactive[nocytotox_mask].copy()
-    print(f"Bioactive & non-cytotoxic samples: {adata_nocytotox.shape}")
 
     sc.pp.neighbors(adata_nocytotox)
     sc.tl.umap(adata_nocytotox)
