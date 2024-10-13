@@ -162,8 +162,8 @@ def make_plots(pred: pl.DataFrame, output_path: str) -> None:
         pdf.savefig(plot6.draw())
 
 
-def predict_continuous(prof_path: str, prediction_path: str, plot_path: str) -> None:
-    """Train XGBoost regression models and plot results."""
+def predict_axiom_assays(prof_path: str, prediction_path: str, plot_path: str) -> None:
+    """Train XGBoost regression model to predict Axiom assays."""
     profiles = pl.read_parquet(prof_path)
     profiles = profiles.with_columns(
         (pl.col("Metadata_ldh_normalized") / pl.col("Metadata_Count_Cells")).alias("Metadata_ldh_cc"),
@@ -203,3 +203,13 @@ def predict_continuous(prof_path: str, prediction_path: str, plot_path: str) -> 
 
     # Analyze results
     make_plots(prediction_df, plot_path)
+
+
+def predict_seal_continuous(prof_path: str, label_path: str, prediction_path: str, plot_path: str) -> None:
+    """Train XGBoost regression model to predict Seal continuous assays."""
+    dat = pl.read_parquet(prof_path)
+    labels = pl.read_parquet(label_path)
+
+    # place holder before I write the function
+    dat.write_parquet(prediction_path)
+    labels.write_parquet(plot_path)

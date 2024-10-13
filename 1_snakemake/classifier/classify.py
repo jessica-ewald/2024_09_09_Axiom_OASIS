@@ -1,6 +1,7 @@
 import pandas as pd
 import polars as pl
 from sklearn.model_selection import KFold
+from tqdm import tqdm
 from xgboost import XGBClassifier
 
 
@@ -10,7 +11,7 @@ def binary_classifier(
     n_splits: int,
     shuffle: bool = False,
 ) -> pl.DataFrame:
-    X = dat.drop(columns=["Label"])
+    x = dat.drop(columns=["Label"])
     y = dat["Label"]
 
     if shuffle:
@@ -20,8 +21,8 @@ def binary_classifier(
 
     pred_df = []
     fold = 1
-    for train_index, val_index in kf.split(X):
-        X_fold_train, X_fold_val = X.iloc[train_index], X.iloc[val_index]
+    for train_index, val_index in kf.split(x):
+        x_fold_train, x_fold_val = x.iloc[train_index], x.iloc[val_index]
         y_fold_train, y_fold_val = y.iloc[train_index], y.iloc[val_index]
         meta_fold_val = meta.iloc[val_index]
 
@@ -35,58 +36,63 @@ def binary_classifier(
         )
 
         # Train the model on the fold training set
-        model.fit(X_fold_train, y_fold_train)
+        model.fit(x_fold_train, y_fold_train)
 
         # Validate the model on the fold validation set
-        y_fold_prob = model.predict_proba(X_fold_val)[:, 1]
-        y_fold_pred = model.predict(X_fold_val)
+        y_fold_prob = model.predict_proba(x_fold_val)[:, 1]
+        y_fold_pred = model.predict(x_fold_val)
 
         pred_df.append(
             pl.DataFrame({
-                "Metadata_Compound": list(meta_fold_val["Metadata_Compound"]),
+                "Metadata_OASIS_ID": list(meta_fold_val["Metadata_OASIS_ID"]),
                 "y_prob": list(y_fold_prob),
                 "y_pred": list(y_fold_pred),
                 "y_actual": list(y_fold_val),
-                "k_fold": fold,
-            })
+            }),
         )
-        fold = fold + 1
+        fold += 1
 
     return pl.concat(pred_df, how="vertical")
 
 
-def classify_DILI_binary(input_path: str, label_column: str, output_path: str) -> None:
+def predict_seal_binary(input_path: str, label_path: str, output_path: str) -> None:
     dat = pl.read_parquet(input_path)
+    meta = pl.read_parquet(label_path).rename({"OASIS_ID": "Metadata_OASIS_ID"})
+    labels = [i for i in meta.columns if "Metadata_" not in i]
+
+    dat = dat.join(meta, on="Metadata_OASIS_ID", how="left")
 
     agg_types = dat.select("Metadata_AggType").to_series().unique().to_list()
     pred_df = []
-    for agg_type in agg_types:
-        prof = dat.filter(
-            (pl.col("Metadata_AggType") == agg_type)
-            & (pl.col(label_column).is_not_null()).rename({label_column: "Label"})
-        )
-        meta_cols = [i for i in prof.columns if "Metadata_" in i]
 
-        prof_meta = prof.select(meta_cols)
-        prof = prof.drop(meta_cols)
+    for label_column in tqdm(labels):
+        for agg_type in agg_types:
+            prof = dat.filter(
+                (pl.col("Metadata_AggType") == agg_type) & (pl.col(label_column).is_not_null()),
+            ).rename({label_column: "Label"})
 
-        class_res = binary_classifier(
-            prof.to_pandas(), prof_meta.to_pandas(), n_splits=10, shuffle=False
-        )
-        class_res = class_res.with_columns(
-            pl.lit(agg_type).alias("Metadata_AggType"),
-            pl.lit("Actual labels").alias("Metadata_LabelType"),
-        )
-        pred_df.append(class_res)
+            num_0 = prof.filter(pl.col("Label") == 0).height
+            num_1 = prof.filter(pl.col("Label") == 1).height
 
-        shuffle_res = binary_classifier(
-            prof.to_pandas(), prof_meta.to_pandas(), n_splits=10, shuffle=True
-        )
-        shuffle_res = shuffle_res.with_columns(
-            pl.lit(agg_type).alias("Metadata_AggType"),
-            pl.lit("Shuffled labels").alias("Metadata_LabelType"),
-        )
-        pred_df.append(shuffle_res)
+            meta_cols = [i for i in prof.columns if "Metadata_" in i]
+            all_meta_cols = [i for i in prof.columns if i in labels] + meta_cols
+
+            prof_meta = prof.select(meta_cols)
+            prof = prof.drop(all_meta_cols)
+
+            class_res = binary_classifier(
+                prof.to_pandas(),
+                prof_meta.to_pandas(),
+                n_splits=5,
+                shuffle=False,
+            )
+            class_res = class_res.with_columns(
+                pl.lit(agg_type).alias("Metadata_AggType"),
+                pl.lit(label_column).alias("Metadata_Label"),
+                pl.lit(num_0).alias("Metadata_Count_0"),
+                pl.lit(num_1).alias("Metadata_Count_1"),
+            )
+            pred_df.append(class_res)
 
     pred_df = pl.concat(pred_df, how="vertical")
     pred_df.write_parquet(output_path)
