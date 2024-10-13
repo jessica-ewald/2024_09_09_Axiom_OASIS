@@ -1,6 +1,8 @@
+import traceback  # noqa: CPY001, D100
+
 import pandas as pd
 import polars as pl
-from sklearn.model_selection import KFold
+from sklearn.model_selection import StratifiedKFold
 from tqdm import tqdm
 from xgboost import XGBClassifier
 
@@ -11,17 +13,18 @@ def binary_classifier(
     n_splits: int,
     shuffle: bool = False,
 ) -> pl.DataFrame:
+    dat["Label"] = dat["Label"].astype(int)
     x = dat.drop(columns=["Label"])
     y = dat["Label"]
 
     if shuffle:
         y = y.sample(frac=1, random_state=42).reset_index(drop=True)
 
-    kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
+    kf = StratifiedKFold(n_splits=n_splits)
 
     pred_df = []
     fold = 1
-    for train_index, val_index in kf.split(x):
+    for train_index, val_index in kf.split(x, y):
         x_fold_train, x_fold_val = x.iloc[train_index], x.iloc[val_index]
         y_fold_train, y_fold_val = y.iloc[train_index], y.iloc[val_index]
         meta_fold_val = meta.iloc[val_index]
@@ -56,6 +59,8 @@ def binary_classifier(
 
 
 def predict_seal_binary(input_path: str, label_path: str, output_path: str) -> None:
+    n_splits = 5
+
     dat = pl.read_parquet(input_path)
     meta = pl.read_parquet(label_path).rename({"OASIS_ID": "Metadata_OASIS_ID"})
     labels = [i for i in meta.columns if "Metadata_" not in i]
@@ -74,25 +79,30 @@ def predict_seal_binary(input_path: str, label_path: str, output_path: str) -> N
             num_0 = prof.filter(pl.col("Label") == 0).height
             num_1 = prof.filter(pl.col("Label") == 1).height
 
-            meta_cols = [i for i in prof.columns if "Metadata_" in i]
-            all_meta_cols = [i for i in prof.columns if i in labels] + meta_cols
+            if (num_0 >= n_splits) & (num_1 >= n_splits):
+                try:
+                    meta_cols = [i for i in prof.columns if "Metadata_" in i]
+                    all_meta_cols = [i for i in prof.columns if i in labels] + meta_cols
 
-            prof_meta = prof.select(meta_cols)
-            prof = prof.drop(all_meta_cols)
+                    prof_meta = prof.select(meta_cols)
+                    prof = prof.drop(all_meta_cols)
 
-            class_res = binary_classifier(
-                prof.to_pandas(),
-                prof_meta.to_pandas(),
-                n_splits=5,
-                shuffle=False,
-            )
-            class_res = class_res.with_columns(
-                pl.lit(agg_type).alias("Metadata_AggType"),
-                pl.lit(label_column).alias("Metadata_Label"),
-                pl.lit(num_0).alias("Metadata_Count_0"),
-                pl.lit(num_1).alias("Metadata_Count_1"),
-            )
-            pred_df.append(class_res)
+                    class_res = binary_classifier(
+                        prof.to_pandas(),
+                        prof_meta.to_pandas(),
+                        n_splits=n_splits,
+                        shuffle=False,
+                    )
+                    class_res = class_res.with_columns(
+                        pl.lit(agg_type).alias("Metadata_AggType"),
+                        pl.lit(label_column).alias("Metadata_Label"),
+                        pl.lit(num_0).alias("Metadata_Count_0"),
+                        pl.lit(num_1).alias("Metadata_Count_1"),
+                    )
+                    pred_df.append(class_res)
+                except Exception:  # noqa: BLE001
+                    print(f"An error occurred for label '{label_column}' and aggregation type '{agg_type}':")
+                    print(traceback.format_exc())
 
     pred_df = pl.concat(pred_df, how="vertical")
     pred_df.write_parquet(output_path)
