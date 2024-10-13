@@ -1,10 +1,4 @@
 .snakemake
-*parquet
-*h5ad
-*png
-*svg
-*gz
-*html
 .ipynb_checkpoints
 .DS_Store
 __pycache__
@@ -12,10 +6,5 @@ outputs
 inputs/images
 inputs/metadata
 inputs/profiles
-*plotly
-*csv
-*npz
-*pkl
-*pickle
 .RData
 .RHistory
