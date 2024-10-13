@@ -22,11 +22,11 @@ rule classify:
         cl.classify.classify(*input, *output)
 
 
-rule predict_continuous:
+rule predict_axiom_assays:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}.parquet"
     output:
         "outputs/{features}/{scenario}/classifier_results/predictions_continuous.parquet",
         "outputs/{features}/{scenario}/classifier_results/plots_continuous.pdf",
     run:
-        cl.regression.predict_continuous(*input, *output)
+        cl.regression.predict_axiom_assays(*input, *output)

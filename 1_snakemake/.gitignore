@@ -9,7 +9,9 @@
 .DS_Store
 __pycache__
 outputs
-inputs
+inputs/images
+inputs/metadata
+inputs/profiles
 *plotly
 *csv
 *npz
