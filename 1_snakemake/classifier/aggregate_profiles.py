@@ -1,4 +1,4 @@
-import logging
+import logging  # noqa: CPY001, D100
 
 import polars as pl
 import pycytominer

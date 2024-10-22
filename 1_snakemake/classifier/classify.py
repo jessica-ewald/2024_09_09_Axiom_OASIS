@@ -11,8 +11,29 @@ def binary_classifier(
     dat: pd.DataFrame,
     meta: pd.DataFrame,
     n_splits: int,
+    *,
     shuffle: bool = False,
 ) -> pl.DataFrame:
+    """Perform a binary XGBoost classification.
+
+    Parameters
+    ----------
+    dat : pd.DataFrame
+        The input dataframe containing features and labels.
+    meta : pd.DataFrame
+        Metadata associated with the input data.
+    n_splits : int
+        Number of folds for cross-validation.
+    shuffle : bool, optional
+        Whether to shuffle the data before splitting (default is False).
+
+    Returns
+    -------
+    pl.DataFrame
+        A Polars DataFrame containing the predicted labels and probabilities
+        for each sample in the validation sets across all folds.
+
+    """
     dat["Label"] = dat["Label"].astype(int)
     x = dat.drop(columns=["Label"])
     y = dat["Label"]
@@ -58,7 +79,23 @@ def binary_classifier(
     return pl.concat(pred_df, how="vertical")
 
 
-def predict_seal_binary(input_path: str, label_path: str, output_path: str) -> None:
+def predict_seal_binary(
+    input_path: str,
+    label_path: str,
+    output_path: str,
+) -> None:
+    """Build classifier for each of Srijit's outcomes.
+
+    Parameters
+    ----------
+    input_path : str
+        Filepath for input profiles.
+    label_path : str
+        Filepath for input binary labels.
+    output_path : str
+        Filepath for model classification results.
+
+    """
     n_splits = 5
 
     dat = pl.read_parquet(input_path)
