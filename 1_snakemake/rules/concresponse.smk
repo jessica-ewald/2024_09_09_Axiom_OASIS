@@ -1,6 +1,6 @@
 rule compute_distances_R:
     input:
-        f"outputs/{features}/{scenario}/profiles/{{pipeline}}.parquet",
+        f"outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
         expand("outputs/{features}/{scenario}/distances/{method}.parquet", method=config["distances_R"], features=config["features"], scenario=config["workflow"]),
     params:
@@ -12,13 +12,13 @@ rule compute_distances_R:
         """
         for method in {params.distances}; do
             method_name=$(echo $method | tr -d '[],"') 
-            Rscript concresponse/compute_distances.R {input} outputs/{wildcards.features}/{wildcards.scenario}/distances/${{method_name}}.parquet {params.cover_var} {params.treatment} {params.categories} ${{method_name}}
+            Rscript concresponse/compute_distances.R {input} outputs/{features}/{scenario}/distances/${{method_name}}.parquet {params.cover_var} {params.treatment} {params.categories} ${{method_name}}
         done
         """
 
 rule compute_distances_python:
     input:
-        f"outputs/{features}/{scenario}/profiles/{{pipeline}}.parquet",
+        f"outputs/{features}/{scenario}/profiles/{scenario}.parquet",
     output:
         expand("outputs/{features}/{scenario}/distances/{method}.parquet", method=config["distances_python"], features=config["features"], scenario=config["workflow"]),
     params:

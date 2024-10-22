@@ -75,7 +75,7 @@ def main() -> None:
     }).with_columns(
         pl.concat_str(["Metadata_Compound", "Metadata_Concentration"], separator="_").alias("Metadata_Perturbation"),
         pl.col("Metadata_Well")
-        .map_elements(lambda well: well if len(well) == 3 else f"{well[0]}0{well[1]}")
+        .map_elements(lambda well: well if len(well) == 3 else f"{well[0]}0{well[1]}", return_dtype=pl.Utf8)
         .alias("Metadata_Well"),
     )
 
