@@ -4,7 +4,9 @@
 __pycache__
 outputs
 inputs/images
-inputs/metadata
+inputs/metadata/biochem
+inputs/metadata/metadata
+inputs/metadata/metadata.parquet
 inputs/profiles
 .RData
 .RHistory
