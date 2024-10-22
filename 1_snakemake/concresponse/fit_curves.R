@@ -1,6 +1,6 @@
 source("./concresponse/fastbmdR_main.R")
 source("./concresponse/fastbmdR_utils.R")
-require(tidyverse)
+require(dplyr)
 require(arrow)
 
 

@@ -1,5 +1,7 @@
-require(tidyverse)
+require(dplyr)
 require(arrow)
+require(foreach)
+require(doParallel)
 
 ############## 0. Read in and process data
 args <- commandArgs(trailingOnly = TRUE)
@@ -18,6 +20,10 @@ print(treatment)
 print(categories)
 print(methods)
 
+num_cores <- 30
+cl <- makeCluster(num_cores)
+registerDoParallel(cl)
+
 # Process data
 all_dat <- read_parquet(input_file) %>% as.data.frame()
 
@@ -34,7 +40,6 @@ dat <- all_dat[, feat_cols] %>% as.matrix()
 if ("gmd" %in% methods) {
   source("./concresponse/gmd_functions.R")
 
-  #if (!file.exists(output_dist)) {
     gmd_prep <- prep_gmd(dat, cover_var, treatment_labels)
 
     plates <- unique(all_dat$Metadata_Plate)
@@ -53,7 +58,6 @@ if ("gmd" %in% methods) {
       gmd_df <- rbind(gmd_df, plate_meta)
     }
     write_parquet(gmd_df, output_dist)
-  #}
 }
 
 
@@ -61,7 +65,6 @@ if ("gmd" %in% methods) {
 if ("cmd" %in% methods) {
   source("./concresponse/cmd_functions.R")
 
-  cmd_df <- data.frame()
   categories <- unlist(strsplit(categories, ","))
 
   # detect feature type
@@ -71,7 +74,8 @@ if ("cmd" %in% methods) {
     feat_type <- "dino"
   }
 
-  for (category in categories) {
+  cmd_df <- data.frame()
+  cmd_df <- foreach(category = categories, .combine = rbind, .packages = c("stringr")) %dopar% {
     print(category)
     if (feat_type == "dino") {
       category_cols <- colnames(dat)[grepl(category, colnames(dat))]
@@ -102,7 +106,9 @@ if ("cmd" %in% methods) {
       plate_meta$Distance <- cmd
       cmd_df <- rbind(cmd_df, plate_meta)
     }
+    return(cmd_df)
   }
-  ## NEED STEP TO CAST meta X Metadata_Distance, with Distance as value variable
+  stopCluster(cl)
+
   write_parquet(cmd_df, output_dist)
 }

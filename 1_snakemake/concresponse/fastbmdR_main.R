@@ -712,11 +712,11 @@ scoresPOD <- function(dat, dose, log10.dose=FALSE, num.sds = 1, filt.var = "AIC.
   
   models = c("Exp2","Exp3","Exp4","Exp5","Poly2","Lin","Power","Hill")
   
-  curve.res <- PerformCurveFitting(data = dat, dose = dose, ncpus = 1, models = models)
+  curve.res <- PerformCurveFitting(data = dat, dose = dose, ncpus = 10, models = models)
   curve.res <- FilterDRFit(curve.res, lof.pval = 0, filt.var = filt.var)
   
   if (dim(curve.res$fitres.filt)[1] > 0) {
-    bmds <- PerformBMDCalc(curve.res, ncpus = 1, num.sds = num.sds, bmr.method = "ctrl.quantile", log10.dose = log10.dose)
+    bmds <- PerformBMDCalc(curve.res, ncpus = 10, num.sds = num.sds, bmr.method = "ctrl.quantile", log10.dose = log10.dose)
   } else {
     bmds <- NULL
   }
