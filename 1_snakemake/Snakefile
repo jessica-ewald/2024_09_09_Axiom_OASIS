@@ -1,4 +1,4 @@
-configfile: "./inputs/conf/cellprofiler.json"
+configfile: "./inputs/conf/dino.json"
 
 # Load rules
 include: "rules/common.smk"
@@ -14,4 +14,5 @@ features = config["features"]
 
 rule all:
      input:
-          f"outputs/{features}/{scenario}/classifier_results/seal_binary_predictions.parquet"
+          f"outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
+          f"outputs/{features}/{scenario}/curves/plots/cp_plots.pdf"
