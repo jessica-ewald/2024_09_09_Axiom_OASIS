@@ -20,10 +20,6 @@ print(treatment)
 print(categories)
 print(methods)
 
-num_cores <- 30
-cl <- makeCluster(num_cores)
-registerDoParallel(cl)
-
 # Process data
 all_dat <- read_parquet(input_file) %>% as.data.frame()
 
@@ -38,6 +34,7 @@ dat <- all_dat[, feat_cols] %>% as.matrix()
 
 ############## 1. gmd
 if ("gmd" %in% methods) {
+  print("Running GMD")
   source("./concresponse/gmd_functions.R")
 
     gmd_prep <- prep_gmd(dat, cover_var, treatment_labels)
@@ -63,7 +60,12 @@ if ("gmd" %in% methods) {
 
 ############## 2. cmd
 if ("cmd" %in% methods) {
+  print("Running CMD")
   source("./concresponse/cmd_functions.R")
+
+  num_cores <- 30
+  cl <- makeCluster(num_cores)
+  registerDoParallel(cl)
 
   categories <- unlist(strsplit(categories, ","))
 
