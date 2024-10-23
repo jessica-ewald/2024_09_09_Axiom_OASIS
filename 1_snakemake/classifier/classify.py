@@ -7,12 +7,14 @@ from tqdm import tqdm
 from xgboost import XGBClassifier
 import cupy as cp
 from sklearn.preprocessing import LabelEncoder
+from tqdm.contrib.concurrent import thread_map
 
 
 def binary_classifier(
     dat: pd.DataFrame,
     meta: pd.DataFrame,
     n_splits: int,
+    gpu_id: int,
     *,
     shuffle: bool = False,
 ) -> pl.DataFrame:
@@ -47,44 +49,86 @@ def binary_classifier(
 
     pred_df = []
     fold = 1
-    for train_index, val_index in kf.split(x, y):
-        x_fold_train, x_fold_val = cp.array(x.iloc[train_index].to_numpy()), cp.array(x.iloc[val_index].to_numpy())
-        y_fold_train, y_fold_val = y.iloc[train_index], y.iloc[val_index]
+    with cp.cuda.Device(gpu_id):
+        for train_index, val_index in kf.split(x, y):
+            x_fold_train, x_fold_val = cp.array(x.iloc[train_index].to_numpy()), cp.array(x.iloc[val_index].to_numpy())
+            y_fold_train, y_fold_val = y.iloc[train_index], y.iloc[val_index]
 
-        le = LabelEncoder()
-        y_fold_train = cp.array(le.fit_transform(y_fold_train))
-        y_fold_val = cp.array(le.fit_transform(y_fold_val))
+            le = LabelEncoder()
+            y_fold_train = cp.array(le.fit_transform(y_fold_train))
+            y_fold_val = cp.array(le.fit_transform(y_fold_val))
 
-        meta_fold_val = meta.iloc[val_index]
+            meta_fold_val = meta.iloc[val_index]
 
-        # Initialize the model
-        model = XGBClassifier(
-            objective="binary:logistic",
-            n_estimators=150,
-            tree_method="hist",
-            device="cuda",
-            learning_rate=0.05,
-            scale_pos_weight=(y_fold_train == 0).sum() / (y_fold_train == 1).sum(),
-        )
+            # Initialize the model
+            model = XGBClassifier(
+                objective="binary:logistic",
+                n_estimators=150,
+                tree_method="hist",
+                device=f"cuda:{gpu_id}",
+                learning_rate=0.05,
+                scale_pos_weight=(y_fold_train == 0).sum() / (y_fold_train == 1).sum(),
+            )
 
-        # Train the model on the fold training set
-        model.fit(x_fold_train, y_fold_train)
+            # Train the model on the fold training set
+            model.fit(x_fold_train, y_fold_train)
 
-        # Validate the model on the fold validation set
-        y_fold_prob = model.predict_proba(x_fold_val)[:, 1]
-        y_fold_pred = model.predict(x_fold_val)
+            # Validate the model on the fold validation set
+            y_fold_prob = model.predict_proba(x_fold_val)[:, 1]
+            y_fold_pred = model.predict(x_fold_val)
 
-        pred_df.append(
-            pl.DataFrame({
-                "Metadata_OASIS_ID": list(meta_fold_val["Metadata_OASIS_ID"]),
-                "y_prob": list(y_fold_prob),
-                "y_pred": list(y_fold_pred),
-                "y_actual": list(y_fold_val),
-            }),
-        )
-        fold += 1
+            pred_df.append(
+                pl.DataFrame({
+                    "Metadata_OASIS_ID": list(meta_fold_val["Metadata_OASIS_ID"]),
+                    "y_prob": list(y_fold_prob),
+                    "y_pred": list(y_fold_pred),
+                    "y_actual": list(y_fold_val),
+                }),
+            )
+            fold += 1
 
     return pl.concat(pred_df, how="vertical")
+
+def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id):
+    """Process a single label_column and agg_type combination."""
+    try:
+        prof = dat.filter(
+            (pl.col("Metadata_AggType") == agg_type) & (pl.col(label_column).is_not_null())
+        ).rename({label_column: "Label"})
+
+        num_0 = prof.filter(pl.col("Label") == 0).height
+        num_1 = prof.filter(pl.col("Label") == 1).height
+
+        if (num_0 >= n_splits) & (num_1 >= n_splits):
+            meta_cols = [i for i in prof.columns if "Metadata_" in i]
+            all_meta_cols = [i for i in prof.columns if i in labels] + meta_cols
+
+            prof_meta = prof.select(meta_cols)
+            prof = prof.drop(all_meta_cols)
+
+            # Call your classifier
+            class_res = binary_classifier(
+                prof.to_pandas(),
+                prof_meta.to_pandas(),
+                n_splits=n_splits,
+                gpu_id=gpu_id,
+                shuffle=False,
+            )
+
+            # Add the metadata columns
+            class_res = class_res.with_columns(
+                pl.lit(agg_type).alias("Metadata_AggType"),
+                pl.lit(label_column).alias("Metadata_Label"),
+                pl.lit(num_0).alias("Metadata_Count_0"),
+                pl.lit(num_1).alias("Metadata_Count_1"),
+            )
+
+            return class_res
+
+    except Exception as e:
+        print(f"An error occurred for label '{label_column}' and aggregation type '{agg_type}':")
+        print(traceback.format_exc())
+        return None
 
 
 def predict_seal_binary(
@@ -105,6 +149,7 @@ def predict_seal_binary(
 
     """
     n_splits = 5
+    num_gpus = 8
 
     dat = pl.read_parquet(input_path)
     meta = pl.read_parquet(label_path).rename({"OASIS_ID": "Metadata_OASIS_ID"})
@@ -113,41 +158,22 @@ def predict_seal_binary(
     dat = dat.join(meta, on="Metadata_OASIS_ID", how="left")
 
     agg_types = dat.select("Metadata_AggType").to_series().unique().to_list()
-    pred_df = []
+    tasks = [
+        (dat, label_column, agg_type, n_splits, labels, i % num_gpus)
+        for i, (label_column, agg_type) in enumerate(
+            [(label_column, agg_type) for label_column in labels for agg_type in agg_types]
+        )
+    ]
 
-    for label_column in tqdm(labels):
-        for agg_type in agg_types:
-            prof = dat.filter(
-                (pl.col("Metadata_AggType") == agg_type) & (pl.col(label_column).is_not_null()),
-            ).rename({label_column: "Label"})
+    # Run the processing in parallel using thread_map
+    pred_results = thread_map(
+        lambda args: process_label_and_agg(*args),
+        tasks,
+        max_workers=num_gpus,
+        desc="Processing labels and agg_types",
+    )
 
-            num_0 = prof.filter(pl.col("Label") == 0).height
-            num_1 = prof.filter(pl.col("Label") == 1).height
-
-            if (num_0 >= n_splits) & (num_1 >= n_splits):
-                #try:
-                    meta_cols = [i for i in prof.columns if "Metadata_" in i]
-                    all_meta_cols = [i for i in prof.columns if i in labels] + meta_cols
-
-                    prof_meta = prof.select(meta_cols)
-                    prof = prof.drop(all_meta_cols)
-
-                    class_res = binary_classifier(
-                        prof.to_pandas(),
-                        prof_meta.to_pandas(),
-                        n_splits=n_splits,
-                        shuffle=False,
-                    )
-                    class_res = class_res.with_columns(
-                        pl.lit(agg_type).alias("Metadata_AggType"),
-                        pl.lit(label_column).alias("Metadata_Label"),
-                        pl.lit(num_0).alias("Metadata_Count_0"),
-                        pl.lit(num_1).alias("Metadata_Count_1"),
-                    )
-                    pred_df.append(class_res)
-                #except Exception:  # noqa: BLE001
-                    #print(f"An error occurred for label '{label_column}' and aggregation type '{agg_type}':")
-                    #print(traceback.format_exc())
-
-    pred_df = pl.concat(pred_df, how="vertical")
-    pred_df.write_parquet(output_path)
+    pred_results = [res for res in pred_results if res is not None]
+    if pred_results:
+        pred_df = pl.concat(pred_results, how="vertical")
+        pred_df.write_parquet(output_path)
