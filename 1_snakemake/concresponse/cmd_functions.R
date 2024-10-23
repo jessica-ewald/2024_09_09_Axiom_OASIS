@@ -1,4 +1,4 @@
-require(tidyverse)
+require(dplyr)
 require(arrow)
 
 compute_cmd <- function(dat, rot_mat, inv_cov, treatment, control) {

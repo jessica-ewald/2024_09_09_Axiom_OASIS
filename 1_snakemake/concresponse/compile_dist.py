@@ -5,7 +5,7 @@ def compile_dist(input_files: list, output_path: str) -> None:
     dfs = []
     for fp in input_files:
         dat = pl.read_parquet(fp)
-        dfs.append(dat.drop(["Metadata_image_id", "Metadata_microscope"]).unique())
+        dfs.append(dat.unique())
 
     dfs = pl.concat(dfs, how="vertical")
     meta_cols = [i for i in dfs.columns if "Metadata" in i and i != "Metadata_Distance"]

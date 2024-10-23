@@ -1,6 +1,7 @@
 import os
 
 import polars as pl
+from tqdm import tqdm
 
 
 def main() -> None:
@@ -20,15 +21,16 @@ def main() -> None:
     plates = [i for i in plates if "plate_" in i]
 
     # Get column schema
-    schema = pl.read_csv(f"{input_profile_path}/{plates[0]}")
+    schema = pl.read_csv(f"{input_profile_path}/{plates[0]}", infer_schema_length=10000)
     meta_cols = [col for col in schema.columns if "Metadata" in col]
     schema = schema.with_columns([pl.col(col).cast(pl.Float64) for col in schema.columns if col not in meta_cols])
     schema = schema.schema
 
     # Read in data for each plate
-    for plate in plates:
+    for plate in tqdm(plates):
         prof_path = f"{input_profile_path}/{plate}"
-        profiles.append(pl.read_csv(prof_path, infer_schema_length=10000))
+        profile = pl.read_csv(prof_path, schema=schema)
+        profiles.append(profile)
 
     # Concat together
     data = pl.concat(profiles, how="vertical_relaxed")

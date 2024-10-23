@@ -1,4 +1,4 @@
-require(tidyverse)
+require(dplyr)
 require(arrow)
 require(data.table)
 
