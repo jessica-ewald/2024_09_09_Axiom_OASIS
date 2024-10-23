@@ -5,6 +5,8 @@ import polars as pl
 from sklearn.model_selection import StratifiedKFold
 from tqdm import tqdm
 from xgboost import XGBClassifier
+import cupy as cp
+from sklearn.preprocessing import LabelEncoder
 
 
 def binary_classifier(
@@ -46,8 +48,13 @@ def binary_classifier(
     pred_df = []
     fold = 1
     for train_index, val_index in kf.split(x, y):
-        x_fold_train, x_fold_val = x.iloc[train_index], x.iloc[val_index]
+        x_fold_train, x_fold_val = cp.array(x.iloc[train_index].to_numpy()), cp.array(x.iloc[val_index].to_numpy())
         y_fold_train, y_fold_val = y.iloc[train_index], y.iloc[val_index]
+
+        le = LabelEncoder()
+        y_fold_train = cp.array(le.fit_transform(y_fold_train))
+        y_fold_val = cp.array(le.fit_transform(y_fold_val))
+
         meta_fold_val = meta.iloc[val_index]
 
         # Initialize the model
@@ -55,6 +62,7 @@ def binary_classifier(
             objective="binary:logistic",
             n_estimators=150,
             tree_method="hist",
+            device="cuda",
             learning_rate=0.05,
             scale_pos_weight=(y_fold_train == 0).sum() / (y_fold_train == 1).sum(),
         )
@@ -117,7 +125,7 @@ def predict_seal_binary(
             num_1 = prof.filter(pl.col("Label") == 1).height
 
             if (num_0 >= n_splits) & (num_1 >= n_splits):
-                try:
+                #try:
                     meta_cols = [i for i in prof.columns if "Metadata_" in i]
                     all_meta_cols = [i for i in prof.columns if i in labels] + meta_cols
 
@@ -137,9 +145,9 @@ def predict_seal_binary(
                         pl.lit(num_1).alias("Metadata_Count_1"),
                     )
                     pred_df.append(class_res)
-                except Exception:  # noqa: BLE001
-                    print(f"An error occurred for label '{label_column}' and aggregation type '{agg_type}':")
-                    print(traceback.format_exc())
+                #except Exception:  # noqa: BLE001
+                    #print(f"An error occurred for label '{label_column}' and aggregation type '{agg_type}':")
+                    #print(traceback.format_exc())
 
     pred_df = pl.concat(pred_df, how="vertical")
     pred_df.write_parquet(output_path)
