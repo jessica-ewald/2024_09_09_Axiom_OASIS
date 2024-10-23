@@ -1,6 +1,7 @@
 import os
 
 import polars as pl
+from tqdm import tqdm
 
 
 def main() -> None:
@@ -17,7 +18,7 @@ def main() -> None:
 
     profiles = []
     plates = os.listdir(input_profile_path)
-    for plate in plates:
+    for plate in tqdm(plates):
         prof_path = f"{input_profile_path}/{plate}"
         dat = pl.scan_parquet(prof_path)
 
@@ -27,7 +28,7 @@ def main() -> None:
         dat = (
             dat.group_by(["Metadata_Plate", "Metadata_Well"])
             .agg([
-                pl.first(meta_cols),
+                pl.first(meta_cols).exclude(["Metadata_Plate", "Metadata_Well"]),
                 pl.median(feat_cols),
             ])
             .collect()

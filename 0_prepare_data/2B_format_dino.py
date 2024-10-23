@@ -1,6 +1,7 @@
 import os
 
 import polars as pl
+from tqdm import tqdm
 
 
 def process_dino_plate(input_profile_path: str) -> pl.DataFrame:
@@ -42,6 +43,7 @@ def process_dino_plate(input_profile_path: str) -> pl.DataFrame:
         data.append(features)
 
     data = pl.DataFrame(data)
+    data = data.transpose()
     data.columns = feat_names
 
     data = data.with_columns(
@@ -64,7 +66,7 @@ def main() -> None:
 
     profiles = []
     plates = os.listdir(input_profile_path)
-    for plate in plates:
+    for plate in tqdm(plates):
         prof_path = f"{input_profile_path}/{plate}"
         profiles.append(process_dino_plate(prof_path))
 
@@ -76,7 +78,7 @@ def main() -> None:
     feat_cols = [i for i in data.columns if "Metadata_" not in i]
 
     data = data.group_by(["Metadata_Plate", "Metadata_Well"]).agg([
-        pl.first(meta_cols).exclude("Metadata_well_id"),
+        pl.first(meta_cols).exclude(["Metadata_well_id", "Metadata_Plate", "Metadata_Well"]),
         pl.median(feat_cols),
     ])
 

@@ -1,5 +1,5 @@
 
-require(tidyverse)
+require(dplyr)
 require(arrow)
 
 prep_gmd <- function(dat, cover_var, treatment_labels) {
