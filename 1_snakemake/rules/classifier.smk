@@ -19,6 +19,16 @@ rule predict_seal_binary:
     run:
         cl.classify.predict_seal_binary(*input, *output)
 
+rule predict_motive_binary:
+    input:
+        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
+        "inputs/annotations/motive_binary.parquet",
+    output:
+        "outputs/{features}/{scenario}/classifier_results/motive_binary_predictions.parquet",
+
+    run:
+        cl.classify.predict_seal_binary(*input, *output)
+
 
 rule predict_axiom_assays:
     input:
