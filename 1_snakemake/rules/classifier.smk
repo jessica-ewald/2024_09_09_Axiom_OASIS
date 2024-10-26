@@ -19,6 +19,19 @@ rule predict_seal_binary:
     run:
         cl.classify.predict_seal_binary(*input, *output)
 
+rule seal_binary_null:
+    input:
+        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
+        "inputs/annotations/seal_binary.parquet",
+    output:
+        "outputs/{features}/{scenario}/classifier_results/seal_binary_null.parquet",
+    params:
+        shuffle = True
+
+    run:
+        cl.classify.predict_seal_binary(*input, *output, shuffle=params.shuffle)
+
+
 rule predict_motive_binary:
     input:
         "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",

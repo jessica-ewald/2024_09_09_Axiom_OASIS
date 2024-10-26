@@ -89,7 +89,7 @@ def binary_classifier(
 
     return pl.concat(pred_df, how="vertical")
 
-def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id):
+def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id, *, shuffle: bool = False):
     """Process a single label_column and agg_type combination."""
     try:
         prof = dat.filter(
@@ -112,7 +112,7 @@ def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id)
                 prof_meta.to_pandas(),
                 n_splits=n_splits,
                 gpu_id=gpu_id,
-                shuffle=False,
+                shuffle=shuffle,
             )
 
             # Add the metadata columns
@@ -135,6 +135,8 @@ def predict_seal_binary(
     input_path: str,
     label_path: str,
     output_path: str,
+    *,
+    shuffle: bool = False
 ) -> None:
     """Build classifier for each of Srijit's outcomes.
 
@@ -167,7 +169,7 @@ def predict_seal_binary(
 
     # Run the processing in parallel using thread_map
     pred_results = thread_map(
-        lambda args: process_label_and_agg(*args),
+        lambda args: process_label_and_agg(*args, shuffle=shuffle),
         tasks,
         max_workers=num_gpus,
         desc="Processing labels and agg_types",
@@ -183,6 +185,8 @@ def predict_motive_binary(
     input_path: str,
     label_path: str,
     output_path: str,
+    *,
+    shuffle: bool = False
 ) -> None:
     """Build classifier for each of Srijit's outcomes.
 
@@ -215,7 +219,7 @@ def predict_motive_binary(
 
     # Run the processing in parallel using thread_map
     pred_results = thread_map(
-        lambda args: process_label_and_agg(*args),
+        lambda args: process_label_and_agg(*args, shuffle=shuffle),
         tasks,
         max_workers=num_gpus,
         desc="Processing labels and agg_types",
