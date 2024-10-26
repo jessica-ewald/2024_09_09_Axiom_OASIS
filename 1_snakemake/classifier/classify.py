@@ -131,57 +131,7 @@ def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id,
         return None
 
 
-def predict_seal_binary(
-    input_path: str,
-    label_path: str,
-    output_path: str,
-    *,
-    shuffle: bool = False
-) -> None:
-    """Build classifier for each of Srijit's outcomes.
-
-    Parameters
-    ----------
-    input_path : str
-        Filepath for input profiles.
-    label_path : str
-        Filepath for input binary labels.
-    output_path : str
-        Filepath for model classification results.
-
-    """
-    n_splits = 5
-    num_gpus = 8
-
-    dat = pl.read_parquet(input_path)
-    meta = pl.read_parquet(label_path).rename({"OASIS_ID": "Metadata_OASIS_ID"})
-    labels = [i for i in meta.columns if "Metadata_" not in i]
-
-    dat = dat.join(meta, on="Metadata_OASIS_ID", how="left")
-
-    agg_types = dat.select("Metadata_AggType").to_series().unique().to_list()
-    tasks = [
-        (dat, label_column, agg_type, n_splits, labels, i % num_gpus)
-        for i, (label_column, agg_type) in enumerate(
-            [(label_column, agg_type) for label_column in labels for agg_type in agg_types]
-        )
-    ]
-
-    # Run the processing in parallel using thread_map
-    pred_results = thread_map(
-        lambda args: process_label_and_agg(*args, shuffle=shuffle),
-        tasks,
-        max_workers=num_gpus,
-        desc="Processing labels and agg_types",
-    )
-
-    pred_results = [res for res in pred_results if res is not None]
-    if pred_results:
-        pred_df = pl.concat(pred_results, how="vertical")
-        pred_df.write_parquet(output_path)
-
-
-def predict_motive_binary(
+def predict_binary(
     input_path: str,
     label_path: str,
     output_path: str,

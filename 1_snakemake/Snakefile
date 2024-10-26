@@ -14,7 +14,7 @@ features = config["features"]
 
 rule all:
      input:
-          f"outputs/{features}/{scenario}/classifier_results/seal_binary_null.parquet",
+          f"outputs/{features}/{scenario}/classifier_results/motive_binary_null.parquet",
           f"outputs/{features}/{scenario}/curves/plots/cc_plots.pdf",
           f"outputs/{features}/{scenario}/curves/plots/mtt_plots.pdf",
           f"outputs/{features}/{scenario}/curves/plots/ldh_plots.pdf",
