@@ -1,4 +1,4 @@
-configfile: "./inputs/conf/dino.json"
+configfile: "./inputs/conf/cpcnn.json"
 
 # Load rules
 include: "rules/common.smk"
