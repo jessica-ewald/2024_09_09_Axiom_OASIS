@@ -1,9 +1,10 @@
 import polars as pl  # noqa: CPY001, D100, INP001
 
+# For now, we will ignore the more complex in vivo/ADME outcomes
 ann_files = [
-    "FINAL_oasis_fdaranks_cleaned.csv",
-    "FINAL_oasis_proxyDILI_cleaned.csv",
-    "FINAL_oasis_TDC_ADME_cleaned.csv",
+    #"FINAL_oasis_fdaranks_cleaned.csv",
+    #"FINAL_oasis_proxyDILI_cleaned.csv",
+    #"FINAL_oasis_TDC_ADME_cleaned.csv",
     "FINAL_oasis_toxcast_cleaned.csv",
     "FINAL_targetannotations_singleproteins_oasiscompounds.csv",
 ]

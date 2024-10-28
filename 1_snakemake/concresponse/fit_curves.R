@@ -1,7 +1,18 @@
-source("./concresponse/fastbmdR_main.R")
-source("./concresponse/fastbmdR_utils.R")
 require(dplyr)
 require(arrow)
+
+######## 0. Make sure fastbmdR is installed
+if (!requireNamespace("fastbmdR", quietly = TRUE)) {
+  
+  # Check if devtools is installed, and install it if not
+  if (!requireNamespace("devtools", quietly = TRUE)) {
+    install.packages("devtools")
+  }
+  
+  # Install fastbmdR from GitHub
+  devtools::install_github("jessica-ewald/fastbmdR@v0.0.0.9000")
+}
+library(fastbmdR)
 
 
 ######## 1. Parse arguments and define parameters
