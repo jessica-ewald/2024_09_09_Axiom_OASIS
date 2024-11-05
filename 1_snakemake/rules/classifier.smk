@@ -61,3 +61,14 @@ rule predict_axiom_assays:
         "outputs/{features}/{scenario}/classifier_results/plots_continuous.pdf",
     run:
         cl.regression.predict_axiom_assays(*input, *output)
+
+rule predict_axiom_null:
+    input:
+        "outputs/{features}/{scenario}/profiles/{scenario}.parquet"
+    output:
+        "outputs/{features}/{scenario}/classifier_results/axiom_assay_null.parquet",
+        "outputs/{features}/{scenario}/classifier_results/plots_continuous_null.pdf",
+    params:
+        shuffle = True
+    run:
+        cl.regression.predict_axiom_assays(*input, *output, shuffle=params.shuffle)
