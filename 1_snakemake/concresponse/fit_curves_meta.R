@@ -53,4 +53,8 @@ for (compound in compounds){
   bmd_res <- rbind(bmd_res, cc_pod)
 }
 
-write_parquet(as.data.frame(bmd_res), output_path)
+dat = dat[, c("Metadata_Compound", "Metadata_OASIS_ID")]
+bmd_res = as.data.frame(bmd_res)
+bmd_res = merge(bmd_res, dat, by="Metadata_Compound")
+
+write_parquet(bmd_res, output_path)

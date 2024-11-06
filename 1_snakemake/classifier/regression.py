@@ -121,6 +121,9 @@ def predict_axiom_assays(prof_path: str, prediction_path: str, plot_path: str, *
 
     # Write out predictions
     prediction_df = pl.concat([ldh, mtt, cc], how="vertical_relaxed")
+    prediction_df = prediction_df.with_columns(
+        pl.col("Observed").arr.first().cast(pl.Float32).alias("Observed")
+    )
     prediction_df.write_parquet(prediction_path)
 
     # Analyze results

@@ -1,4 +1,4 @@
-configfile: "./inputs/conf/cellprofiler.json"
+configfile: "./inputs/conf/dino.json"
 
 # Load rules
 include: "rules/common.smk"
@@ -16,3 +16,4 @@ rule all:
      input:
           f"outputs/{features}/{scenario}/classifier_results/axiom_assay_null.parquet",
           f"outputs/{features}/{scenario}/classifier_results/axiom_assay_predictions.parquet",
+          f"outputs/{features}/{scenario}/curves/ldhpods.parquet"
