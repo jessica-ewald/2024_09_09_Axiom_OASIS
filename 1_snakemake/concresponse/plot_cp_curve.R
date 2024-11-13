@@ -2,8 +2,18 @@ require(dplyr)
 require(arrow)
 require(ggplot2)
 require(ggforce)
-source("./concresponse/fastbmdR_main.R")
-source("./concresponse/fastbmdR_utils.R")
+
+if (!requireNamespace("fastbmdR", quietly = TRUE)) {
+  
+  # Check if remotes is installed, and install it if not
+  if (!requireNamespace("remotes", quietly = TRUE)) {
+    install.packages("remotes")
+  }
+  
+  # Install fastbmdR from GitHub
+  remotes::install_github("jessica-ewald/fastbmdR@v0.0.0.9000")
+}
+library(fastbmdR)
 
 
 #### 1. Read in data and set common parameters

@@ -1,4 +1,4 @@
-configfile: "./inputs/conf/dino.json"
+configfile: "./inputs/conf/cpcnn.json"
 
 # Load rules
 include: "rules/common.smk"
@@ -14,6 +14,13 @@ features = config["features"]
 
 rule all:
      input:
-          f"outputs/{features}/{scenario}/classifier_results/axiom_assay_null.parquet",
-          f"outputs/{features}/{scenario}/classifier_results/axiom_assay_predictions.parquet",
-          f"outputs/{features}/{scenario}/curves/ldhpods.parquet"
+          #f"outputs/{features}/{scenario}/classifier_results/axiom_assay_null.parquet",
+          #f"outputs/{features}/{scenario}/classifier_results/axiom_assay_predictions.parquet",
+          f"outputs/{features}/{scenario}/curves/ldhpods.parquet",
+          f"outputs/{features}/{scenario}/curves/mttpods.parquet",
+          f"outputs/{features}/{scenario}/curves/ccpods.parquet",
+          f"outputs/{features}/{scenario}/curves/pods.parquet",
+          f"outputs/{features}/{scenario}/curves/plots/mtt_plots.pdf",
+          f"outputs/{features}/{scenario}/curves/plots/cc_plots.pdf",
+          f"outputs/{features}/{scenario}/curves/plots/ldh_plots.pdf",
+          f"outputs/{features}/{scenario}/curves/plots/cp_plots.pdf",

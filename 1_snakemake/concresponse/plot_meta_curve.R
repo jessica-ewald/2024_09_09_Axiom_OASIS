@@ -2,8 +2,52 @@ require(dplyr)
 require(arrow)
 require(ggplot2)
 require(ggforce)
-source("./concresponse/fastbmdR_main.R")
-source("./concresponse/fastbmdR_utils.R")
+require(reshape2)
+
+if (!requireNamespace("fastbmdR", quietly = TRUE)) {
+  
+  # Check if remotes is installed, and install it if not
+  if (!requireNamespace("remotes", quietly = TRUE)) {
+    install.packages("remotes")
+  }
+  
+  # Install fastbmdR from GitHub
+  remotes::install_github("jessica-ewald/fastbmdR@v0.0.0.9000")
+}
+library(fastbmdR)
+
+#### 0. Define helper functions for plot fits
+Exp2 <- function(b,c,d,e,f,dose){
+  return(e * exp(b * dose))
+}
+
+Exp3 <- function(b,c,d,e,f,dose){
+  return(e * (exp(sign(b) * (abs(b) * dose)^d)))
+}
+
+Exp4 <- function(b,c,d,e,f,dose){
+  return(e * (c - (c - 1) * exp((-1) * b * dose)))
+}
+
+Exp5 <- function(b,c,d,e,f,dose){
+  return(e * (c - (c - 1) * exp((-1) * (b * dose)^d)))
+}
+
+Hill <- function(b,c,d,e,f,dose){
+  return(c + (d - c)/(1 + (dose/e)^b))
+}
+
+Pow <- function(b,c,d,e,f,dose){
+  return(e + b * (dose^c))
+}
+
+Poly2 <- function(b,c,d,e,f,dose){
+  return(b + c * (dose) + d * (dose^2))
+}
+
+Lin <- function(b,c,d,e,f,dose){
+  return(d + b * (dose))
+}
 
 
 #### 1. Read in data and set common parameters

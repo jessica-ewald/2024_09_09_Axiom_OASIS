@@ -18,16 +18,16 @@ def call_hits(
     cc = pl.read_parquet(cc_path)
 
     # 2. Get hits
-    hits = mtt.select("Metadata_Compound")
+    hits = mtt.select("Metadata_OASIS_ID")
 
-    mtt_hits = mtt.filter(pl.col("all.pass") == True).select("Metadata_Compound").to_series().to_list()
-    ldh_hits = ldh.filter(pl.col("all.pass") == True).select("Metadata_Compound").to_series().to_list()
-    cc_hits = cc.filter(pl.col("all.pass") == True).select("Metadata_Compound").to_series().to_list()
+    mtt_hits = mtt.filter(pl.col("all.pass") == True).select("Metadata_OASIS_ID").to_series().to_list()
+    ldh_hits = ldh.filter(pl.col("all.pass") == True).select("Metadata_OASIS_ID").to_series().to_list()
+    cc_hits = cc.filter(pl.col("all.pass") == True).select("Metadata_OASIS_ID").to_series().to_list()
 
     hits = hits.with_columns(
-        pl.when(pl.col("Metadata_Compound").is_in(mtt_hits)).then(pl.lit(1)).otherwise(pl.lit(0)).alias("MTT"),
-        pl.when(pl.col("Metadata_Compound").is_in(ldh_hits)).then(pl.lit(1)).otherwise(pl.lit(0)).alias("LDH"),
-        pl.when(pl.col("Metadata_Compound").is_in(cc_hits)).then(pl.lit(1)).otherwise(pl.lit(0)).alias("cell_count"),
+        pl.when(pl.col("Metadata_OASIS_ID").is_in(mtt_hits)).then(pl.lit(1)).otherwise(pl.lit(0)).alias("MTT"),
+        pl.when(pl.col("Metadata_OASIS_ID").is_in(ldh_hits)).then(pl.lit(1)).otherwise(pl.lit(0)).alias("LDH"),
+        pl.when(pl.col("Metadata_OASIS_ID").is_in(cc_hits)).then(pl.lit(1)).otherwise(pl.lit(0)).alias("cell_count"),
     )
 
     # 3. Write out results
