@@ -30,5 +30,7 @@ def call_hits(
         pl.when(pl.col("Metadata_OASIS_ID").is_in(cc_hits)).then(pl.lit(1)).otherwise(pl.lit(0)).alias("cell_count"),
     )
 
+    hits = hits.rename({"Metadata_OASIS_ID": "OASIS_ID"})
+
     # 3. Write out results
     hits.write_parquet(hits_path)

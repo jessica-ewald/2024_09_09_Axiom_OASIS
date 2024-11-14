@@ -63,21 +63,21 @@ rule motive_binary_null:
         cl.classify.predict_binary(*input, *output, shuffle=params.shuffle)
 
 
-rule predict_axiom_assays:
+rule predict_axiom_continuous:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}.parquet"
     output:
-        "outputs/{features}/{scenario}/classifier_results/axiom_assay_predictions.parquet",
-        "outputs/{features}/{scenario}/classifier_results/plots_continuous.pdf",
+        "outputs/{features}/{scenario}/classifier_results/axiom_continuous_predictions.parquet",
+        "outputs/{features}/{scenario}/classifier_results/plots/axiom_continuous_predictions.pdf",
     run:
         cl.regression.predict_axiom_assays(*input, *output)
 
-rule predict_axiom_null:
+rule predict_axiom_continuous_null:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}.parquet"
     output:
-        "outputs/{features}/{scenario}/classifier_results/axiom_assay_null.parquet",
-        "outputs/{features}/{scenario}/classifier_results/plots_continuous_null.pdf",
+        "outputs/{features}/{scenario}/classifier_results/axiom_continuous_null.parquet",
+        "outputs/{features}/{scenario}/classifier_results/plots/axiom_continuous_null.pdf",
     params:
         shuffle = True
     run:
