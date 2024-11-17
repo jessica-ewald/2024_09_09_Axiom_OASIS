@@ -10,10 +10,14 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import KFold
 
 
-def xgboost_regression(dat: pl.DataFrame, target: str, feat_cols: list, id_cols: list) -> pl.DataFrame:
+def xgboost_regression(dat: pl.DataFrame, target: str, feat_cols: list, id_cols: list, *, shuffle: bool = False) -> pl.DataFrame:
     """Predict continuous metadata from profiling data with XGBoost."""
     x = dat.select(feat_cols).to_numpy()
-    y = dat[target].to_numpy()
+
+    if shuffle:
+        y = dat.select(pl.col(target).shuffle(seed=42)).to_numpy()
+    else:
+        y = dat.select(pl.col(target)).to_numpy()
 
     model = xgb.XGBRegressor(objective="reg:squarederror")
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
@@ -43,49 +47,8 @@ def xgboost_regression(dat: pl.DataFrame, target: str, feat_cols: list, id_cols:
     id_df = pl.DataFrame(id_values, schema={col: dat[col].dtype for col in id_cols})
     return pl.concat([id_df, result_df], how="horizontal")
 
-
-def mse_per_bin(dat: pl.DataFrame, n_bins: int, variable: str) -> (pl.DataFrame, pl.DataFrame):
-    """Compute the mean squred error per observation bin for an XGBoost regression model."""
-    dat = dat.filter(pl.col("Variable_Name") == variable)
-    observed_values = dat["Observed"].to_numpy()
-    bins = np.linspace(observed_values.min(), observed_values.max(), n_bins + 1)
-    bin_indices = np.digitize(observed_values, bins) - 1
-
-    dat = dat.with_columns([
-        pl.Series(name="Observed_bins", values=bin_indices),
-    ])
-
-    mse_per_bin = dat.group_by("Observed_bins").agg([
-        pl.map_groups(
-            [pl.col("Observed"), pl.col("Predicted")],
-            lambda x: mean_squared_error(x[0], x[1]),
-        ).alias("mse"),
-    ])
-
-    dat = dat.to_pandas()
-    mse_per_bin = mse_per_bin.to_pandas()
-
-    bin_midpoints = []
-    mse_values = []
-    for i in range(len(bins) - 1):
-        bin_mid = (bins[i] + bins[i + 1]) / 2
-        if i in mse_per_bin["Observed_bins"]:
-            bin_midpoints.append(bin_mid)
-            mse_values.append(mse_per_bin["mse"][i])
-
-    mse_df = pd.DataFrame({
-        "bin_mid": bin_midpoints,
-        "mse": mse_values,
-    })
-
-    return dat, mse_df
-
-
 def make_plots(pred: pl.DataFrame, output_path: str) -> None:
     """Plot observed vs. predicted and mse per bin."""
-    ldh, mse_ldh = mse_per_bin(pred, 10, "Metadata_ldh_normalized")
-    mtt, mse_mtt = mse_per_bin(pred, 10, "Metadata_mtt_normalized")
-    cc, mse_cc = mse_per_bin(pred, 10, "Metadata_Count_Cells")
 
     # TODO add R2 to overall plot
     mpl.use("Agg")
@@ -93,7 +56,7 @@ def make_plots(pred: pl.DataFrame, output_path: str) -> None:
         pn.options.figure_size = (8, 8)
 
         plot1 = (
-            ggplot(ldh, aes(x="Observed", y="Predicted"))
+            ggplot(pred.filter(pl.col("Variable_Name") == "Metadata_ldh_normalized"), aes(x="Observed", y="Predicted"))
             + geom_point(alpha=0.6)
             + labs(
                 x="Observed",
@@ -105,18 +68,7 @@ def make_plots(pred: pl.DataFrame, output_path: str) -> None:
         pdf.savefig(plot1.draw())
 
         plot2 = (
-            ggplot(mse_ldh, aes(x="bin_mid", y="mse"))
-            + geom_line()
-            + theme_bw()
-            + labs(
-                x="Observed LDH (bin)",
-                y="MSE",
-            )
-        )
-        pdf.savefig(plot2.draw())
-
-        plot3 = (
-            ggplot(mtt, aes(x="Observed", y="Predicted"))
+            ggplot(pred.filter(pl.col("Variable_Name") == "Metadata_mtt_normalized"), aes(x="Observed", y="Predicted"))
             + geom_point(alpha=0.6)
             + labs(
                 x="Observed",
@@ -125,21 +77,10 @@ def make_plots(pred: pl.DataFrame, output_path: str) -> None:
             )
             + theme_bw()
         )
-        pdf.savefig(plot3.draw())
+        pdf.savefig(plot2.draw())
 
-        plot4 = (
-            ggplot(mse_mtt, aes(x="bin_mid", y="mse"))
-            + geom_line()
-            + theme_bw()
-            + labs(
-                x="Observed MTT (bin)",
-                y="MSE",
-            )
-        )
-        pdf.savefig(plot4.draw())
-
-        plot5 = (
-            ggplot(cc, aes(x="Observed", y="Predicted"))
+        plot3 = (
+            ggplot(pred.filter(pl.col("Variable_Name") == "Metadata_Count_Cells"), aes(x="Observed", y="Predicted"))
             + geom_point(alpha=0.6)
             + labs(
                 x="Observed",
@@ -148,27 +89,12 @@ def make_plots(pred: pl.DataFrame, output_path: str) -> None:
             )
             + theme_bw()
         )
-        pdf.savefig(plot5.draw())
-
-        plot6 = (
-            ggplot(mse_cc, aes(x="bin_mid", y="mse"))
-            + geom_line()
-            + theme_bw()
-            + labs(
-                x="Observed cell count (bin)",
-                y="MSE",
-            )
-        )
-        pdf.savefig(plot6.draw())
+        pdf.savefig(plot3.draw())
 
 
-def predict_axiom_assays(prof_path: str, prediction_path: str, plot_path: str) -> None:
+def predict_axiom_assays(prof_path: str, prediction_path: str, plot_path: str, *, shuffle: bool = False) -> None:
     """Train XGBoost regression model to predict Axiom assays."""
     profiles = pl.read_parquet(prof_path)
-    profiles = profiles.with_columns(
-        (pl.col("Metadata_ldh_normalized") / pl.col("Metadata_Count_Cells")).alias("Metadata_ldh_cc"),
-        (pl.col("Metadata_mtt_normalized") / pl.col("Metadata_Count_Cells")).alias("Metadata_mtt_cc"),
-    )
     feat_cols = [i for i in profiles.columns if "Metadata" not in i]
     id_cols = ["Metadata_Plate", "Metadata_Well", "Metadata_Compound", "Metadata_Log10Conc"]
 
@@ -177,39 +103,28 @@ def predict_axiom_assays(prof_path: str, prediction_path: str, plot_path: str) -
         "Metadata_ldh_normalized",
         feat_cols,
         id_cols,
+        shuffle=shuffle
     )
     ldh = ldh.with_columns(
         pl.lit("Metadata_ldh_normalized").alias("Variable_Name"),
     )
 
-    mtt = xgboost_regression(profiles, "Metadata_mtt_normalized", feat_cols, id_cols)
+    mtt = xgboost_regression(profiles, "Metadata_mtt_normalized", feat_cols, id_cols, shuffle=shuffle)
     mtt = mtt.with_columns(
         pl.lit("Metadata_mtt_normalized").alias("Variable_Name"),
     )
 
-    cc = xgboost_regression(profiles, "Metadata_Count_Cells", feat_cols, id_cols)
+    cc = xgboost_regression(profiles, "Metadata_Count_Cells", feat_cols, id_cols, shuffle=shuffle)
     cc = cc.with_columns(
         pl.lit("Metadata_Count_Cells").alias("Variable_Name"),
     )
-    cc_cols = cc.columns
-    cc = cc.with_columns(
-        pl.col("Observed").cast(pl.Float32).alias("Observed"),
-        pl.col("Predicted").cast(pl.Float32).alias("Predicted"),
-    ).select(cc_cols)
 
     # Write out predictions
     prediction_df = pl.concat([ldh, mtt, cc], how="vertical_relaxed")
+    prediction_df = prediction_df.with_columns(
+        pl.col("Observed").arr.first().cast(pl.Float32).alias("Observed")
+    )
     prediction_df.write_parquet(prediction_path)
 
     # Analyze results
     make_plots(prediction_df, plot_path)
-
-
-def predict_seal_continuous(prof_path: str, label_path: str, prediction_path: str, plot_path: str) -> None:
-    """Train XGBoost regression model to predict Seal continuous assays."""
-    dat = pl.read_parquet(prof_path)
-    labels = pl.read_parquet(label_path)
-
-    # place holder before I write the function
-    dat.write_parquet(prediction_path)
-    labels.write_parquet(plot_path)

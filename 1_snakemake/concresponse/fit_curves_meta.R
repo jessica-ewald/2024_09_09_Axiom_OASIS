@@ -4,13 +4,13 @@ require(arrow)
 ######## 0. Make sure fastbmdR is installed
 if (!requireNamespace("fastbmdR", quietly = TRUE)) {
   
-  # Check if devtools is installed, and install it if not
-  if (!requireNamespace("devtools", quietly = TRUE)) {
-    install.packages("devtools")
+  # Check if remotes is installed, and install it if not
+  if (!requireNamespace("remotes", quietly = TRUE)) {
+    install.packages("remotes")
   }
   
   # Install fastbmdR from GitHub
-  devtools::install_github("jessica-ewald/fastbmdR@v0.0.0.9000")
+  remotes::install_github("jessica-ewald/fastbmdR@v0.0.0.9000")
 }
 library(fastbmdR)
 
@@ -53,4 +53,9 @@ for (compound in compounds){
   bmd_res <- rbind(bmd_res, cc_pod)
 }
 
-write_parquet(as.data.frame(bmd_res), output_path)
+dat = dat[, c("Metadata_Compound", "Metadata_OASIS_ID")]
+dat = distinct(dat)
+bmd_res = as.data.frame(bmd_res)
+bmd_res = merge(bmd_res, dat, by="Metadata_Compound")
+
+write_parquet(bmd_res, output_path)
