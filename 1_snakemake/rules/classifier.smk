@@ -61,6 +61,27 @@ rule toxcast_cellfree_binary_null:
     run:
         cl.classify.predict_binary(*input, *output, shuffle=params.shuffle)
 
+rule toxcast_cytotox_binary:
+    input:
+        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
+        "inputs/annotations/toxcast_cytotox_binary.parquet",
+    output:
+        "outputs/{features}/{scenario}/classifier_results/toxcast_cytotox_binary_predictions.parquet",
+    run:
+        cl.classify.predict_binary(*input, *output)
+
+
+rule toxcast_cytotox_binary_null:
+    input:
+        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
+        "inputs/annotations/toxcast_cytotox_binary.parquet",
+    output:
+        "outputs/{features}/{scenario}/classifier_results/toxcast_cytotox_binary_null.parquet",
+    params:
+        shuffle = True
+    run:
+        cl.classify.predict_binary(*input, *output, shuffle=params.shuffle)
+
 rule predict_axiom_continuous:
     input:
         "outputs/{features}/{scenario}/profiles/{scenario}.parquet"
