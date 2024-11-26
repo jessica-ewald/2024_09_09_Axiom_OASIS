@@ -1,4 +1,4 @@
-configfile: "./inputs/conf/cpcnn.json"
+configfile: "./inputs/conf/cellprofiler.json"
 
 # Load rules
 include: "rules/common.smk"
@@ -23,7 +23,7 @@ rule all:
           f"outputs/{features}/{scenario}/curves/ccpods.parquet",
           f"outputs/{features}/{scenario}/curves/pods.parquet",
           f"outputs/{features}/{scenario}/curves/axiom_hits.parquet",
-          #f"outputs/{features}/{scenario}/curves/plots/mtt_plots.pdf",
-          #f"outputs/{features}/{scenario}/curves/plots/cc_plots.pdf",
-          #f"outputs/{features}/{scenario}/curves/plots/ldh_plots.pdf",
-          #f"outputs/{features}/{scenario}/curves/plots/cp_plots.pdf",
+          f"outputs/{features}/{scenario}/classifier_results/toxcast_cellbased_binary_predictions.parquet",
+          f"outputs/{features}/{scenario}/classifier_results/toxcast_cellbased_binary_null.parquet",
+          f"outputs/{features}/{scenario}/classifier_results/toxcast_cellfree_binary_predictions.parquet",
+          f"outputs/{features}/{scenario}/classifier_results/toxcast_cellfree_binary_null.parquet",

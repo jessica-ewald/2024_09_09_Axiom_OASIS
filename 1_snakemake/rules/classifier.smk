@@ -19,49 +19,47 @@ rule axiom_assay_hitcall:
         cl.hitcalls.call_hits(*input, *output)
 
 
-rule predict_seal_binary:
+rule toxcast_cellbased_binary:
     input:
         "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
-        "inputs/annotations/seal_binary.parquet",
+        "inputs/annotations/toxcast_cellbased_binary.parquet",
     output:
-        "outputs/{features}/{scenario}/classifier_results/seal_binary_predictions.parquet",
+        "outputs/{features}/{scenario}/classifier_results/toxcast_cellbased_binary_predictions.parquet",
     run:
         cl.classify.predict_binary(*input, *output)
 
 
-rule seal_binary_null:
+rule toxcast_cellbased_binary_null:
     input:
         "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
-        "inputs/annotations/seal_binary.parquet",
+        "inputs/annotations/toxcast_cellbased_binary.parquet",
     output:
-        "outputs/{features}/{scenario}/classifier_results/seal_binary_null.parquet",
+        "outputs/{features}/{scenario}/classifier_results/toxcast_cellbased_binary_null.parquet",
     params:
         shuffle = True
     run:
         cl.classify.predict_binary(*input, *output, shuffle=params.shuffle)
 
-
-rule predict_motive_binary:
+rule toxcast_cellfree_binary:
     input:
         "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
-        "inputs/annotations/motive_binary.parquet",
+        "inputs/annotations/toxcast_cellfree_binary.parquet",
     output:
-        "outputs/{features}/{scenario}/classifier_results/motive_binary_predictions.parquet",
+        "outputs/{features}/{scenario}/classifier_results/toxcast_cellfree_binary_predictions.parquet",
     run:
         cl.classify.predict_binary(*input, *output)
 
 
-rule motive_binary_null:
+rule toxcast_cellfree_binary_null:
     input:
         "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
-        "inputs/annotations/motive_binary.parquet",
+        "inputs/annotations/toxcast_cellfree_binary.parquet",
     output:
-        "outputs/{features}/{scenario}/classifier_results/motive_binary_null.parquet",
+        "outputs/{features}/{scenario}/classifier_results/toxcast_cellfree_binary_null.parquet",
     params:
         shuffle = True
     run:
         cl.classify.predict_binary(*input, *output, shuffle=params.shuffle)
-
 
 rule predict_axiom_continuous:
     input:
