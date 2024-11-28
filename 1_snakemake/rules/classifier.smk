@@ -29,17 +29,6 @@ rule toxcast_cellbased_binary:
         cl.classify.predict_binary(*input, *output)
 
 
-rule toxcast_cellbased_binary_null:
-    input:
-        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
-        "inputs/annotations/toxcast_cellbased_binary.parquet",
-    output:
-        "outputs/{features}/{scenario}/classifier_results/toxcast_cellbased_binary_null.parquet",
-    params:
-        shuffle = True
-    run:
-        cl.classify.predict_binary(*input, *output, shuffle=params.shuffle)
-
 rule toxcast_cellfree_binary:
     input:
         "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
@@ -49,17 +38,6 @@ rule toxcast_cellfree_binary:
     run:
         cl.classify.predict_binary(*input, *output)
 
-
-rule toxcast_cellfree_binary_null:
-    input:
-        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
-        "inputs/annotations/toxcast_cellfree_binary.parquet",
-    output:
-        "outputs/{features}/{scenario}/classifier_results/toxcast_cellfree_binary_null.parquet",
-    params:
-        shuffle = True
-    run:
-        cl.classify.predict_binary(*input, *output, shuffle=params.shuffle)
 
 rule toxcast_cytotox_binary:
     input:
@@ -71,16 +49,15 @@ rule toxcast_cytotox_binary:
         cl.classify.predict_binary(*input, *output)
 
 
-rule toxcast_cytotox_binary_null:
+rule predict_axiom_binary:
     input:
         "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
-        "inputs/annotations/toxcast_cytotox_binary.parquet",
+        "outputs/{features}/{scenario}/curves/axiom_hits.parquet",
     output:
-        "outputs/{features}/{scenario}/classifier_results/toxcast_cytotox_binary_null.parquet",
-    params:
-        shuffle = True
+        "outputs/{features}/{scenario}/classifier_results/axiom_binary_predictions.parquet",
     run:
-        cl.classify.predict_binary(*input, *output, shuffle=params.shuffle)
+        cl.classify.predict_binary(*input, *output)
+
 
 rule predict_axiom_continuous:
     input:
@@ -90,6 +67,7 @@ rule predict_axiom_continuous:
         "outputs/{features}/{scenario}/classifier_results/plots/axiom_continuous_predictions.pdf",
     run:
         cl.regression.predict_axiom_assays(*input, *output)
+
 
 rule predict_axiom_continuous_null:
     input:
@@ -101,23 +79,3 @@ rule predict_axiom_continuous_null:
         shuffle = True
     run:
         cl.regression.predict_axiom_assays(*input, *output, shuffle=params.shuffle)
-
-rule predict_axiom_binary:
-    input:
-        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
-        "outputs/{features}/{scenario}/curves/axiom_hits.parquet",
-    output:
-        "outputs/{features}/{scenario}/classifier_results/axiom_binary_predictions.parquet",
-    run:
-        cl.classify.predict_binary(*input, *output)
-
-rule predict_axiom_binary_null:
-    input:
-        "outputs/{features}/{scenario}/aggregated_profiles/agg.parquet",
-        "outputs/{features}/{scenario}/curves/axiom_hits.parquet",
-    output:
-        "outputs/{features}/{scenario}/classifier_results/axiom_binary_null.parquet",
-    params:
-        shuffle = True
-    run:
-        cl.classify.predict_binary(*input, *output, shuffle=params.shuffle)

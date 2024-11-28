@@ -83,6 +83,7 @@ def binary_classifier(
                     "y_prob": list(y_fold_prob),
                     "y_pred": list(y_fold_pred),
                     "y_actual": list(y_fold_val),
+                    "k_fold": fold,
                 }),
             )
             fold += 1
@@ -135,8 +136,6 @@ def predict_binary(
     input_path: str,
     label_path: str,
     output_path: str,
-    *,
-    shuffle: bool = False
 ) -> None:
     """Build classifier for each of Srijit's outcomes.
 
@@ -167,9 +166,9 @@ def predict_binary(
         )
     ]
 
-    # Run the processing in parallel using thread_map
+    # Train actual models
     pred_results = thread_map(
-        lambda args: process_label_and_agg(*args, shuffle=shuffle),
+        lambda args: process_label_and_agg(*args, shuffle=False),
         tasks,
         max_workers=num_gpus,
         desc="Processing labels and agg_types",
@@ -178,4 +177,25 @@ def predict_binary(
     pred_results = [res for res in pred_results if res is not None]
     if pred_results:
         pred_df = pl.concat(pred_results, how="vertical")
-        pred_df.write_parquet(output_path)
+        pred_df = pred_df.with_columns(
+            pl.lit("Actual").alias("Model_type")
+        )
+
+    # Random baseline
+    null_results = thread_map(
+        lambda args: process_label_and_agg(*args, shuffle=True),
+        tasks,
+        max_workers=num_gpus,
+        desc="Processing labels and agg_types",
+    )
+
+    null_results = [res for res in null_results if res is not None]
+    if null_results:
+        null_df = pl.concat(null_results, how="vertical")
+        null_df = null_df.with_columns(
+            pl.lit("Random_baseline").alias("Model_type")
+        )
+
+    # write out results
+    if not pred_df.is_empty() and not null_df.is_empty():
+        pl.concat([pred_df, null_df], how="vertical").write_parquet(output_path)
