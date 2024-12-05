@@ -169,3 +169,6 @@ s3_credentials.sh
 to_do.txt
 
 .sqlite
+
+XX_preprocessing/output/standardized_smilesXX_preprocessing/output/refchemdb_jump.csv
+XX_preprocessing/output/refchemdb_inchikey.csv
