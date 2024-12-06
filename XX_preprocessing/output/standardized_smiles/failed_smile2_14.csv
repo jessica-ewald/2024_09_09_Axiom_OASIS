@@ -1,0 +1,26 @@
+,Unnamed: 0,INPUT,FOUND_BY,DTXSID,PREFERRED_NAME,smiles
+325,5825,DTXSID80302498,DSSTox_Substance_Id,DTXSID80302498,"7-[3-(5,5-dimethyl-4-oxofuran-2-yl)butoxy]chromen-2-one",CC(CCOC1=CC2=C(C=CC(=O)O2)C=C1)C1=CC(=O)C(C)(C)O1
+326,5826,DTXSID30197391,DSSTox_Substance_Id,DTXSID30197391,"2,3-Dihydro-1H-isoindol-1-one",O=C1NCC2=CC=CC=C12
+327,5827,DTXSID0058984,DSSTox_Substance_Id,DTXSID0058984,"Benzenesulfonamide, 3-(4,5-dihydro-3-methyl-5-oxo-1H-pyrazol-1-yl)-",CC1=NN(C(=O)C1)C1=CC=CC(=C1)S(N)(=O)=O
+328,5828,DTXSID2020347,DSSTox_Substance_Id,DTXSID2020347,Coumaphos,CCOP(=S)(OCC)OC1=CC2=C(C=C1)C(C)=C(Cl)C(=O)O2
+329,5829,DTXSID7043744,DSSTox_Substance_Id,DTXSID7043744,N-(1-Naphthyl)ethylenediamine,NCCNC1=C2C=CC=CC2=CC=C1
+330,5830,DTXSID7059145,DSSTox_Substance_Id,DTXSID7059145,"Benzoic acid, 2-hydroxy-5-sulfo-",OC(=O)C1=C(O)C=CC(=C1)S(O)(=O)=O
+331,5831,DTXSID10555657,DSSTox_Substance_Id,DTXSID10555657,S-(5-Chloro-4-methyl-2-sulfamoylphenyl) ethanethioate,CC(=O)SC1=C(C=C(C)C(Cl)=C1)S(N)(=O)=O
+332,5832,DTXSID10419866,DSSTox_Substance_Id,DTXSID10419866,4-(chloromethyl)-7-hydroxy-2H-chromen-2-one,OC1=CC2=C(C=C1)C(CCl)=CC(=O)O2
+333,5833,DTXSID3062865,DSSTox_Substance_Id,DTXSID3062865,Methanesulfonamide,CS(N)(=O)=O
+334,5834,DTXSID80179960,DSSTox_Substance_Id,DTXSID80179960,"Benzoic acid, p-bromo-, sodium salt",[Na+].[O-]C(=O)C1=CC=C(Br)C=C1
+335,5835,DTXSID50659805,DSSTox_Substance_Id,DTXSID50659805,Sodium trihydroxy(phenyl)borate(1-),[Na+].O[B-](O)(O)C1=CC=CC=C1
+336,5836,DTXSID80194299,DSSTox_Substance_Id,DTXSID80194299,"2-(2-Propynyl)-1,2-benzisothiazol-3(2H)-one 1,1-dioxide",O=C1N(CC#C)S(=O)(=O)C2=CC=CC=C12
+337,5837,DTXSID10393910,DSSTox_Substance_Id,DTXSID10393910,"4-(1,3-Dioxo-1,3-dihydro-2H-isoindol-2-yl)benzene-1-sulfonamide",NS(=O)(=O)C1=CC=C(C=C1)N1C(=O)C2=CC=CC=C2C1=O
+338,5838,DTXSID6045296,DSSTox_Substance_Id,DTXSID6045296,Mafenide hydrochloride,Cl.NCC1=CC=C(C=C1)S(N)(=O)=O
+339,5839,DTXSID50370265,DSSTox_Substance_Id,DTXSID50370265,2-Naphthaleneboronic acid,OB(O)C1=CC2=CC=CC=C2C=C1
+340,5840,DTXSID6060973,DSSTox_Substance_Id,DTXSID6060973,"2H-Pyran-2-one, 4,6-dimethyl-",CC1=CC(C)=CC(=O)O1
+341,5841,DTXSID1051486,DSSTox_Substance_Id,DTXSID1051486,"5-Amino-1,3,4-thiadiazole-2-thiol",NC1=NN=C(S)S1
+342,5842,DTXSID5045885,DSSTox_Substance_Id,DTXSID5045885,Thioxolone,OC1=CC2=C(SC(=O)O2)C=C1
+343,5843,DTXSID70276533,DSSTox_Substance_Id,DTXSID70276533,4-Sulfosalicylic acid,OC(=O)C1=C(O)C=C(C=C1)S(O)(=O)=O
+344,5844,DTXSID9023702,DSSTox_Substance_Id,DTXSID9023702,"N1,N2-Bis(2-aminoethyl)-1,2-ethanediamine",NCCNCCNCCN
+345,5845,DTXSID6046973,DSSTox_Substance_Id,DTXSID6046973,Proxan-potassium,[K+].CC(C)OC([S-])=S
+346,5846,DTXSID40872465,DSSTox_Substance_Id,DTXSID40872465,Hexafluorophosphate ion,F[P-](F)(F)(F)(F)F
+347,5847,DTXSID70390682,DSSTox_Substance_Id,DTXSID70390682,"Propanamide, N-[4-(aminosulfonyl)phenyl]-2-methyl-",CC(C)C(=O)NC1=CC=C(C=C1)S(N)(=O)=O
+348,5848,DTXSID20590852,DSSTox_Substance_Id,DTXSID20590852,tert-Butyl (benzylsulfamoyl)carbamate,CC(C)(C)OC(=O)NS(=O)(=O)NCC1=CC=CC=C1
+349,5849,DTXSID60658763,DSSTox_Substance_Id,DTXSID60658763,"1,1-Difluoro-1-(4-methylphenyl)methanesulfonamide",CC1=CC=C(C=C1)C(F)(F)S(N)(=O)=O

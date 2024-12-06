@@ -134,6 +134,7 @@ jump = jump.with_columns(
     pl.col("Metadata_InChIKey").str.slice(0,14).alias("INCHI_14")
 )
 refchemdb_jump = refchemdb.join(jump, on="INCHI_14", how="inner")
+refchemdb_jump.write_parquet("./output/refchemdb_jump.parquet")
 
 # Map to OASIS
 oasis = pl.read_csv("../1_snakemake/inputs/annotations/seal_input/v5_oasis_03Sept2024_simple.csv")
@@ -141,3 +142,4 @@ oasis = oasis.with_columns(
     pl.col("INCHIKEY").str.slice(0, 14).alias("INCHI_14")
 )
 refchemdb_oasis = refchemdb.join(oasis, on="INCHI_14", how="inner")
+refchemdb_oasis.write_parquet("../1_snakemake/inputs/annotations/refchemdb_oasis.parquet")
