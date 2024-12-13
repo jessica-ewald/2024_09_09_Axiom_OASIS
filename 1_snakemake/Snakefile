@@ -15,8 +15,3 @@ features = config["features"]
 rule all:
      input:
           f"outputs/{features}/{scenario}/classifier_results/axiom_continuous_predictions.parquet",
-          f"outputs/{features}/{scenario}/classifier_results/axiom_continuous_null.parquet",
-          f"outputs/{features}/{scenario}/classifier_results/toxcast_cellbased_binary_predictions.parquet",
-          f"outputs/{features}/{scenario}/classifier_results/toxcast_cellfree_binary_predictions.parquet",
-          f"outputs/{features}/{scenario}/classifier_results/toxcast_cytotox_binary_predictions.parquet",
-          f"outputs/{features}/{scenario}/classifier_results/axiom_binary_predictions.parquet",
