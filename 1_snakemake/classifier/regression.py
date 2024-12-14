@@ -4,18 +4,19 @@ import polars as pl
 import xgboost as xgb
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from sklearn.model_selection import GroupShuffleSplit
+from tqdm import tqdm
 
 
 def xgboost_regression(dat: pd.DataFrame, target: str, feat_cols: list, split_group: str, *, mean_pred: bool = False) -> pl.DataFrame:
     """Predict continuous metadata from profiling data with XGBoost."""
 
     groups = dat[split_group]
-    gss = GroupShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
+    gss = GroupShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
     i = 1
     results = []
     pred_obs = []
 
-    for split_idx, (train_idx, test_idx) in tqdm(enumerate(gss.split(dat, groups=groups)), desc=f"Processing {target}"):
+    for split_idx, (train_idx, test_idx) in tqdm(enumerate(gss.split(dat, groups=groups))):
         # Splitting the dataset
         train_data = dat.iloc[train_idx]
         test_data = dat.iloc[test_idx]
@@ -52,53 +53,55 @@ def xgboost_regression(dat: pd.DataFrame, target: str, feat_cols: list, split_gr
             "Metadata_Compound": test_data["Metadata_Compound"].values,
             "Metadata_OASIS_ID": test_data["Metadata_OASIS_ID"].values,
             "Metadata_Log10Conc": test_data["Metadata_Log10Conc"].values,
-            "Variable": var,
+            "Variable": target,
             "Split": i,
         }))
 
     # Convert results to DataFrame for analysis
     results_df = pd.DataFrame(results, columns=["Variable", "Split", "R²", "RMSE", "MAE"])
-    pred_obs_df = pl.concat(pred_obs, how="vertical")
+    pred_obs_df = pl.concat(pred_obs, how="vertical_relaxed").to_pandas()
 
     return results_df, pred_obs_df
 
 
 def predict_axiom_assays(prof_path: str, prediction_path: str, results_path: str) -> None:
     """Train XGBoost regression model to predict Axiom assays."""
-    profiles = pl.read_parquet(prof_path)
+    profiles = pd.read_parquet(prof_path)
+    profiles = profiles.dropna(subset=["Metadata_OASIS_ID"]).reset_index(drop=True)
+    profiles = profiles[profiles["Metadata_Perturbation"] != "DMSO_0.0"].reset_index(drop=True)
+    profiles["Metadata_Log10Conc"] = np.round(profiles["Metadata_Log10Conc"], 2)
+
+    # Encoding categorical columns
+    profiles["Metadata_Plate_cat"] = profiles["Metadata_Plate"].astype("category").cat.codes
+    profiles["Metadata_source_cat"] = profiles["Metadata_source"].astype("category").cat.codes
+    profiles["Metadata_Well_cat"] = profiles["Metadata_Well"].astype("category").cat.codes
+    profiles["Metadata_Compound_cat"] = profiles["Metadata_Compound"].astype("category").cat.codes
+
     feat_cols = [i for i in profiles.columns if "Metadata" not in i]
-    baseline_cols = ["Metadata_Plate", "Metadata_Well", "Metadata_source", "Metadata_Count_Cells"]
+    baseline_cols = ["Metadata_Plate_cat", "Metadata_Well_cat", "Metadata_source_cat", "Metadata_Count_Cells"]
 
     # LDH
-    ldh_res, ldh_pred = xgboost_regression(
-        profiles,
-        "Metadata_ldh_ridge_norm",
-        feat_cols,
-        "Metadata_Compound"
-    )
-    ldh_pred = ldh_pred.with_columns(
-        pl.lit("Metadata_ldh_ridge_norm").alias("Variable_Name"),
-        pl.lit("Morphology").alias("Model_type"),
-    )
-    ldh_res = ldh_res.with_columns(
-        pl.lit("Metadata_ldh_ridge_norm").alias("Variable_Name"),
-        pl.lit("Morphology").alias("Model_type"),
-    )
-
     ldh_bl_res, ldh_bl_pred = xgboost_regression(
         profiles,
         "Metadata_ldh_ridge_norm",
         baseline_cols,
         "Metadata_Compound"
     )
-    ldh_bl_pred = ldh_bl_pred.with_columns(
-        pl.lit("Metadata_ldh_ridge_norm").alias("Variable_Name"),
-        pl.lit("Baseline").alias("Model_type"),
+    ldh_bl_pred["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_bl_pred["Model_type"] = "Baseline"
+    ldh_bl_res["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_bl_res["Model_type"] = "Baseline"
+
+    ldh_res, ldh_pred = xgboost_regression(
+        profiles,
+        "Metadata_ldh_ridge_norm",
+        feat_cols,
+        "Metadata_Compound"
     )
-    ldh_bl_res = ldh_bl_res.with_columns(
-        pl.lit("Metadata_ldh_ridge_norm").alias("Variable_Name"),
-        pl.lit("Baseline").alias("Model_type"),
-    )
+    ldh_pred["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_pred["Model_type"] = "Morphology"
+    ldh_res["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_res["Model_type"] = "Morphology"
 
     ldh_mean_res, ldh_mean_pred = xgboost_regression(
         profiles,
@@ -107,14 +110,10 @@ def predict_axiom_assays(prof_path: str, prediction_path: str, results_path: str
         "Metadata_Compound",
         mean_pred=True
     )
-    ldh_mean_pred = ldh_mean_pred.with_columns(
-        pl.lit("Metadata_ldh_ridge_norm").alias("Variable_Name"),
-        pl.lit("Mean_predictor").alias("Model_type"),
-    )
-    ldh_mean_res = ldh_mean_res.with_columns(
-        pl.lit("Metadata_ldh_ridge_norm").alias("Variable_Name"),
-        pl.lit("Mean_predictor").alias("Model_type"),
-    )
+    ldh_mean_pred["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_mean_pred["Model_type"] = "Mean_predictor"
+    ldh_mean_res["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_mean_res["Model_type"] = "Mean_predictor"
 
     # MTT
     mtt_res, mtt_pred = xgboost_regression(
@@ -123,14 +122,10 @@ def predict_axiom_assays(prof_path: str, prediction_path: str, results_path: str
         feat_cols,
         "Metadata_Compound"
     )
-    mtt_pred = mtt_pred.with_columns(
-        pl.lit("Metadata_mtt_ridge_norm").alias("Variable_Name"),
-        pl.lit("Morphology").alias("Model_type"),
-    )
-    mtt_res = mtt_res.with_columns(
-        pl.lit("Metadata_mtt_ridge_norm").alias("Variable_Name"),
-        pl.lit("Morphology").alias("Model_type"),
-    )
+    mtt_pred["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_pred["Model_type"] = "Morphology"
+    mtt_res["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_res["Model_type"] = "Morphology"
 
     mtt_bl_res, mtt_bl_pred = xgboost_regression(
         profiles,
@@ -138,14 +133,10 @@ def predict_axiom_assays(prof_path: str, prediction_path: str, results_path: str
         baseline_cols,
         "Metadata_Compound"
     )
-    mtt_bl_pred = mtt_bl_pred.with_columns(
-        pl.lit("Metadata_mtt_ridge_norm").alias("Variable_Name"),
-        pl.lit("Baseline").alias("Model_type"),
-    )
-    mtt_bl_res = mtt_bl_res.with_columns(
-        pl.lit("Metadata_mtt_ridge_norm").alias("Variable_Name"),
-        pl.lit("Baseline").alias("Model_type"),
-    )
+    mtt_bl_pred["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_bl_pred["Model_type"] = "Baseline"
+    mtt_bl_res["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_bl_res["Model_type"] = "Baseline"
 
     mtt_mean_res, mtt_mean_pred = xgboost_regression(
         profiles,
@@ -154,25 +145,21 @@ def predict_axiom_assays(prof_path: str, prediction_path: str, results_path: str
         "Metadata_Compound",
         mean_pred=True
     )
-    mtt_mean_pred = mtt_mean_pred.with_columns(
-        pl.lit("Metadata_mtt_ridge_norm").alias("Variable_Name"),
-        pl.lit("Mean_predictor").alias("Model_type"),
-    )
-    mtt_mean_res = mtt_mean_res.with_columns(
-        pl.lit("Metadata_mtt_ridge_norm").alias("Variable_Name"),
-        pl.lit("Mean_predictor").alias("Model_type"),
-    )
+    mtt_mean_pred["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_mean_pred["Model_type"] = "Mean_predictor"
+    mtt_mean_res["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_mean_res["Model_type"] = "Mean_predictor"
 
     # Write out predictions
-    prediction_df = pl.concat(
+    prediction_df = pd.concat(
         [ldh_pred, ldh_bl_pred, ldh_mean_pred, mtt_pred, mtt_bl_pred, mtt_mean_pred], 
-        how="vertical_relaxed"
-    ).with_columns(
-        pl.col("Observed").arr.first().cast(pl.Float32).alias("Observed")
-    ).write_parquet(prediction_path)
+        ignore_index=True
+    )
+    prediction_df.to_parquet(prediction_path)
 
     # Write out results
-    res_df = pl.concat(
+    res_df = pd.concat(
         [ldh_res, ldh_bl_res, ldh_mean_res, mtt_res, mtt_bl_res, mtt_mean_res], 
-        how="vertical_relaxed"
-    ).write_parquet(results_path)
+        ignore_index=True
+    )
+    res_df.to_parquet(results_path)
