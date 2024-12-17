@@ -17,6 +17,7 @@ def binary_classifier(
     gpu_id: int,
     *,
     shuffle: bool = False,
+    cc: bool = False,
 ) -> pl.DataFrame:
     """Perform a binary XGBoost classification.
 
@@ -41,6 +42,11 @@ def binary_classifier(
     dat["Label"] = dat["Label"].astype(int)
     x = dat.drop(columns=["Label"])
     y = dat["Label"]
+
+    if cc:
+        x = x[["Cell_Count"]]
+    else:
+        x = x.drop(columns=["Cell_Count"])
 
     if shuffle:
         y = y.sample(frac=1, random_state=42).reset_index(drop=True)
@@ -90,7 +96,7 @@ def binary_classifier(
 
     return pl.concat(pred_df, how="vertical")
 
-def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id, *, shuffle: bool = False):
+def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id, *, shuffle: bool = False, cc: bool = False):
     """Process a single label_column and agg_type combination."""
     try:
         prof = dat.filter(
@@ -114,6 +120,7 @@ def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id,
                 n_splits=n_splits,
                 gpu_id=gpu_id,
                 shuffle=shuffle,
+                cc=cc,
             )
 
             # Add the metadata columns
@@ -196,6 +203,21 @@ def predict_binary(
             pl.lit("Random_baseline").alias("Model_type")
         )
 
+    # Cell count baseline
+    cc_results = thread_map(
+        lambda args: process_label_and_agg(*args, cc=True),
+        tasks,
+        max_workers=num_gpus,
+        desc="Processing labels and agg_types",
+    )
+
+    cc_results = [res for res in cc_results if res is not None]
+    if cc_results:
+        cc_df = pl.concat(cc_results, how="vertical")
+        cc_df = cc_df.with_columns(
+            pl.lit("Cellcount_baseline").alias("Model_type")
+        )
+
     # write out results
-    if not pred_df.is_empty() and not null_df.is_empty():
-        pl.concat([pred_df, null_df], how="vertical").write_parquet(output_path)
+    if not pred_df.is_empty() and not null_df.is_empty() and not cc_df.is_empty():
+        pl.concat([pred_df, null_df, cc_df], how="vertical").write_parquet(output_path)

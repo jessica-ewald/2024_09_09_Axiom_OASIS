@@ -103,7 +103,7 @@ def aggregate_profiles(
 ) -> None:
     """Aggregate subset of profiles for each compound."""
     # 1. Read in data
-    profiles = pl.read_parquet(prof_path)
+    profiles = pl.read_parquet(prof_path).rename({"Metadata_Count_Cells": "Cell_Count"})
     pods = pl.read_parquet(pod_path)
 
     # 2. Process metadata
