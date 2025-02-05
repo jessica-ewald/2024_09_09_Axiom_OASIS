@@ -31,6 +31,21 @@ def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
             ),
         )
 
+        # if no pod, then use all profiles
+        dat_filt = dat.filter(
+                ~pl.col("Metadata_OASIS_ID").is_in(agg_df.select(pl.col("Metadata_OASIS_ID")).to_series().to_list())
+            )
+        agg_df = pl.concat([
+            agg_df,
+            pl.from_pandas(
+            pycytominer.aggregate(
+                    dat_filt.to_pandas(),
+                    strata=["Metadata_OASIS_ID"],
+                    features=feat_cols,
+                ),
+            )
+        ], how="vertical")
+
     elif method == "allpodcc":
         agg_df = pl.from_pandas(
             pycytominer.aggregate(
@@ -43,39 +58,37 @@ def aggregate_compound(method: str, dat: pl.DataFrame) -> pl.DataFrame:
             ),
         )
 
-    elif method == "lastpod":
-        agg_df = pl.from_pandas(
+        # if no allpodcc, then use first profile after pod
+        dat_filt = dat.filter(
+                ~pl.col("Metadata_OASIS_ID").is_in(agg_df.select(pl.col("Metadata_OASIS_ID")).to_series().to_list())
+            )
+        agg_df = pl.concat([
+            agg_df,
+            pl.from_pandas(
             pycytominer.aggregate(
-                dat.filter(
-                    (pl.col("Metadata_Log10Conc") > pl.col("Metadata_POD"))
-                    & (pl.col("Metadata_Concentration") == 50.0),
-                ).to_pandas(),
-                strata=["Metadata_OASIS_ID"],
-                features=feat_cols,
-            ),
-        )
+                    dat_filt.filter(
+                        pl.col("Metadata_Concentration") == pl.col("Metadata_MinConc"),
+                    ).to_pandas(),
+                    strata=["Metadata_OASIS_ID"],
+                    features=feat_cols,
+                ),
+            )
+        ], how="vertical")
 
-    elif method == "firstpod":
-        agg_df = pl.from_pandas(
+        # if still no pod, then use all
+        dat_filt = dat.filter(
+                ~pl.col("Metadata_OASIS_ID").is_in(agg_df.select(pl.col("Metadata_OASIS_ID")).to_series().to_list())
+            )
+        agg_df = pl.concat([
+            agg_df,
+            pl.from_pandas(
             pycytominer.aggregate(
-                dat.filter(
-                    pl.col("Metadata_Concentration") == pl.col("Metadata_MinConc"),
-                ).to_pandas(),
-                strata=["Metadata_OASIS_ID"],
-                features=feat_cols,
-            ),
-        )
-
-    elif method == "lastpodcc":
-        agg_df = pl.from_pandas(
-            pycytominer.aggregate(
-                dat.filter(
-                    pl.col("Metadata_Concentration") == pl.col("Metadata_MaxConc"),
-                ).to_pandas(),
-                strata=["Metadata_OASIS_ID"],
-                features=feat_cols,
-            ),
-        )
+                    dat_filt.to_pandas(),
+                    strata=["Metadata_OASIS_ID"],
+                    features=feat_cols,
+                ),
+            )
+        ], how="vertical")
 
     # Annotate with aggregation and feature type
     agg_df = agg_df.with_columns(pl.lit(method).alias("Metadata_AggType"))
@@ -90,7 +103,7 @@ def aggregate_profiles(
 ) -> None:
     """Aggregate subset of profiles for each compound."""
     # 1. Read in data
-    profiles = pl.read_parquet(prof_path)
+    profiles = pl.read_parquet(prof_path).rename({"Metadata_Count_Cells": "Cell_Count"})
     pods = pl.read_parquet(pod_path)
 
     # 2. Process metadata
@@ -132,7 +145,7 @@ def aggregate_profiles(
     )
 
     # 3. Aggregate profiles
-    methods = ["all", "allpod", "allpodcc", "firstpod", "lastpod", "lastpodcc"]
+    methods = ["all", "allpod", "allpodcc"]
     agg_df = []
 
     for method in methods:

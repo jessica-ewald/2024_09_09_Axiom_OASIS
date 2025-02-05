@@ -1,130 +1,165 @@
-import matplotlib as mpl
 import numpy as np
 import pandas as pd
-import plotnine as pn
 import polars as pl
 import xgboost as xgb
-from matplotlib.backends.backend_pdf import PdfPages
-from plotnine import aes, geom_line, geom_point, ggplot, labs, theme_bw
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import KFold
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+from sklearn.model_selection import GroupShuffleSplit
+from tqdm import tqdm
 
 
-def xgboost_regression(dat: pl.DataFrame, target: str, feat_cols: list, id_cols: list, *, shuffle: bool = False) -> pl.DataFrame:
+def xgboost_regression(dat: pd.DataFrame, target: str, feat_cols: list, split_group: str, *, mean_pred: bool = False) -> pl.DataFrame:
     """Predict continuous metadata from profiling data with XGBoost."""
-    x = dat.select(feat_cols).to_numpy()
 
-    if shuffle:
-        y = dat.select(pl.col(target).shuffle(seed=42)).to_numpy()
-    else:
-        y = dat.select(pl.col(target)).to_numpy()
+    groups = dat[split_group]
+    gss = GroupShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
+    i = 1
+    results = []
+    pred_obs = []
 
-    model = xgb.XGBRegressor(objective="reg:squarederror")
-    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    for split_idx, (train_idx, test_idx) in tqdm(enumerate(gss.split(dat, groups=groups))):
+        # Splitting the dataset
+        train_data = dat.iloc[train_idx]
+        test_data = dat.iloc[test_idx]
 
-    observed_values = []
-    predicted_values = []
-    id_values = []
-    for train_index, test_index in kf.split(x):
-        # Split the data into training and testing sets
-        x_train, x_test = x[train_index], x[test_index]
-        y_train, y_test = y[train_index], y[test_index]
+        train_data = train_data.dropna(subset=[target]).reset_index(drop=True)
+        test_data = test_data.dropna(subset=[target]).reset_index(drop=True)
+        
+        X_train = train_data[feat_cols]
+        y_train = train_data[target]
+        X_test = test_data[feat_cols]
+        y_test = test_data[target]
 
-        # Train the model
-        model.fit(x_train, y_train)
+        # Train model
+        if mean_pred:
+            mean_value = np.mean(y_train)
+            predictions = np.full(len(y_test), mean_value)
+        else: 
+            model = xgb.XGBRegressor(objective="reg:squarederror")
+            model.fit(X_train, y_train)
+            predictions = model.predict(X_test)
 
-        # Predict on the test set
-        y_pred = model.predict(x_test)
-        observed_values.extend(y_test)
-        predicted_values.extend(y_pred)
-        id_values.extend(dat.select(id_cols).to_numpy()[test_index])
+        # Calculate performance
+        mse = mean_squared_error(y_test, predictions)
+        r2 = r2_score(y_test, predictions)
+        rmse = np.sqrt(mse)
+        mae = mean_absolute_error(y_test, predictions)
 
-    result_df = pl.DataFrame({
-        "Observed": observed_values,
-        "Predicted": predicted_values,
-    })
+        results.append((target, split_idx, r2, rmse, mae))
+        pred_obs.append(pl.DataFrame({
+            "Predicted": predictions,
+            "Observed": y_test.values,
+            "Metadata_Plate": test_data["Metadata_Plate"].values,
+            "Metadata_Well": test_data["Metadata_Well"].values,
+            "Metadata_Compound": test_data["Metadata_Compound"].values,
+            "Metadata_OASIS_ID": test_data["Metadata_OASIS_ID"].values,
+            "Metadata_Log10Conc": test_data["Metadata_Log10Conc"].values,
+            "Variable": target,
+            "Split": i,
+        }))
 
-    id_df = pl.DataFrame(id_values, schema={col: dat[col].dtype for col in id_cols})
-    return pl.concat([id_df, result_df], how="horizontal")
+    # Convert results to DataFrame for analysis
+    results_df = pd.DataFrame(results, columns=["Variable", "Split", "R²", "RMSE", "MAE"])
+    pred_obs_df = pl.concat(pred_obs, how="vertical_relaxed").to_pandas()
 
-def make_plots(pred: pl.DataFrame, output_path: str) -> None:
-    """Plot observed vs. predicted and mse per bin."""
-
-    # TODO add R2 to overall plot
-    mpl.use("Agg")
-    with PdfPages(output_path) as pdf:
-        pn.options.figure_size = (8, 8)
-
-        plot1 = (
-            ggplot(pred.filter(pl.col("Variable_Name") == "Metadata_ldh_normalized"), aes(x="Observed", y="Predicted"))
-            + geom_point(alpha=0.6)
-            + labs(
-                x="Observed",
-                y="Predicted",
-                title="Observed vs Predicted LDH",
-            )
-            + theme_bw()
-        )
-        pdf.savefig(plot1.draw())
-
-        plot2 = (
-            ggplot(pred.filter(pl.col("Variable_Name") == "Metadata_mtt_normalized"), aes(x="Observed", y="Predicted"))
-            + geom_point(alpha=0.6)
-            + labs(
-                x="Observed",
-                y="Predicted",
-                title="Observed vs Predicted MTT",
-            )
-            + theme_bw()
-        )
-        pdf.savefig(plot2.draw())
-
-        plot3 = (
-            ggplot(pred.filter(pl.col("Variable_Name") == "Metadata_Count_Cells"), aes(x="Observed", y="Predicted"))
-            + geom_point(alpha=0.6)
-            + labs(
-                x="Observed",
-                y="Predicted",
-                title="Observed vs Predicted cell count",
-            )
-            + theme_bw()
-        )
-        pdf.savefig(plot3.draw())
+    return results_df, pred_obs_df
 
 
-def predict_axiom_assays(prof_path: str, prediction_path: str, plot_path: str, *, shuffle: bool = False) -> None:
+def predict_axiom_assays(prof_path: str, prediction_path: str, results_path: str) -> None:
     """Train XGBoost regression model to predict Axiom assays."""
-    profiles = pl.read_parquet(prof_path)
+    profiles = pd.read_parquet(prof_path)
+    profiles = profiles.dropna(subset=["Metadata_OASIS_ID"]).reset_index(drop=True)
+    profiles = profiles[profiles["Metadata_Perturbation"] != "DMSO_0.0"].reset_index(drop=True)
+    profiles["Metadata_Log10Conc"] = np.round(profiles["Metadata_Log10Conc"], 2)
+
+    # Encoding categorical columns
+    profiles["Metadata_Plate_cat"] = profiles["Metadata_Plate"].astype("category").cat.codes
+    profiles["Metadata_source_cat"] = profiles["Metadata_source"].astype("category").cat.codes
+    profiles["Metadata_Well_cat"] = profiles["Metadata_Well"].astype("category").cat.codes
+    profiles["Metadata_Compound_cat"] = profiles["Metadata_Compound"].astype("category").cat.codes
+
     feat_cols = [i for i in profiles.columns if "Metadata" not in i]
-    id_cols = ["Metadata_Plate", "Metadata_Well", "Metadata_Compound", "Metadata_Log10Conc"]
+    baseline_cols = ["Metadata_Plate_cat", "Metadata_Well_cat", "Metadata_source_cat", "Metadata_Count_Cells"]
 
-    ldh = xgboost_regression(
-        profiles.filter(pl.col("Metadata_ldh_normalized") > -0.5),
-        "Metadata_ldh_normalized",
+    # LDH
+    ldh_bl_res, ldh_bl_pred = xgboost_regression(
+        profiles,
+        "Metadata_ldh_ridge_norm",
+        baseline_cols,
+        "Metadata_Compound"
+    )
+    ldh_bl_pred["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_bl_pred["Model_type"] = "Baseline"
+    ldh_bl_res["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_bl_res["Model_type"] = "Baseline"
+
+    ldh_res, ldh_pred = xgboost_regression(
+        profiles,
+        "Metadata_ldh_ridge_norm",
         feat_cols,
-        id_cols,
-        shuffle=shuffle
+        "Metadata_Compound"
     )
-    ldh = ldh.with_columns(
-        pl.lit("Metadata_ldh_normalized").alias("Variable_Name"),
-    )
+    ldh_pred["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_pred["Model_type"] = "Morphology"
+    ldh_res["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_res["Model_type"] = "Morphology"
 
-    mtt = xgboost_regression(profiles, "Metadata_mtt_normalized", feat_cols, id_cols, shuffle=shuffle)
-    mtt = mtt.with_columns(
-        pl.lit("Metadata_mtt_normalized").alias("Variable_Name"),
+    ldh_mean_res, ldh_mean_pred = xgboost_regression(
+        profiles,
+        "Metadata_ldh_ridge_norm",
+        [],
+        "Metadata_Compound",
+        mean_pred=True
     )
+    ldh_mean_pred["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_mean_pred["Model_type"] = "Mean_predictor"
+    ldh_mean_res["Variable_Name"] = "Metadata_ldh_ridge_norm"
+    ldh_mean_res["Model_type"] = "Mean_predictor"
 
-    cc = xgboost_regression(profiles, "Metadata_Count_Cells", feat_cols, id_cols, shuffle=shuffle)
-    cc = cc.with_columns(
-        pl.lit("Metadata_Count_Cells").alias("Variable_Name"),
+    # MTT
+    mtt_res, mtt_pred = xgboost_regression(
+        profiles,
+        "Metadata_mtt_ridge_norm",
+        feat_cols,
+        "Metadata_Compound"
     )
+    mtt_pred["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_pred["Model_type"] = "Morphology"
+    mtt_res["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_res["Model_type"] = "Morphology"
+
+    mtt_bl_res, mtt_bl_pred = xgboost_regression(
+        profiles,
+        "Metadata_mtt_ridge_norm",
+        baseline_cols,
+        "Metadata_Compound"
+    )
+    mtt_bl_pred["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_bl_pred["Model_type"] = "Baseline"
+    mtt_bl_res["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_bl_res["Model_type"] = "Baseline"
+
+    mtt_mean_res, mtt_mean_pred = xgboost_regression(
+        profiles,
+        "Metadata_mtt_ridge_norm",
+        [],
+        "Metadata_Compound",
+        mean_pred=True
+    )
+    mtt_mean_pred["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_mean_pred["Model_type"] = "Mean_predictor"
+    mtt_mean_res["Variable_Name"] = "Metadata_mtt_ridge_norm"
+    mtt_mean_res["Model_type"] = "Mean_predictor"
 
     # Write out predictions
-    prediction_df = pl.concat([ldh, mtt, cc], how="vertical_relaxed")
-    prediction_df = prediction_df.with_columns(
-        pl.col("Observed").arr.first().cast(pl.Float32).alias("Observed")
+    prediction_df = pd.concat(
+        [ldh_pred, ldh_bl_pred, ldh_mean_pred, mtt_pred, mtt_bl_pred, mtt_mean_pred], 
+        ignore_index=True
     )
-    prediction_df.write_parquet(prediction_path)
+    prediction_df.to_parquet(prediction_path)
 
-    # Analyze results
-    make_plots(prediction_df, plot_path)
+    # Write out results
+    res_df = pd.concat(
+        [ldh_res, ldh_bl_res, ldh_mean_res, mtt_res, mtt_bl_res, mtt_mean_res], 
+        ignore_index=True
+    )
+    res_df.to_parquet(results_path)

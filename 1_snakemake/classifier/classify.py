@@ -17,6 +17,7 @@ def binary_classifier(
     gpu_id: int,
     *,
     shuffle: bool = False,
+    cc: bool = False,
 ) -> pl.DataFrame:
     """Perform a binary XGBoost classification.
 
@@ -41,6 +42,11 @@ def binary_classifier(
     dat["Label"] = dat["Label"].astype(int)
     x = dat.drop(columns=["Label"])
     y = dat["Label"]
+
+    if cc:
+        x = x[["Cell_Count"]]
+    else:
+        x = x.drop(columns=["Cell_Count"])
 
     if shuffle:
         y = y.sample(frac=1, random_state=42).reset_index(drop=True)
@@ -83,13 +89,14 @@ def binary_classifier(
                     "y_prob": list(y_fold_prob),
                     "y_pred": list(y_fold_pred),
                     "y_actual": list(y_fold_val),
+                    "k_fold": fold,
                 }),
             )
             fold += 1
 
     return pl.concat(pred_df, how="vertical")
 
-def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id, *, shuffle: bool = False):
+def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id, *, shuffle: bool = False, cc: bool = False):
     """Process a single label_column and agg_type combination."""
     try:
         prof = dat.filter(
@@ -113,6 +120,7 @@ def process_label_and_agg(dat, label_column, agg_type, n_splits, labels, gpu_id,
                 n_splits=n_splits,
                 gpu_id=gpu_id,
                 shuffle=shuffle,
+                cc=cc,
             )
 
             # Add the metadata columns
@@ -135,8 +143,6 @@ def predict_binary(
     input_path: str,
     label_path: str,
     output_path: str,
-    *,
-    shuffle: bool = False
 ) -> None:
     """Build classifier for each of Srijit's outcomes.
 
@@ -167,9 +173,9 @@ def predict_binary(
         )
     ]
 
-    # Run the processing in parallel using thread_map
+    # Train actual models
     pred_results = thread_map(
-        lambda args: process_label_and_agg(*args, shuffle=shuffle),
+        lambda args: process_label_and_agg(*args, shuffle=False),
         tasks,
         max_workers=num_gpus,
         desc="Processing labels and agg_types",
@@ -178,4 +184,40 @@ def predict_binary(
     pred_results = [res for res in pred_results if res is not None]
     if pred_results:
         pred_df = pl.concat(pred_results, how="vertical")
-        pred_df.write_parquet(output_path)
+        pred_df = pred_df.with_columns(
+            pl.lit("Actual").alias("Model_type")
+        )
+
+    # Random baseline
+    null_results = thread_map(
+        lambda args: process_label_and_agg(*args, shuffle=True),
+        tasks,
+        max_workers=num_gpus,
+        desc="Processing labels and agg_types",
+    )
+
+    null_results = [res for res in null_results if res is not None]
+    if null_results:
+        null_df = pl.concat(null_results, how="vertical")
+        null_df = null_df.with_columns(
+            pl.lit("Random_baseline").alias("Model_type")
+        )
+
+    # Cell count baseline
+    cc_results = thread_map(
+        lambda args: process_label_and_agg(*args, cc=True),
+        tasks,
+        max_workers=num_gpus,
+        desc="Processing labels and agg_types",
+    )
+
+    cc_results = [res for res in cc_results if res is not None]
+    if cc_results:
+        cc_df = pl.concat(cc_results, how="vertical")
+        cc_df = cc_df.with_columns(
+            pl.lit("Cellcount_baseline").alias("Model_type")
+        )
+
+    # write out results
+    if not pred_df.is_empty() and not null_df.is_empty() and not cc_df.is_empty():
+        pl.concat([pred_df, null_df, cc_df], how="vertical").write_parquet(output_path)
