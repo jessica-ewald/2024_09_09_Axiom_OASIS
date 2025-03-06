@@ -10,5 +10,6 @@
     "control": "DMSO",
     "distances_R": ["gmd"],
     "distances_python": [],
-    "categories": ["NA"]
+    "categories": ["NA"],
+    "dist_transform": "none"
 }

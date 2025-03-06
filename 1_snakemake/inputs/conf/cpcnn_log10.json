@@ -1,6 +1,7 @@
 {
     "features": "cpcnn",
-    "workflow": "mad_int_featselect",
+    "name": "mad_featselect_log10",
+    "workflow": "mad_featselect",
     "num_sds": 2,
     "iqr_scale": 100,
     "clip_value": 500,
@@ -11,5 +12,5 @@
     "distances_R": ["gmd"],
     "distances_python": [],
     "categories": ["NA"],
-    "dist_transform": "none"
+    "dist_transform": "log10"
 }

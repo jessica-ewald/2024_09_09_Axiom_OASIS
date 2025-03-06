@@ -14,5 +14,6 @@
         "Cells_AGP", "Cells_DNA", "Cells_Mito", "Cells_RNA", "Cells_ER", "Cells_AreaShape",
         "Nuclei_AGP", "Nuclei_DNA", "Nuclei_Mito", "Nuclei_RNA", "Nuclei_ER", "Nuclei_AreaShape",
         "Cytoplasm_AGP", "Cytoplasm_DNA", "Cytoplasm_Mito", "Cytoplasm_RNA", "Cytoplasm_ER", "Cytoplasm_AreaShape"
-    ]
+    ],
+    "dist_transform": "none"
 }

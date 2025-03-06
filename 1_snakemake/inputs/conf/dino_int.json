@@ -12,5 +12,6 @@
     "distances_python": [],
     "categories": [
         "DNA", "ER", "AGP", "RNA", "Mito", "Brightfield"
-    ]
+    ],
+    "dist_transform": "none"
 }
