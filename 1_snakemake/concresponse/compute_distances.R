@@ -25,7 +25,7 @@ all_dat <- read_parquet(input_file) %>% as.data.frame()
 
 dat_cols <- colnames(all_dat)
 feat_cols <- dat_cols[!grepl("Metadata_", dat_cols)]
-feat_cols <- feat_cols[!grepl("ObjectSkeleton", dat_cols)] # causes major problems
+feat_cols <- feat_cols[!grepl("ObjectSkeleton", feat_cols)] # causes major problems
 meta_cols <- dat_cols[grepl("Metadata_", dat_cols)]
 
 treatment_labels <- all_dat[, treatment] %>% c()
