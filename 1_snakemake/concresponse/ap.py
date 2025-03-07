@@ -1,4 +1,11 @@
+import polars as pl
 from copairs import map
+from copairs.matching import assign_reference_index
+from tqdm import tqdm
+import pandas as pd
+import numpy as np
+import random
+from concurrent.futures import ProcessPoolExecutor
 
 def process_compound(cmpd: String, profiles: pl.DataFrame, dmso_profiles: pl.DataFrame):
     """ Function to process each compound in parallel """
@@ -50,9 +57,6 @@ def process_compound(cmpd: String, profiles: pl.DataFrame, dmso_profiles: pl.Dat
     return None
 
 def ap(input_path: str, output_paths: list, distances: list) -> None:
-    print(input_path)
-    print(output_paths)
-    print(distances)
 
     path_dict = dict(zip(distances, paths))
 
