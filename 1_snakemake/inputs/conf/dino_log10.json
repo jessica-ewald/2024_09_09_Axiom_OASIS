@@ -9,8 +9,10 @@
     "treatment": "Metadata_Perturbation",
     "compound": "Metadata_Compound",
     "control": "DMSO",
-    "distances_R": ["gmd"],
+    "distances_R": ["gmd", "cmd"],
     "distances_python": [],
-    "categories": ["NA"],
+    "categories": [
+        "DNA", "ER", "AGP", "RNA", "Mito", "Brightfield"
+    ],
     "dist_transform": "log10"
 }
