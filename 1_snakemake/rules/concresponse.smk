@@ -24,12 +24,13 @@ rule compute_distances_python:
     input:
         f"outputs/{features}/{name}/profiles/{scenario}.parquet",
     output:
-        expand("outputs/{features}/{name}/distances/{method}.parquet", method=config["distances_python"], features=config["features"], scenario=config["workflow"], name=config["name"]),
+        expand("outputs/{features}/{name}/distances/{method}.parquet", method=config["distances_python"], features=config["features"], name=config["name"]),
     params:
         distances=config["distances_python"],
     run:
-        output_files = list(output)
-        cr.ap.ap(*input, output_files, params.distances)
+        for method in config["distances_python"]:
+            output_file = f"outputs/{wildcards.features}/{wildcards.name}/distances/{method}.parquet"
+            cr.ap.calculate_distances(input[0], output_file, method)
 
 
 distances = config["distances_R"] + config["distances_python"]

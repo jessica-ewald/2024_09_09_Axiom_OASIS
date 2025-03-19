@@ -5,107 +5,131 @@ from tqdm import tqdm
 import pandas as pd
 import numpy as np
 import random
-from concurrent.futures import ProcessPoolExecutor
+from joblib import Parallel, delayed
 
-def process_compound(cmpd: String, profiles: pl.DataFrame, dmso_profiles: pl.DataFrame):
-    """ Function to process each compound in parallel """
+
+def phenotypic_consistency_dmso(cmpd: str, prof_path: str):
+
+    profiles = pl.read_parquet(prof_path)
+    feat_cols = [i for i in profiles.columns if "Metadata" not in i]
+
+    profiles = profiles.select(["Metadata_Compound", "Metadata_Plate", "Metadata_Well"] + feat_cols)
+    dmso_profiles = profiles.filter(pl.col("Metadata_Compound") == "DMSO")
+
     cmpd_profs = profiles.filter(pl.col("Metadata_Compound") == cmpd)
     cmpd_plates = cmpd_profs.select(pl.col("Metadata_Plate")).to_series().unique().to_list()
-    cmpd_dmso = dmso_profiles.filter(pl.col("Metadata_Plate").is_in(cmpd_plates))
+    cmpd_dmso = dmso_profiles.filter(pl.col("Metadata_Plate").is_in(cmpd_plates)).with_row_index().with_columns(
+        pl.lit(cmpd).alias("Metadata_Compound_DMSO")
+    )
 
-    cmpd_profs = pl.concat([cmpd_profs, cmpd_dmso])
+    # Choose 720 samples to have even multiple of 16
+    indices = np.random.choice(np.arange(cmpd_dmso.shape[0]), size=720, replace=False)
+    cmpd_dmso = cmpd_dmso.filter(pl.col("index").is_in(indices))
 
-    # Get DMSO indices and randomly select 20
-    indices = cmpd_profs["Metadata_Compound"].eq("DMSO").arg_true()
-    indices = np.random.choice(indices, size=min(20, len(indices)), replace=False)
+    # create random DMSO groups
+    categories = np.random.permutation(np.repeat(np.arange(1, 46), 16))
+    cmpd_dmso = cmpd_dmso.with_columns(
+        pl.Series("Metadata_DMSO_Category", categories)
+    ).to_pandas()
 
-    cmpd_profs = cmpd_profs.to_pandas()
-    cmpd_dmso_ap = []
+    # Calculate phenotypic consistency
+    pos_sameby = ["Metadata_DMSO_Category"]
+    pos_diffby = []
+    neg_sameby = []
+    neg_diffby = ["Metadata_DMSO_Category"]
 
-    for index in indices:
-        cmpd_df = cmpd_profs.copy()
-        cmpd_df.loc[index, "Metadata_Compound"] = cmpd
+    metadata = cmpd_dmso.filter(regex="^Metadata")
+    cmpd_feats = cmpd_dmso.filter(regex="^(?!Metadata)").values
 
-        reference_col = "Metadata_reference_index"
+    activity_ap = map.average_precision(
+        metadata, cmpd_feats, pos_sameby, pos_diffby, neg_sameby, neg_diffby
+    )
 
-        df_activity = assign_reference_index(
-            cmpd_df,
-            "Metadata_Compound == 'DMSO'",
-            reference_col=reference_col,
-            default_value=-1,
-        )
+    return activity_ap
 
-        pos_sameby = ["Metadata_Compound", reference_col]
-        pos_diffby = []
-        neg_sameby = []  # used to be plate
-        neg_diffby = ["Metadata_Compound", reference_col]
 
-        metadata = df_activity.filter(regex="^Metadata")
-        cmpd_feats = df_activity.filter(regex="^(?!Metadata)").values
+def phenotypic_activity_compound(cmpd: str, prof_path: str):
+    """ Function to process each compound in parallel """
 
-        activity_ap = map.average_precision(
-            metadata, cmpd_feats, pos_sameby, pos_diffby, neg_sameby, neg_diffby
-        )
+    # get data
+    profiles = pl.scan_parquet(prof_path)
+    feat_cols = [i for i in profiles.collect_schema().names() if "Metadata" not in i]
 
-        cmpd_dmso_ap.append(activity_ap[
-            (activity_ap["Metadata_orig_compound"] == "DMSO") & 
-            (activity_ap["Metadata_Compound"] == cmpd)
-        ])
+    profiles = profiles.select(["Metadata_Compound", "Metadata_Plate", "Metadata_Well"] + feat_cols)
+    dmso_profiles = profiles.filter(pl.col("Metadata_Compound") == "DMSO")
 
-    if cmpd_dmso_ap:
-        return pd.concat(cmpd_dmso_ap)
-    return None
+    # select only data for cmpd
+    cmpd_profs = profiles.filter(pl.col("Metadata_Compound") == cmpd).collect()
+    cmpd_plates = cmpd_profs.select(pl.col("Metadata_Plate")).to_series().unique().to_list()
+    cmpd_dmso = dmso_profiles.filter(pl.col("Metadata_Plate").is_in(cmpd_plates)).collect().with_row_index()
+    
+    # Choose 720 samples to have even multiple of 16
+    indices = np.random.choice(np.arange(cmpd_dmso.shape[0]), size=720, replace=False)
+    cmpd_dmso = cmpd_dmso.filter(pl.col("index").is_in(indices)).drop("index")
 
-def ap(input_path: str, output_paths: list, distances: list) -> None:
+    cmpd_df = pl.concat([cmpd_profs, cmpd_dmso]).to_pandas()
 
-    path_dict = dict(zip(distances, paths))
+    # calculate phenotypic activity
+    reference_col = "Metadata_reference_index"
 
-    input_profiles = pl.read_parquet(input_path)
-    feat_cols = [i for i in input_profiles.columns if "Metadata" not in i]
+    df_activity = assign_reference_index(
+        cmpd_df,
+        "Metadata_Compound == 'DMSO'",
+        reference_col=reference_col,
+        default_value=-1,
+    )
 
-    if "ap" in distances:
-        # get only columns of interest
-        profiles = input_profiles.select(["Metadata_Compound", "Metadata_Plate", "Metadata_Well"] + feat_cols)
-        profiles = profiles.with_columns(
-            pl.col("Metadata_Compound").alias("Metadata_orig_compound")
-        )
-        dmso_profiles = profiles.filter(pl.col("Metadata_Compound") == "DMSO")
+    pos_sameby = ["Metadata_Compound", reference_col]
+    pos_diffby = []
+    neg_sameby = []
+    neg_diffby = ["Metadata_Compound", reference_col]
 
-        compounds = profiles.select(pl.col("Metadata_Compound")).to_series().unique().to_list()
-        compounds = [i for i in compounds if "DMSO" not in i]
+    metadata = df_activity.filter(regex="^Metadata")
+    cmpd_feats = df_activity.filter(regex="^(?!Metadata)").values
 
-        # Calculate average_precision for each dmso
-        random.seed(10)
-        with ProcessPoolExecutor(max_workers=80) as executor:
-            results = list(tqdm(executor.map(process_compound, compounds, profiles, dmso_profiles), total=len(compounds)))
+    activity_ap = map.average_precision(
+        metadata, cmpd_feats, pos_sameby, pos_diffby, neg_sameby, neg_diffby
+    )
 
-        # Filter out None results and concatenate
-        all_dmso_ap = pd.concat([r for r in results if r is not None])
+    return activity_ap
 
-        # Calculate average_precision for all treatments
-        reference_col = "Metadata_reference_index"
 
-        df_activity = assign_reference_index(
-            cmpd_df,
-            "Metadata_Compound == 'DMSO'",
-            reference_col=reference_col,
-            default_value=-1,
-        )
+def calculate_ap(prof_path: str):
 
-        pos_sameby = ["Metadata_Compound", reference_col]
-        pos_diffby = []
-        neg_sameby = []  # used to be plate
-        neg_diffby = ["Metadata_Compound", reference_col]
+    lf = pl.scan_parquet(prof_path)
+    compounds = lf.select("Metadata_Compound").collect().to_series().unique().to_list()
+    compounds = [i for i in compounds if "DMSO" not in i]
 
-        metadata = df_activity.filter(regex="^Metadata")
-        cmpd_feats = df_activity.filter(regex="^(?!Metadata)").values
+    # Calculate dmso AP in parallel
+    dmso_results = Parallel(n_jobs=80)(delayed(phenotypic_consistency_dmso)(cmpd) for cmpd in tqdm(compounds))
+    dmso_ap = pd.concat(dmso_results)
 
-        activity_ap = map.average_precision(
-            metadata, cmpd_feats, pos_sameby, pos_diffby, neg_sameby, neg_diffby
-        )
-        activity_ap = activity_ap.query("Metadata_broad_sample != 'DMSO'")
+    # Calculate cmpd AP in parallel
+    cmpd_results = Parallel(n_jobs=80)(delayed(phenotypic_activity_compound)(cmpd) for cmpd in tqdm(compounds))
+    cmpd_ap = pd.concat(cmpd_results)
 
-        all_ap = pl.DataFrame(pd.concat([activity_ap, all_dmso_ap]))
+    # Combine everything together
+    cmpd_ap = pl.DataFrame(cmpd_ap).filter(~pl.col("average_precision").is_null()).select(
+        ["Metadata_Compound", "Metadata_Plate", "Metadata_Well", "n_pos_pairs", "n_total_pairs", "average_precision"]
+    ).with_columns(
+        pl.lit("COMPOUND").alias("Metadata_Compound_DMSO")
+    ).select([
+        "Metadata_Compound", "Metadata_Plate", "Metadata_Well", "Metadata_Compound_DMSO", "n_pos_pairs", "n_total_pairs", "average_precision"
+    ])
 
-        all_ap.write_parquet(path_dict["ap"])
+    dmso_ap = pl.DataFrame(dmso_ap).select([
+        "Metadata_Compound", "Metadata_Plate", "Metadata_Well", "Metadata_Compound_DMSO", "n_pos_pairs", "n_total_pairs", "average_precision"
+    ])
 
+    ap = pl.concat([dmso_ap, cmpd_ap])
+
+    return ap
+
+
+    def calculate_distances(prof_path: str, dist_path: str, method: str):
+
+        if method == "ap":
+            dist = calculate_ap(prof_path, dist_path)
+            dist.write_parquet(dist_path)
+        else:
+            print("METHOD NOT FOUND")
