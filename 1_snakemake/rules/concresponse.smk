@@ -29,7 +29,7 @@ rule compute_distances_python:
         distances=config["distances_python"],
     run:
         for method in config["distances_python"]:
-            output_file = f"outputs/{wildcards.features}/{wildcards.name}/distances/{method}.parquet"
+            output_file = f"outputs/{features}/{name}/distances/{method}.parquet"
             cr.ap.calculate_distances(input[0], output_file, method)
 
 

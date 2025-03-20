@@ -1,6 +1,6 @@
 {
     "features": "cellprofiler",
-    "name": "mad_featselect",
+    "name": "mad_featselect_ap",
     "workflow": "mad_featselect",
     "num_sds": 2,
     "iqr_scale": 100,
@@ -9,8 +9,8 @@
     "treatment": "Metadata_Perturbation",
     "compound": "Metadata_Compound",
     "control": "DMSO",
-    "distances_R": ["gmd", "cmd"],
-    "distances_python": [],
+    "distances_R": [],
+    "distances_python": ["ap"],
     "categories": [
         "Cells_AGP", "Cells_DNA", "Cells_Mito", "Cells_RNA", "Cells_ER", "Cells_AreaShape",
         "Nuclei_AGP", "Nuclei_DNA", "Nuclei_Mito", "Nuclei_RNA", "Nuclei_ER", "Nuclei_AreaShape",

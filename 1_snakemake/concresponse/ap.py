@@ -12,8 +12,6 @@ def phenotypic_consistency_dmso(cmpd: str, prof_path: str):
 
     profiles = pl.read_parquet(prof_path)
     feat_cols = [i for i in profiles.columns if "Metadata" not in i]
-
-    profiles = profiles.select(["Metadata_Compound", "Metadata_Plate", "Metadata_Well"] + feat_cols)
     dmso_profiles = profiles.filter(pl.col("Metadata_Compound") == "DMSO")
 
     cmpd_profs = profiles.filter(pl.col("Metadata_Compound") == cmpd)
@@ -54,8 +52,6 @@ def phenotypic_activity_compound(cmpd: str, prof_path: str):
     # get data
     profiles = pl.scan_parquet(prof_path)
     feat_cols = [i for i in profiles.collect_schema().names() if "Metadata" not in i]
-
-    profiles = profiles.select(["Metadata_Compound", "Metadata_Plate", "Metadata_Well"] + feat_cols)
     dmso_profiles = profiles.filter(pl.col("Metadata_Compound") == "DMSO")
 
     # select only data for cmpd
@@ -101,35 +97,33 @@ def calculate_ap(prof_path: str):
     compounds = [i for i in compounds if "DMSO" not in i]
 
     # Calculate dmso AP in parallel
-    dmso_results = Parallel(n_jobs=80)(delayed(phenotypic_consistency_dmso)(cmpd) for cmpd in tqdm(compounds))
+    dmso_results = Parallel(n_jobs=80)(delayed(phenotypic_consistency_dmso)(cmpd, prof_path) for cmpd in tqdm(compounds))
     dmso_ap = pd.concat(dmso_results)
 
     # Calculate cmpd AP in parallel
-    cmpd_results = Parallel(n_jobs=80)(delayed(phenotypic_activity_compound)(cmpd) for cmpd in tqdm(compounds))
+    cmpd_results = Parallel(n_jobs=80)(delayed(phenotypic_activity_compound)(cmpd, prof_path) for cmpd in tqdm(compounds))
     cmpd_ap = pd.concat(cmpd_results)
 
     # Combine everything together
-    cmpd_ap = pl.DataFrame(cmpd_ap).filter(~pl.col("average_precision").is_null()).select(
-        ["Metadata_Compound", "Metadata_Plate", "Metadata_Well", "n_pos_pairs", "n_total_pairs", "average_precision"]
-    ).with_columns(
-        pl.lit("COMPOUND").alias("Metadata_Compound_DMSO")
-    ).select([
-        "Metadata_Compound", "Metadata_Plate", "Metadata_Well", "Metadata_Compound_DMSO", "n_pos_pairs", "n_total_pairs", "average_precision"
-    ])
+    cmpd_ap = pl.DataFrame(cmpd_ap).filter(~pl.col("average_precision").is_null()).drop("Metadata_reference_index")
+    meta_cols = [i for i in cmpd_ap.columns if "Metadata" in i]
+    cmpd_ap = cmpd_ap.select(meta_cols + ["average_precision"])
 
-    dmso_ap = pl.DataFrame(dmso_ap).select([
-        "Metadata_Compound", "Metadata_Plate", "Metadata_Well", "Metadata_Compound_DMSO", "n_pos_pairs", "n_total_pairs", "average_precision"
-    ])
+    dmso_ap = pl.DataFrame(dmso_ap).drop(["Metadata_Compound"]).with_columns(
+        pl.concat_str([pl.lit("DMSO"), pl.col("Metadata_Compound_DMSO")], separator="_").alias("Metadata_Compound")
+    ).select(meta_cols + ["average_precision"])
 
-    ap = pl.concat([dmso_ap, cmpd_ap])
+    ap = pl.concat([dmso_ap, cmpd_ap]).rename({"average_precision": "Distance"}).with_columns(
+        pl.lit("ap").alias("Metadata_Distance")
+    )
 
     return ap
 
 
-    def calculate_distances(prof_path: str, dist_path: str, method: str):
+def calculate_distances(prof_path: str, dist_path: str, method: str):
 
-        if method == "ap":
-            dist = calculate_ap(prof_path, dist_path)
-            dist.write_parquet(dist_path)
-        else:
-            print("METHOD NOT FOUND")
+    if method == "ap":
+        dist = calculate_ap(prof_path)
+        dist.write_parquet(dist_path)
+    else:
+        print("METHOD NOT FOUND")

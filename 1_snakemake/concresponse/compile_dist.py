@@ -13,7 +13,7 @@ def compile_dist(input_files: list, transform: str, output_path: str) -> None:
         values="Distance",
         index=meta_cols,
         columns="Metadata_Distance",
-        aggregate_function=None,
+        aggregate_function="median",
     )
 
     # apply transform if specified
