@@ -37,7 +37,7 @@ feat_cols <- colnames(dat)[!grepl("Metadata", colnames(dat))]
 
 bmd_res <- data.frame()
 for (compound in compounds){
-  comp_fit <- dat[dat_comp$Metadata_Compound == compound, ]
+  comp_fit <- dat[dat$Metadata_Compound == compound, ]
 
   if (grepl("_ap", input_path)) {
     cmpd_ctrls <- grepl(compound, dat$Metadata_Compound) & grepl("DMSO", dat$Metadata_Compound)
