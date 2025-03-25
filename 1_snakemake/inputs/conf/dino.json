@@ -14,5 +14,6 @@
     "categories": [
         "DNA", "ER", "AGP", "RNA", "Mito", "Brightfield"
     ],
-    "dist_transform": "none"
+    "dist_transform": "none",
+    "outlier_feat_thresh": 10000000
 }

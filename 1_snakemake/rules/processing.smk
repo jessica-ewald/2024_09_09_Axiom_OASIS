@@ -29,5 +29,7 @@ rule featselect:
         f"outputs/{features}/{name}/profiles/{{pipeline}}.parquet",
     output:
         f"outputs/{features}/{name}/profiles/{{pipeline}}_featselect.parquet",
+    params:
+        outlier_thresh=config["outlier_feat_thresh"],
     run:
-        pp.select_features(*input, *output)
+        pp.select_features(*input, params.outlier_thresh, *output)

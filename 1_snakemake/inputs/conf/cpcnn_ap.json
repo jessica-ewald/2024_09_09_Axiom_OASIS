@@ -12,5 +12,6 @@
     "distances_R": [],
     "distances_python": ["ap"],
     "categories": ["NA"],
-    "dist_transform": "none"
+    "dist_transform": "none",
+    "outlier_feat_thresh": 10000000
 }
