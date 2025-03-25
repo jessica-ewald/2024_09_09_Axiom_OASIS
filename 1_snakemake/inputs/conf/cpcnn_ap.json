@@ -1,7 +1,7 @@
 {
-    "features": "dino",
+    "features": "cpcnn",
     "workflow": "mad_featselect",
-    "name": "mad_featselect",
+    "name": "mad_featselect_ap",
     "num_sds": 2,
     "iqr_scale": 100,
     "clip_value": 500,
@@ -9,10 +9,8 @@
     "treatment": "Metadata_Perturbation",
     "compound": "Metadata_Compound",
     "control": "DMSO",
-    "distances_R": ["gmd", "cmd"],
-    "distances_python": [],
-    "categories": [
-        "DNA", "ER", "AGP", "RNA", "Mito", "Brightfield"
-    ],
+    "distances_R": [],
+    "distances_python": ["ap"],
+    "categories": ["NA"],
     "dist_transform": "none"
 }

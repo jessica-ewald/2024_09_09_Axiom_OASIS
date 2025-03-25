@@ -28,7 +28,7 @@ ctrl <- "DMSO"
 dat <- read_parquet(input_path) %>% as.data.frame()
 
 compounds <- unique(dat$Metadata_Compound)
-compounds <- compounds[compounds != ctrl]
+compounds <- compounds[!grepl(ctrl, compounds)]
 
 dat_dmso <- dat[dat$Metadata_Compound == ctrl, ]
 dat_comp <- dat[dat$Metadata_Compound != ctrl, ]
@@ -37,9 +37,16 @@ feat_cols <- colnames(dat)[!grepl("Metadata", colnames(dat))]
 
 bmd_res <- data.frame()
 for (compound in compounds){
-  comp_fit <- dat_comp[dat_comp$Metadata_Compound == compound, ]
-  cmpd_plates <- comp_fit$Metadata_Plate
-  dmso_fit <- dat_dmso[dat_dmso$Metadata_Plate %in% cmpd_plates, ]
+  comp_fit <- dat[dat_comp$Metadata_Compound == compound, ]
+
+  if (grepl("_ap", input_path)) {
+    cmpd_ctrls <- grepl(compound, dat$Metadata_Compound) & grepl("DMSO", dat$Metadata_Compound)
+    dmso_fit <- dat[cmpd_ctrls, ]
+  } else {
+    cmpd_plates <- comp_fit$Metadata_Plate
+    dmso_fit <- dat_dmso[dat_dmso$Metadata_Plate %in% cmpd_plates, ]
+  }
+
   dat_fit <- rbind(dmso_fit, comp_fit)
   dat_fit <- dat_fit[order(dat_fit$Metadata_Concentration), ]
 

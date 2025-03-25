@@ -1,6 +1,7 @@
 {
     "features": "cpcnn",
     "workflow": "mad_featselect",
+    "name": "mad_featselect",
     "num_sds": 2,
     "iqr_scale": 100,
     "clip_value": 500,

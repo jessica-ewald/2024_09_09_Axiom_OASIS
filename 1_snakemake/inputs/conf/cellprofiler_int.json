@@ -1,6 +1,7 @@
 {
     "features": "cellprofiler",
     "workflow": "mad_int_featselect",
+    "name": "mad_int_featselect",
     "num_sds": 2,
     "iqr_scale": 100,
     "clip_value": 500,

@@ -7,6 +7,7 @@ import numpy as np
 import random
 from joblib import Parallel, delayed
 
+n_cpus = 10
 
 def phenotypic_consistency_dmso(cmpd: str, prof_path: str):
 
@@ -97,11 +98,11 @@ def calculate_ap(prof_path: str):
     compounds = [i for i in compounds if "DMSO" not in i]
 
     # Calculate dmso AP in parallel
-    dmso_results = Parallel(n_jobs=80)(delayed(phenotypic_consistency_dmso)(cmpd, prof_path) for cmpd in tqdm(compounds))
+    dmso_results = Parallel(n_jobs=n_cpus)(delayed(phenotypic_consistency_dmso)(cmpd, prof_path) for cmpd in tqdm(compounds))
     dmso_ap = pd.concat(dmso_results)
 
     # Calculate cmpd AP in parallel
-    cmpd_results = Parallel(n_jobs=80)(delayed(phenotypic_activity_compound)(cmpd, prof_path) for cmpd in tqdm(compounds))
+    cmpd_results = Parallel(n_jobs=n_cpus)(delayed(phenotypic_activity_compound)(cmpd, prof_path) for cmpd in tqdm(compounds))
     cmpd_ap = pd.concat(cmpd_results)
 
     # Combine everything together
