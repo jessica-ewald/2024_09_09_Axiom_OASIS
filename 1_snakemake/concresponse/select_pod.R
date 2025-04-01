@@ -13,6 +13,7 @@ pod_path <- args[3]
 
 ######## 2. Select POD as minimum BMD across gmd and all categories
 bmd <- read_parquet(bmd_path) %>% as.data.frame()
+
 # This is what the SD of residuals must be less than
 bmd$res.thresh <- 3 * bmd$SDctrl
 bmd <- as.data.table(bmd)

@@ -77,7 +77,7 @@ cp_compounds <- unique(cp_pods$Metadata_Compound)
 plot_results <- data.frame(Metadata_Log10Conc = dose)
 fitted_feats <- data.frame()
 for (compound in cp_compounds){
-  temp_pod <- cp_pods[cp_pods$Metadata_Compound == compound, ]
+  temp_pod <- cp_pods[cp_pods$Metadata_Compound == compound, ] %>% distinct()
   feat_type <- temp_pod$gene.id
   model <- temp_pod$mod.name
   b <- temp_pod$b
@@ -100,9 +100,16 @@ for (compound in cp_compounds){
   
   # get observations
   dat_temp <- dat[dat$Metadata_Compound == compound, ]
-  temp_plates <- unique(dat_temp$Metadata_Plate)
-  temp_dmso <- dat[(dat$Metadata_Compound == "DMSO") & (dat$Metadata_Plate %in% temp_plates), 
-                   c(feat_type, "Metadata_Log10Conc")]
+  if (grepl("_ap", cp_pod_path)) {
+    cmpd_ctrls <- grepl(compound, dat$Metadata_Compound) & grepl("DMSO", dat$Metadata_Compound)
+    temp_dmso <- dat[cmpd_ctrls, ]
+    temp_dmso <- temp_dmso[sample(1:720, 20), c(feat_type, "Metadata_Log10Conc")]
+  } else {
+    temp_plates <- unique(dat_temp$Metadata_Plate)
+    temp_dmso <- dat[(dat$Metadata_Compound == "DMSO") & (dat$Metadata_Plate %in% temp_plates), 
+                    c(feat_type, "Metadata_Log10Conc")]
+  }
+
   feats <- dat_temp[, c(feat_type, "Metadata_Log10Conc")]
   feats <- rbind(temp_dmso, feats)
 

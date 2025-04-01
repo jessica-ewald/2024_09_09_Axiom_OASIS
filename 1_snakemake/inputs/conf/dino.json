@@ -1,6 +1,7 @@
 {
     "features": "dino",
     "workflow": "mad_featselect",
+    "name": "mad_featselect",
     "num_sds": 2,
     "iqr_scale": 100,
     "clip_value": 500,
@@ -12,5 +13,7 @@
     "distances_python": [],
     "categories": [
         "DNA", "ER", "AGP", "RNA", "Mito", "Brightfield"
-    ]
+    ],
+    "dist_transform": "none",
+    "outlier_feat_thresh": 10000000
 }
