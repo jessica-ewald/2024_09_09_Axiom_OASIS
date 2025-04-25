@@ -157,7 +157,7 @@ def predict_binary(
 
     """
     n_splits = 5
-    num_gpus = 8
+    num_gpus = 4
 
     dat = pl.read_parquet(input_path)
     meta = pl.read_parquet(label_path).rename({"OASIS_ID": "Metadata_OASIS_ID"})
