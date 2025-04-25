@@ -1,0 +1,1087 @@
+OASIS_ID,Compound_name,Cell_count_hit,MT_hit,LDH_hit,Cell_Painting_hit,Hit_in_all_assays
+OASIS654,2-Acetamidofluorene,No,No,No,Yes,No
+OASIS1044,Dasatinib,Yes,Yes,No,Yes,No
+OASIS1023,Pantoprazole,No,No,No,Yes,No
+OASIS507,Secnidazole,No,No,No,Yes,No
+OASIS1916,Isavuconazonium (sulfate),Yes,Yes,No,Yes,No
+OASIS1380,Zidovudine,No,No,No,No,No
+OASIS976,Tasosartan,No,No,No,No,No
+OASIS744,Irinotecan,Yes,Yes,No,Yes,No
+OASIS970,Rivaroxaban,No,Yes,No,Yes,No
+OASIS657,Everolimus,Yes,Yes,No,Yes,No
+OASIS104,Puromycin aminonucleoside,Yes,Yes,Yes,Yes,Yes
+OASIS1112,Nimodipine,No,Yes,No,No,No
+OASIS1847,Tenofovir alafenamide,Yes,Yes,Yes,Yes,Yes
+,Compound_211c050e,No,No,No,No,No
+OASIS888,Azelnidipine,Yes,Yes,No,Yes,No
+OASIS1803,Difelikefalin,No,No,No,No,No
+OASIS508,Pyriproxyfen,Yes,Yes,No,Yes,No
+,Compound_bb08fa81,No,No,No,No,No
+OASIS302,Loratadine,No,Yes,No,Yes,No
+OASIS168,Lersivirine,No,No,No,No,No
+OASIS1508,Praziquantel,No,No,No,No,No
+OASIS408,Mequinol,No,No,No,No,No
+OASIS1157,Linezolid,No,No,No,No,No
+OASIS1634,Resveratrol,No,No,No,Yes,No
+,Compound_67bcd956,No,No,No,No,No
+,Compound_a31ed4f8,No,No,No,No,No
+OASIS1131,Nitazoxanide,Yes,Yes,Yes,Yes,Yes
+OASIS1455,Gefitinib,Yes,Yes,Yes,Yes,Yes
+OASIS741,Oxytetracycline,No,No,No,No,No
+OASIS1310,Losartan,No,Yes,No,No,No
+OASIS611,Aztreonam,No,No,No,No,No
+,Compound_6d31e50a,No,No,No,No,No
+OASIS055,Etoposide,No,No,No,No,No
+OASIS1171,Anidulafungin,No,Yes,No,Yes,No
+OASIS1564,Nateglinide,No,No,No,No,No
+,Compound_59cfb866,No,No,No,No,No
+OASIS109,Erythromycin Ethylsuccinate,No,No,No,Yes,No
+OASIS006,Coumarin,No,No,No,Yes,No
+OASIS1447,Sulfathiazole,No,No,No,No,No
+,Compound_d5b63f1f,No,No,No,No,No
+,Compound_1e0f84c9,No,No,No,No,No
+OASIS1152,Isosorbide,No,No,No,Yes,No
+OASIS548,"1,4-Dibromobenzene",No,No,No,No,No
+OASIS1817,Carfilzomib,Yes,Yes,Yes,Yes,Yes
+OASIS1136,Glimepiride,No,Yes,No,No,No
+OASIS1220,Scopolamine,No,Yes,No,Yes,No
+OASIS671,Oxcarbazepine,No,No,No,Yes,No
+OASIS397,Flonicamid,No,No,No,No,No
+OASIS896,Betahistine,No,No,No,No,No
+OASIS795,Bupivacaine,No,No,No,No,No
+OASIS1293,Cefixime,No,No,No,No,No
+OASIS1505,Etodolac,No,No,No,No,No
+OASIS1827,Brigatinib,Yes,Yes,Yes,Yes,Yes
+OASIS898,Proguanil,Yes,Yes,Yes,Yes,Yes
+OASIS1478,Cilastatin,No,No,No,No,No
+OASIS984,Hypericin,No,Yes,No,Yes,No
+OASIS747,Tetracaine,No,No,No,Yes,No
+OASIS1802,Voclosporin,Yes,Yes,Yes,Yes,Yes
+OASIS156,Dipropylene glycol,No,No,No,Yes,No
+OASIS1534,Hycanthone,Yes,Yes,Yes,Yes,Yes
+OASIS651,Oxaliplatin,No,No,No,Yes,No
+OASIS543,Adamantane,No,No,No,No,No
+OASIS1706,Cenobamate,No,No,No,No,No
+OASIS1930,Delafloxacin (meglumine),No,Yes,No,Yes,No
+,Compound_0a8f3c0e,No,No,No,No,No
+OASIS577,Benzo[b]thiophene,No,No,No,No,No
+OASIS937,Imatinib,Yes,Yes,Yes,Yes,Yes
+,Compound_109b1ce7,No,No,No,No,No
+OASIS1739,Cabozantinib,No,Yes,No,Yes,No
+OASIS1954,Pretomanid,No,No,No,Yes,No
+OASIS1214,Perindopril,No,No,No,No,No
+OASIS1726,Mirabegron,No,No,No,Yes,No
+OASIS1565,Tocainide,No,No,No,Yes,No
+OASIS763,Deferasirox,No,Yes,No,Yes,No
+OASIS807,Indocyanine green,Yes,Yes,No,Yes,No
+,Compound_375f9c96,No,No,No,No,No
+OASIS1490,Alpidem,No,Yes,No,Yes,No
+OASIS1250,Adefovir,No,No,No,No,No
+OASIS955,Aripiprazole,Yes,Yes,No,Yes,No
+OASIS1227,Valsartan,No,No,No,No,No
+OASIS303,Metoprolol,No,No,No,Yes,No
+OASIS1141,Almotriptan,No,No,No,Yes,No
+OASIS039,Clofibrate,No,No,No,No,No
+OASIS1249,Tegaserod,No,Yes,Yes,Yes,No
+,Compound_2ad780d8,No,No,No,No,No
+OASIS1408,Flecainide,No,Yes,No,Yes,No
+OASIS261,Volinanserin,No,Yes,No,Yes,No
+OASIS790,4-Aminosalicylic acid,No,No,No,No,No
+OASIS010,Diclofenac,No,No,No,Yes,No
+OASIS1003,Chlorthalidone,No,No,No,No,No
+OASIS698,Bisacodyl,No,No,No,No,No
+OASIS1424,Olsalazine,No,Yes,No,No,No
+OASIS353,Isoeugenol,No,No,No,No,No
+OASIS1287,Amlodipine,Yes,Yes,Yes,Yes,Yes
+OASIS1444,Troglitazone,No,Yes,No,Yes,No
+OASIS1617,Benzyl alcohol,No,No,No,No,No
+OASIS1035,Trimebutine,No,No,No,No,No
+,Compound_5b75fe17,No,No,No,No,No
+OASIS1953,Apalutamide,No,Yes,No,Yes,No
+,Compound_f4ce8b04,No,No,No,No,No
+OASIS1727,Ospemifene,No,No,No,No,No
+OASIS566,Bispyribac (sodium),No,No,No,No,No
+OASIS1792,Apremilast,No,No,No,No,No
+OASIS443,Ethylvanillin,No,No,No,No,No
+OASIS1213,Nicardipine,No,No,No,Yes,No
+,Compound_700a50fe,No,No,No,No,No
+OASIS027,Disulfiram,Yes,Yes,No,Yes,No
+OASIS514,Buprofezin,No,No,No,No,No
+OASIS029,Captopril,No,No,No,No,No
+OASIS805,Flumazenil,No,No,No,No,No
+OASIS1331,Salicylic acid,No,No,No,No,No
+OASIS1288,Amoxapine,Yes,Yes,Yes,Yes,Yes
+OASIS1238,Saquinavir,Yes,Yes,Yes,Yes,Yes
+OASIS1472,Erlotinib,No,No,No,Yes,No
+OASIS160,Darbufelone (mesylate),Yes,No,No,Yes,No
+OASIS816,Piperacillin,No,No,No,No,No
+OASIS1398,Carmustine,No,No,No,Yes,No
+,Compound_26a3141a,No,No,No,No,No
+OASIS893,Progesterone,No,No,No,Yes,No
+,Compound_5d6a2392,No,No,No,No,No
+OASIS1957,Alpelisib,Yes,Yes,No,Yes,No
+OASIS655,Emtricitabine,No,No,No,No,No
+OASIS1560,Nocodazole,No,Yes,No,Yes,No
+OASIS073,Griseofulvin,No,Yes,No,Yes,No
+OASIS1030,Vismodegib,No,Yes,No,Yes,No
+,Compound_66f5ba33,No,No,No,No,No
+OASIS028,Tamoxifen,Yes,Yes,Yes,Yes,Yes
+OASIS650,Rifabutin,Yes,Yes,Yes,Yes,Yes
+OASIS742,Bexarotene,No,No,No,Yes,No
+OASIS522,Phenothrin,No,No,No,No,No
+OASIS615,Ceftriaxone,No,No,No,No,No
+OASIS320,Alpha-Naphthoflavone,No,Yes,No,Yes,No
+,Compound_a8277eea,No,No,No,No,No
+OASIS724,Niflumic acid,No,No,No,No,No
+OASIS1000,Cephalothin,No,No,No,No,No
+OASIS325,Chlorpyrifos,No,No,No,Yes,No
+,Compound_516bb906,No,No,No,No,No
+OASIS1676,Methyl Eugenol,No,No,No,No,No
+OASIS056,Iproniazid,No,No,No,No,No
+OASIS1673,Succinic anhydride,No,No,No,No,No
+OASIS128,Acetyl tributyl citrate,No,No,No,Yes,No
+OASIS033,Bendazac,No,No,No,No,No
+OASIS1353,Bosentan,No,Yes,No,No,No
+OASIS100,N-Nitrosodiethylamine,No,No,No,No,No
+OASIS1125,Tibolone,No,No,No,Yes,No
+OASIS331,Roflumilast,No,No,No,No,No
+OASIS762,Glafenine,No,Yes,No,Yes,No
+OASIS372,Dibromoacetic acid,No,No,No,No,No
+OASIS1206,Etidronic acid,Yes,Yes,Yes,Yes,Yes
+OASIS1342,Temafloxacin,No,No,No,Yes,No
+,Compound_d36e9bcf,No,No,No,No,No
+OASIS849,Eplerenone,No,No,No,No,No
+OASIS367,Triclopyr,No,No,Yes,Yes,No
+OASIS606,Thiabendazole,No,Yes,No,Yes,No
+OASIS1462,Tenoxicam,No,Yes,No,Yes,No
+OASIS413,Estragole,No,No,No,Yes,No
+OASIS1130,5-Aminosalicylic Acid,No,No,No,No,No
+OASIS1479,Cinacalcet,Yes,Yes,Yes,Yes,Yes
+OASIS144,Theobromine,No,No,No,No,No
+OASIS1326,Rivastigmine,No,No,No,No,No
+OASIS1951,Encorafenib,Yes,No,No,Yes,No
+OASIS1138,Amisulpride,No,No,No,No,No
+OASIS1144,Fipexide,No,Yes,No,Yes,No
+OASIS485,"2-Ethyl-2-(hydroxymethyl)propane-1,3-diol",No,Yes,No,No,No
+OASIS1732,Semaglutide,No,No,No,No,No
+OASIS610,Alfacalcidol,No,Yes,No,Yes,No
+OASIS1952,Abemaciclib,Yes,Yes,Yes,Yes,Yes
+OASIS387,"2,6-Dichloro-4-nitroaniline",No,No,No,Yes,No
+OASIS126,SSR69071,Yes,Yes,Yes,Yes,Yes
+OASIS1175,Pralnacasan,No,No,No,No,No
+OASIS1129,Vemurafenib,No,Yes,No,Yes,No
+OASIS1750,Vorapaxar,No,Yes,No,Yes,No
+OASIS361,4-Nitrophenol,No,No,No,Yes,No
+OASIS005,Tetracycline,No,No,No,Yes,No
+OASIS1091,Calcitriol,Yes,Yes,No,Yes,No
+OASIS1734,Berotralstat (dihydrochloride),Yes,Yes,Yes,Yes,Yes
+OASIS457,Spiroxamine,No,No,No,Yes,No
+OASIS834,Temsirolimus,Yes,Yes,Yes,Yes,Yes
+OASIS1165,Lubiprostone,No,No,No,Yes,No
+OASIS1932,Rolapitant,Yes,Yes,No,Yes,No
+OASIS1021,Norethindrone acetate,No,No,No,Yes,No
+OASIS062,Omeprazole,No,Yes,No,Yes,No
+OASIS1737,Edoxaban (tosylate),No,No,No,Yes,No
+OASIS705,Demeclocycline,No,No,No,Yes,No
+OASIS1790,Abiraterone acetate,No,No,No,Yes,No
+OASIS1025,Pyridoxine,No,No,No,No,No
+OASIS305,Bezafibrate,No,No,No,Yes,No
+OASIS1915,Fidaxomicin,Yes,Yes,Yes,Yes,Yes
+OASIS847,Ioversol,No,No,No,No,No
+OASIS1067,Prazosin,Yes,Yes,Yes,Yes,Yes
+OASIS1575,Acetarsol,No,No,No,No,No
+OASIS725,Perphenazine,Yes,Yes,Yes,Yes,Yes
+OASIS812,Nefazodone,Yes,Yes,No,Yes,No
+OASIS735,Valpromide,No,No,No,No,No
+OASIS593,Phenothiazine,No,No,No,No,No
+OASIS616,Celecoxib,No,No,No,Yes,No
+OASIS1202,Didanosine,No,No,No,No,No
+OASIS942,Rasagiline,No,No,No,No,No
+,Compound_8937d1da,No,No,No,No,No
+OASIS1083,Piroxicam,No,No,No,No,No
+OASIS1474,Estramustine,No,Yes,No,Yes,No
+OASIS1368,Ibudilast,No,No,No,No,No
+OASIS1912,Vortioxetine,Yes,Yes,Yes,Yes,Yes
+,Compound_dd2e79a8,No,No,No,No,No
+OASIS1400,Cefadroxil,No,No,No,No,No
+OASIS1033,Tinidazole,No,No,No,No,No
+OASIS1791,Gabapentin enacarbil,No,No,No,No,No
+OASIS1871,Stiripentol,No,No,No,Yes,No
+OASIS788,Voglibose,No,No,No,Yes,No
+OASIS1903,Belumosudil,No,Yes,No,Yes,No
+OASIS979,Cabazitaxel,No,Yes,No,Yes,No
+,Compound_84d1048d,No,No,No,No,No
+,Compound_384e16d7,No,No,No,No,No
+OASIS1103,Famotidine,No,No,No,No,No
+OASIS1578,Tadalafil,No,Yes,No,Yes,No
+OASIS673,Cilnidipine,No,No,No,Yes,No
+OASIS927,Repaglinide,No,No,No,No,No
+OASIS1779,Avapritinib,Yes,Yes,No,Yes,No
+OASIS1870,Deferiprone,No,No,No,Yes,No
+OASIS1437,Tazobactam,No,No,No,No,No
+OASIS1513,Bithionol,Yes,Yes,Yes,Yes,Yes
+OASIS1875,Ixazomib,Yes,Yes,Yes,Yes,Yes
+OASIS040,Chlormezanone,No,No,No,Yes,No
+OASIS336,Methoxsalen,No,No,No,No,No
+OASIS1382,Ciprofibrate,No,No,No,Yes,No
+OASIS456,Prochloraz,No,Yes,No,Yes,No
+OASIS1700,Sulfapyridine,No,No,No,No,No
+OASIS967,Dronedarone,Yes,Yes,Yes,Yes,Yes
+OASIS025,Glibenclamide,No,Yes,No,Yes,No
+OASIS1078,L-Ascorbic acid,No,No,No,No,No
+OASIS778,Enfuvirtide,No,No,No,No,No
+OASIS035,Terbinafine,No,No,No,No,No
+OASIS201,SSR240612,Yes,Yes,Yes,Yes,Yes
+OASIS730,Salsalate,No,No,No,No,No
+OASIS034,Lomustine,No,No,No,Yes,No
+OASIS1357,Tianeptine,No,No,No,Yes,No
+OASIS1088,Bendroflumethiazide,No,Yes,No,Yes,No
+OASIS065,Chloramphenicol,No,No,No,No,No
+,Compound_2d74381f,No,No,No,No,No
+OASIS1864,(E/Z)-Belinostat,No,Yes,No,Yes,No
+OASIS101,Tannic acid,Yes,Yes,No,Yes,No
+OASIS078,Chlorpropamide,No,No,No,Yes,No
+OASIS1675,Resorcinol,No,No,No,No,No
+OASIS1647,Ethyl methanesulfonate,No,No,No,No,No
+OASIS1800,Lemborexant,No,Yes,No,Yes,No
+OASIS915,Metaxalone,No,No,No,No,No
+OASIS1956,Binimetinib,No,No,No,Yes,No
+OASIS338,Epinastine,No,Yes,No,Yes,No
+OASIS368,"2,4-D",No,No,No,Yes,No
+OASIS1929,Eslicarbazepine acetate,No,No,No,Yes,No
+OASIS285,Eugenol,No,No,No,No,No
+OASIS966,Fosfluconazole,No,No,No,No,No
+OASIS019,Phenylbutazone,No,No,No,No,No
+OASIS360,"2,7-Dihydroxynaphthalene",No,No,No,Yes,No
+,Compound_af2d6312,No,No,No,No,No
+OASIS1232,Polythiazide,No,Yes,No,Yes,No
+OASIS462,Dibutyl phthalate,No,No,No,No,No
+OASIS1701,Chromium picolinate,No,No,No,No,No
+OASIS1093,Ceftizoxime,No,No,No,No,No
+OASIS1156,Voriconazole,No,No,No,No,No
+OASIS1679,"N,N-Dimethyl-4-toluidine",No,No,No,Yes,No
+OASIS538,Piperazine,No,No,No,No,No
+OASIS1523,Carbimazole,No,No,No,No,No
+OASIS356,"3,3,4,4,5,5,6,6,7,7,8,8,8-Tridecafluorooctan-1-ol",No,No,No,No,No
+OASIS1372,Plerixafor,No,No,No,No,No
+OASIS637,Nisoldipine,No,Yes,No,Yes,No
+OASIS1194,Cefpodoxime,No,No,No,No,No
+OASIS906,D-Panthenol,No,No,No,No,No
+OASIS523,"3,5-Dichloro-N-(2-methylbut-3-yn-2-yl)benzamide",No,No,No,No,No
+OASIS395,Tetraconazole,No,No,No,Yes,No
+OASIS1928,Lonafarnib,Yes,Yes,Yes,Yes,Yes
+OASIS535,Climbazole,No,Yes,No,Yes,No
+OASIS1896,Ivosidenib,No,Yes,No,Yes,No
+OASIS958,Etoricoxib,No,Yes,No,No,No
+OASIS1243,Metolazone,No,Yes,No,Yes,No
+OASIS782,Fluvastatin,No,No,No,Yes,No
+OASIS648,Zalcitabine,No,No,No,Yes,No
+OASIS1459,Risperidone,No,Yes,No,Yes,No
+OASIS1702,Talazoparib,No,Yes,No,No,No
+OASIS454,Diethyltoluamide,No,No,No,No,No
+OASIS229,Propyl gallate,No,No,No,Yes,No
+OASIS1885,Tasimelteon,No,No,No,No,No
+OASIS1530,Felbamate,No,No,No,No,No
+OASIS330,β-Naphthoflavone,No,No,No,Yes,No
+OASIS444,Urethane,No,No,No,No,No
+OASIS1253,Ampiroxicam,No,No,No,No,No
+OASIS1061,Dolasetron,Yes,Yes,No,Yes,No
+OASIS1087,Benazepril,No,No,No,Yes,No
+OASIS164,CP 376395,No,No,No,Yes,No
+OASIS1302,Fludrocortisone,No,No,No,Yes,No
+OASIS1900,Rilpivirine (hydrochloride),No,Yes,No,Yes,No
+OASIS868,Bucillamine,No,No,Yes,Yes,No
+OASIS1473,Lopinavir,Yes,Yes,No,Yes,No
+OASIS828,Econazole,No,Yes,No,Yes,No
+OASIS1441,Topiramate,No,No,No,No,No
+OASIS1007,Erythromycin,No,No,No,No,No
+OASIS931,Tolterodine,No,Yes,Yes,Yes,No
+OASIS080,Meloxicam,No,No,No,No,No
+OASIS396,Metaflumizone,No,No,No,Yes,No
+OASIS1845,Prucalopride,No,Yes,No,No,No
+OASIS511,Chlorpropham,No,No,No,No,No
+OASIS743,Daptomycin,No,No,No,Yes,No
+OASIS789,Acenocoumarol,No,No,No,No,No
+OASIS142,Busulfan,No,No,No,No,No
+,Compound_2226c376,No,No,No,No,No
+OASIS797,Buspirone,No,Yes,No,Yes,No
+OASIS750,Domperidone,Yes,Yes,No,Yes,No
+OASIS900,Cisapride,Yes,Yes,No,Yes,No
+OASIS674,Lafutidine,No,No,No,Yes,No
+OASIS1482,Oxytocin,No,No,No,Yes,No
+OASIS721,Metyrapone,No,No,No,Yes,No
+,Compound_e48ed218,No,No,No,No,No
+OASIS995,Amsacrine,Yes,Yes,Yes,Yes,Yes
+OASIS1740,Ruxolitinib,Yes,Yes,No,Yes,No
+OASIS1388,Riboflavin,No,Yes,No,No,No
+OASIS626,Granisetron,No,Yes,No,Yes,No
+OASIS799,Cefoperazone,No,No,No,No,No
+OASIS1838,Avanafil,No,Yes,No,Yes,No
+OASIS1204,Droperidol,Yes,Yes,No,Yes,No
+OASIS1881,Lusutrombopag,Yes,Yes,No,Yes,No
+OASIS798,Cefazolin,No,No,No,No,No
+OASIS1910,Vilazodone (Hydrochloride),Yes,Yes,No,Yes,No
+OASIS085,Metformin,No,No,No,No,No
+,Compound_567dbb1e,No,No,No,No,No
+OASIS848,Galanthamine,No,No,No,No,No
+OASIS1381,Budesonide,No,No,No,Yes,No
+OASIS031,Disopyramide,No,No,No,No,No
+OASIS267,Sampatrilat,No,No,No,No,No
+OASIS1394,Aminoglutethimide,No,No,No,Yes,No
+OASIS1107,Methsuximide,No,No,No,No,No
+OASIS097,Indomethacin,No,No,No,No,No
+OASIS1045,Furazolidone,Yes,Yes,No,Yes,No
+OASIS354,Benzyl isothiocyanate,No,No,No,Yes,No
+OASIS911,Itraconazole,No,Yes,No,Yes,No
+OASIS571,Basic green 4,Yes,Yes,Yes,Yes,Yes
+OASIS1936,Benznidazole,No,No,No,Yes,No
+OASIS094,Isoniazid,No,No,No,No,No
+,Compound_e88ada59,No,No,No,No,No
+OASIS985,Dapsone,No,No,No,Yes,No
+OASIS996,Benoxaprofen,No,No,No,No,No
+OASIS1079,Vitamin D2,No,No,No,Yes,No
+OASIS838,Tyramine,No,No,No,No,No
+OASIS066,Nitrofurantoin,Yes,Yes,Yes,Yes,Yes
+OASIS1777,Eliglustat,Yes,Yes,Yes,Yes,Yes
+OASIS540,"N,N-Dicyclohexylcarbodiimide(DCC)",Yes,Yes,Yes,Yes,Yes
+OASIS1865,Plecanatide,No,No,No,No,No
+OASIS001,Acetaminophen,No,No,No,No,No
+OASIS1142,Piracetam,No,No,No,No,No
+OASIS465,3-Iodoprop-2-yn-1-yl butylcarbamate,Yes,Yes,Yes,Yes,Yes
+OASIS818,Rimantadine,No,No,No,No,No
+OASIS1384,Ethylene glycol,No,No,No,Yes,No
+OASIS1248,Ramelteon,No,No,No,No,No
+OASIS1426,Orlistat,No,No,No,No,No
+OASIS143,Axitinib,Yes,Yes,No,Yes,No
+OASIS977,Silodosin,Yes,Yes,No,Yes,No
+OASIS582,Chlorendic acid,No,No,No,No,No
+OASIS466,Diheptyl phthalate,No,No,No,No,No
+OASIS494,Drometrizole,No,No,No,No,No
+OASIS1867,Regorafenib,Yes,Yes,Yes,Yes,Yes
+OASIS1801,Bempedoic acid,No,No,No,No,No
+OASIS369,4-CPA,No,No,No,Yes,No
+OASIS1001,Cephradine,No,No,No,No,No
+OASIS379,Fipronil,No,Yes,No,Yes,No
+OASIS1101,Etomidate,No,No,No,No,No
+,Compound_f789edad,No,No,No,No,No
+OASIS1600,Titanocene dichloride,No,No,No,Yes,No
+OASIS661,Levofloxacin,No,No,No,Yes,No
+OASIS1709,Sotorasib (racemate),No,No,No,Yes,No
+OASIS1252,Ebastine,Yes,Yes,Yes,Yes,Yes
+OASIS691,Niacin,No,No,No,Yes,No
+,Compound_b1e7bc28,No,No,No,No,No
+,Compound_1f5f6d79,No,No,No,No,No
+OASIS292,"1,4-Dichlorobenzene",No,No,No,No,No
+,Compound_d4250270,No,No,No,No,No
+OASIS1857,Odevixibat,No,No,No,No,No
+OASIS892,Tolazamide,No,No,No,No,No
+OASIS1433,Pindolol,No,No,No,Yes,No
+OASIS090,Propylthiouracil,No,No,No,Yes,No
+OASIS843,Tiratricol,No,Yes,No,Yes,No
+OASIS840,Fluvoxamine,Yes,Yes,Yes,Yes,Yes
+OASIS496,Cyprodinil,No,No,No,No,No
+,Compound_e5639c90,No,No,No,No,No
+OASIS960,Temocapril,No,Yes,No,Yes,No
+OASIS124,Cyproconazole,No,No,No,No,No
+,Compound_d60a93f5,No,No,No,No,No
+OASIS1782,Venetoclax,No,Yes,No,Yes,No
+OASIS087,Allopurinol,No,No,No,No,No
+OASIS1456,Rifapentine,No,Yes,No,Yes,No
+OASIS684,Zaltoprofen,No,No,No,Yes,No
+OASIS472,Hexaconazole,No,Yes,No,Yes,No
+OASIS1878,Tenapanor (hydrochloride),No,Yes,No,Yes,No
+OASIS089,Ibuprofen,No,No,No,No,No
+OASIS1369,Paliperidone,No,Yes,No,Yes,No
+OASIS1403,Cyproheptadine,No,No,No,Yes,No
+OASIS1536,Leflunomide,No,Yes,No,Yes,No
+OASIS773,Mometasone,Yes,Yes,Yes,Yes,Yes
+OASIS043,Cimetidine,No,No,No,No,No
+OASIS252,Clodinafop-propargyl,No,Yes,No,No,No
+OASIS597,Cobicistat,Yes,Yes,Yes,Yes,Yes
+OASIS1822,Uridine triacetate,No,No,No,Yes,No
+OASIS1852,Opicapone,No,No,No,Yes,No
+OASIS1355,Lapatinib,Yes,Yes,No,Yes,No
+OASIS486,Pendimethalin,No,No,No,No,No
+OASIS1559,Dimenhydrinate,No,No,No,Yes,No
+OASIS501,Famoxadone,Yes,Yes,No,Yes,No
+OASIS764,Ritonavir,No,Yes,No,Yes,No
+OASIS092,Rifampicin,No,Yes,No,Yes,No
+OASIS1886,Neratinib,Yes,Yes,Yes,Yes,Yes
+OASIS1835,Dacomitinib,Yes,Yes,Yes,Yes,Yes
+OASIS1815,Pirfenidone,No,No,No,No,No
+OASIS123,Chlorothalonil,No,Yes,Yes,Yes,No
+OASIS1005,Cyclofenil,No,No,No,Yes,No
+,Compound_9d6f222d,No,No,No,No,No
+OASIS605,6-Mercaptopurine,No,Yes,No,Yes,No
+OASIS1646,Myristicin,No,No,No,No,No
+,Compound_2a57da8c,No,No,No,No,No
+OASIS1356,Pinacidil,No,Yes,No,Yes,No
+OASIS928,Tamsulosin,No,Yes,No,Yes,No
+OASIS532,Diniconazole,No,No,No,Yes,No
+,Compound_fee2a120,No,No,No,No,No
+OASIS1431,Vitamin K1,No,Yes,No,No,No
+OASIS666,Ibufenac,No,No,No,Yes,No
+OASIS1520,Anastrozole,No,No,No,No,No
+OASIS1889,Triclabendazole,No,Yes,No,Yes,No
+OASIS1793,Bedaquiline (fumarate),No,Yes,No,Yes,No
+OASIS1749,Ferric maltol,Yes,Yes,Yes,Yes,Yes
+OASIS1549,Paclitaxel,No,Yes,No,Yes,No
+OASIS1770,Bosutinib (hydrate),Yes,Yes,Yes,Yes,Yes
+OASIS1283,Terbutaline,No,No,No,Yes,No
+OASIS1521,Benzonatate,No,No,No,Yes,No
+OASIS463,Benzyl butyl phthalate,No,No,No,No,No
+OASIS1231,Hydroxyurea,No,No,No,No,No
+OASIS1466,Zolmitriptan,No,No,No,No,No
+OASIS1933,Deflazacort,No,Yes,No,Yes,No
+OASIS943,Artesunate,No,No,No,Yes,No
+OASIS1102,Exemestane,No,No,No,Yes,No
+OASIS1546,Norethindrone,No,No,No,Yes,No
+OASIS940,Bortezomib,Yes,Yes,Yes,Yes,Yes
+OASIS1495,Abiraterone,No,No,No,Yes,No
+OASIS287,"1,6-Dichlorohexane",No,No,No,No,No
+OASIS023,Chlorpromazine,Yes,Yes,Yes,Yes,Yes
+OASIS122,Diallyl phthalate,Yes,Yes,Yes,Yes,Yes
+OASIS993,Altretamine,No,No,No,No,No
+OASIS753,Lidocaine,No,No,No,No,No
+OASIS296,Pulegone,No,No,No,No,No
+OASIS1396,Apomorphine,Yes,Yes,Yes,Yes,Yes
+OASIS748,Ezetimibe,Yes,Yes,No,Yes,No
+OASIS393,Quinoxyfen,No,Yes,No,Yes,No
+OASIS060,Colchicine,No,No,No,Yes,No
+OASIS1251,Droxidopa,No,No,No,No,No
+OASIS1874,Idelalisib,Yes,Yes,Yes,Yes,Yes
+OASIS1076,Dabigatran,No,No,No,No,No
+OASIS208,"N2-(tert-Butyl)-N4-cyclopropyl-6-(methylthio)-1,3,5-triazine-2,4-diamine",No,No,No,Yes,No
+OASIS1461,Bacitracin,No,No,No,No,No
+OASIS428,Casoron,No,No,No,No,No
+OASIS049,Quinidine (15% dihydroquinidine),No,Yes,No,Yes,No
+OASIS131,Terbuthylazine,No,No,No,No,No
+OASIS1304,Fluoxetine,Yes,Yes,Yes,Yes,Yes
+OASIS1785,Lurbinectedin,Yes,Yes,Yes,Yes,Yes
+OASIS1858,Trilaciclib,Yes,Yes,No,Yes,No
+OASIS158,"4,4-Dimethyloxazolidine",No,No,No,No,No
+OASIS272,CP-532623,No,Yes,No,Yes,No
+OASIS1780,Selexipag,No,No,No,No,No
+OASIS1787,Tedizolid (phosphate),No,No,No,Yes,No
+OASIS1143,Oxyphenisatine,No,No,No,No,No
+,Compound_baf3c49a,No,No,No,No,No
+OASIS917,Nadolol,No,No,No,No,No
+OASIS814,Pentostatin,No,No,No,No,No
+,Compound_050ea8a9,No,No,No,No,No
+OASIS047,Carbamazepine,No,No,No,No,No
+OASIS470,Bromoxynil octanoate,No,No,No,No,No
+OASIS1788,Nifurtimox,Yes,Yes,No,Yes,No
+OASIS754,Oxyphenbutazone,Yes,Yes,No,Yes,No
+OASIS1812,Letermovir,No,Yes,No,Yes,No
+OASIS1154,Dofetilide,No,No,No,Yes,No
+OASIS1911,Safinamide (mesylate),No,Yes,No,Yes,No
+OASIS1439,Teniposide,Yes,Yes,No,Yes,No
+OASIS064,Lornoxicam,No,Yes,No,No,No
+OASIS181,Aplaviroc (hydrochloride),No,No,No,Yes,No
+OASIS1768,Obeticholic acid,No,No,No,No,No
+OASIS188,Maropitant,Yes,Yes,Yes,Yes,Yes
+OASIS1635,3-Nitropropanoic acid,No,Yes,No,Yes,No
+,Compound_fdb8d1f5,No,No,No,No,No
+OASIS1167,Acetylcholine (chloride),No,No,No,No,No
+OASIS930,Tolcapone,No,Yes,No,No,No
+,Compound_a1cfdba2,No,No,No,No,No
+OASIS1114,Nizatidine,No,No,No,No,No
+OASIS1725,Larotrectinib,No,Yes,No,Yes,No
+OASIS011,Cyclosporin A,Yes,Yes,Yes,Yes,Yes
+OASIS659,Cinchophen,No,No,No,No,No
+,Compound_f7ec0534,No,No,No,No,No
+OASIS867,Tigecycline,No,Yes,No,Yes,No
+OASIS1449,Atorvastatin,No,No,No,Yes,No
+OASIS1487,Febuxostat,No,No,No,Yes,No
+OASIS1240,Valdecoxib,No,Yes,No,Yes,No
+OASIS953,Ranolazine,No,Yes,No,Yes,No
+OASIS1374,Varenicline,No,No,No,No,No
+OASIS1876,Zanubrutinib,Yes,Yes,No,Yes,No
+OASIS1265,Alfuzosin,No,Yes,No,Yes,No
+OASIS1006,Diphenhydramine,No,Yes,No,Yes,No
+OASIS694,Melatonin,No,No,No,No,No
+OASIS218,Carbendazim,No,Yes,No,Yes,No
+OASIS1348,Meropenem,No,No,No,No,No
+,Compound_ed9176f4,No,No,No,No,No
+OASIS108,Thioacetamide,No,No,No,Yes,No
+OASIS256,CP671305,No,No,No,No,No
+OASIS1507,Edaravone,No,No,No,No,No
+OASIS1168,Ximelagatran,Yes,Yes,Yes,Yes,Yes
+OASIS1468,Cefdinir,No,No,No,No,No
+OASIS1077,Acetylcysteine,No,No,No,No,No
+OASIS1869,Cholic acid,No,No,No,Yes,No
+OASIS1691,Myrcene,No,No,No,No,No
+OASIS998,Carbidopa,No,No,No,No,No
+OASIS1744,Vandetanib,Yes,Yes,Yes,Yes,Yes
+,Compound_26e57091,No,No,No,No,No
+OASIS046,Benzbromarone,No,Yes,No,No,No
+OASIS1860,Aripiprazole Lauroxil,No,No,No,No,No
+,Compound_2bf03cab,No,No,No,No,No
+OASIS909,Floxuridine,No,Yes,No,Yes,No
+OASIS1347,Aceclofenac,No,No,No,Yes,No
+OASIS1922,Pralsetinib,Yes,Yes,No,Yes,No
+OASIS1458,Irsogladine,No,Yes,No,Yes,No
+,Compound_2ba46d57,No,No,No,No,No
+OASIS781,5-Fluorouracil,No,No,No,Yes,No
+OASIS1275,Crizotinib,Yes,Yes,Yes,Yes,Yes
+,Compound_a628ede8,No,No,No,No,No
+,Compound_04264751,No,No,No,No,No
+OASIS1049,Diacerein,No,Yes,No,Yes,No
+OASIS1895,Valbenazine,No,Yes,No,Yes,No
+OASIS007,Nitrofurazone,Yes,Yes,Yes,Yes,Yes
+OASIS887,Telbivudine,No,No,No,No,No
+OASIS012,Sulindac,No,No,No,Yes,No
+OASIS1823,Palbociclib,No,Yes,Yes,Yes,No
+OASIS529,4-(tert-Butyl)benzoic acid,No,No,No,Yes,No
+OASIS344,1-Oxindene,No,No,No,Yes,No
+OASIS052,Ethinylestradiol,No,No,No,Yes,No
+OASIS516,"N-(4-fluorophenyl)-N-isopropyl-2-((5-(trifluoromethyl)-1,3,4-thiadiazol-2-yl)oxy)acetamide",No,No,No,Yes,No
+OASIS1941,Brilliant blue G-250,No,Yes,No,Yes,No
+OASIS1695,Penicillin V (Potassium),No,No,No,No,No
+OASIS1066,Heptaminol,No,No,No,No,No
+,Compound_43808771,No,No,No,No,No
+OASIS384,4-Chloro-3-nitroaniline,No,No,No,No,No
+OASIS253,"Benzene-1,2-dicarboxaldehyde",No,No,No,Yes,No
+OASIS1712,Copanlisib,Yes,Yes,No,Yes,No
+OASIS813,Pentetic acid,No,No,No,No,No
+OASIS832,Artemisinin,No,No,No,No,No
+OASIS250,Dihexyl phthalate,No,No,No,No,No
+OASIS1735,Finerenone,No,Yes,No,Yes,No
+OASIS1880,Gilteritinib,Yes,Yes,Yes,Yes,Yes
+OASIS785,Metronidazole,No,No,No,Yes,No
+OASIS1736,Rucaparib,Yes,Yes,Yes,Yes,Yes
+OASIS1137,Beclometasone,No,No,No,Yes,No
+OASIS971,Propacetamol,No,No,No,No,No
+OASIS738,Stavudine,No,No,No,No,No
+OASIS1748,Enzalutamide,No,Yes,No,Yes,No
+OASIS1014,Isradipine,No,Yes,No,Yes,No
+,Compound_fa9eeeaf,No,No,No,No,No
+OASIS534,Tebuconazole,No,No,No,Yes,No
+OASIS1042,Mebendazole,No,Yes,No,Yes,No
+OASIS1570,Oseltamivir,No,No,No,Yes,No
+OASIS1412,Hydroxychloroquine,Yes,Yes,Yes,Yes,Yes
+OASIS1383,Metamizole (sodium),No,No,No,No,No
+OASIS441,Etofenprox,No,No,No,No,No
+OASIS886,Etravirine,Yes,No,No,Yes,No
+OASIS1228,Venlafaxine,No,No,No,No,No
+OASIS1352,Argatroban,No,No,No,No,No
+OASIS446,Pyraflufen-ethyl,No,No,No,No,No
+OASIS827,Troxipide,No,Yes,No,No,No
+OASIS1184,Acitretin,No,No,No,Yes,No
+OASIS670,Isoxicam,No,No,No,No,No
+OASIS745,Sunitinib,Yes,Yes,Yes,Yes,Yes
+OASIS1818,Dimethyl fumarate,No,No,No,No,No
+,Compound_d8e791f6,No,No,No,No,No
+OASIS1519,Amphotericin B,No,No,No,Yes,No
+OASIS1811,Brexpiprazole,Yes,Yes,Yes,Yes,Yes
+OASIS839,Tolmetin,No,No,No,Yes,No
+OASIS050,Aspirin,No,No,No,No,No
+OASIS1528,Chlorzoxazone,No,No,No,No,No
+OASIS1755,Glasdegib,No,Yes,No,Yes,No
+OASIS1475,Lenalidomide,No,No,No,Yes,No
+OASIS113,Trimethadione,No,No,No,No,No
+OASIS1898,Duvelisib,Yes,Yes,No,Yes,No
+OASIS939,Gemcitabine,No,No,No,No,No
+OASIS808,Lactose,No,No,No,No,No
+,Compound_c555849c,No,No,No,No,No
+OASIS1497,Tolrestat,No,No,No,No,No
+,Compound_a166b3a5,No,No,No,No,No
+OASIS905,Roxatidine,No,No,No,No,No
+OASIS497,MCPA,No,No,No,No,No
+OASIS1820,Pomalidomide,No,No,No,No,No
+OASIS204,Sodium Tartrate,No,No,No,No,No
+OASIS1696,Hexylresorcinol,No,No,No,No,No
+OASIS499,Pymetrozine,No,No,No,No,No
+OASIS859,Darifenacin,Yes,Yes,No,Yes,No
+OASIS564,Imidazole,No,No,No,No,No
+OASIS686,Simethicone,No,No,No,No,No
+OASIS1132,Nelfinavir,Yes,Yes,No,Yes,No
+OASIS1794,Fostamatinib,Yes,Yes,Yes,Yes,Yes
+OASIS220,2-Bromo-4'-hydroxyacetophenone,No,No,No,No,No
+OASIS986,DHEA,No,No,No,Yes,No
+OASIS959,Hydroxyethyl starch,No,No,No,No,No
+OASIS638,Nitrendipine,No,Yes,No,Yes,No
+OASIS520,Linalool,No,No,No,No,No
+OASIS1282,Reserpine,Yes,Yes,No,Yes,No
+OASIS1115,Norepinephrine,No,No,No,Yes,No
+OASIS752,Loxoprofen,No,No,No,No,No
+OASIS074,Tolbutamide,No,No,No,Yes,No
+OASIS1856,Tucatinib,No,No,No,Yes,No
+OASIS632,Melperone,No,Yes,No,Yes,No
+OASIS003,Theophylline,No,No,No,No,No
+OASIS1333,Decitabine,No,No,No,No,No
+OASIS1851,Empagliflozin,No,No,No,Yes,No
+OASIS586,Leucomalachite green,No,No,No,Yes,No
+OASIS051,Cyclophosphamide,No,No,No,No,No
+OASIS1561,Tenofovir,No,No,No,No,No
+OASIS1745,Ceritinib,Yes,Yes,Yes,Yes,Yes
+,Compound_644b7ea0,No,No,No,No,No
+,Compound_5de2ed34,No,No,No,No,No
+OASIS1122,Sulfamethizole,No,No,No,No,No
+OASIS951,Riluzole,No,No,No,Yes,No
+OASIS389,Nicotinonitrile,No,No,No,No,No
+OASIS1554,Sparfloxacin,No,No,No,No,No
+,Compound_ac61b18b,No,No,No,No,No
+OASIS642,Protirelin,No,No,No,No,No
+OASIS851,Pirarubicin,Yes,Yes,Yes,Yes,Yes
+OASIS883,"Cyclohexane-1,2,3,4,5,6-hexaol",No,No,No,Yes,No
+OASIS1752,Ribociclib,Yes,Yes,Yes,Yes,Yes
+,Compound_d3facf13,No,No,No,No,No
+OASIS1945,Relugolix,No,Yes,No,Yes,No
+OASIS689,Rilpivirine,No,Yes,No,Yes,No
+OASIS1531,Fenoprofen,No,No,No,No,No
+OASIS442,Oxyfluorfen,No,No,No,Yes,No
+OASIS1345,Fluspirilene,Yes,Yes,Yes,Yes,Yes
+,Compound_c7b43962,No,No,No,No,No
+OASIS938,Pioglitazone,No,No,No,Yes,No
+OASIS1839,Lenvatinib,No,Yes,No,Yes,No
+OASIS492,Difenoconazole,Yes,Yes,No,Yes,No
+OASIS1806,Osilodrostat,No,No,No,No,No
+OASIS1843,Pitolisant (hydrochloride),Yes,Yes,No,Yes,No
+OASIS1127,Zafirlukast,No,No,No,No,No
+OASIS1540,Mepivacaine,No,No,No,Yes,No
+OASIS274,Nelivaptan,No,Yes,No,Yes,No
+OASIS1776,Tivozanib,No,Yes,No,Yes,No
+OASIS1377,Metopimazine,Yes,Yes,Yes,Yes,Yes
+OASIS1434,Primaquine,Yes,Yes,Yes,Yes,Yes
+,Compound_04892a07,No,No,No,No,No
+OASIS058,Ticlopidine,No,No,No,Yes,No
+OASIS809,Lamotrigine,No,No,No,No,No
+OASIS1247,Miglustat,No,No,No,No,No
+,Compound_17d75fd3,No,No,No,No,No
+OASIS526,Halofenozide,No,No,No,No,No
+,Compound_88f6068e,No,No,No,No,No
+OASIS1364,Saxagliptin,No,No,No,No,No
+OASIS021,Ethionamide,No,No,No,No,No
+OASIS1877,Sofosbuvir,No,Yes,No,Yes,No
+OASIS1756,Nintedanib,Yes,Yes,No,Yes,No
+OASIS667,Diatrizoic acid,No,No,No,No,No
+OASIS1351,Rifaximin,No,Yes,No,Yes,No
+OASIS1908,Teriflunomide,No,Yes,No,Yes,No
+OASIS1819,Triheptanoin,No,No,No,No,No
+OASIS1418,Mequitazine,Yes,Yes,Yes,Yes,Yes
+OASIS736,Vecuronium (bromide),No,No,No,No,No
+OASIS1191,Cabergoline,Yes,Yes,No,Yes,No
+OASIS717,D-Mannitol,No,No,No,No,No
+OASIS1760,Lorlatinib,No,Yes,No,Yes,No
+OASIS1905,Apixaban,No,Yes,No,Yes,No
+OASIS1415,Ketorolac,No,No,No,No,No
+OASIS1917,Fedratinib (hydrochloride hydrate),Yes,Yes,Yes,Yes,Yes
+OASIS1337,Ivermectin,Yes,Yes,No,Yes,No
+,Compound_f92d6120,No,No,No,No,No
+OASIS1060,Mitoxantrone,Yes,Yes,Yes,Yes,Yes
+,Compound_331dc82d,No,No,No,No,No
+OASIS1836,Ponatinib (hydrochloride),Yes,Yes,Yes,Yes,Yes
+OASIS1868,Cobimetinib,Yes,Yes,Yes,Yes,Yes
+OASIS1343,Vitamin B12,No,No,No,No,No
+OASIS362,Triclosan,Yes,Yes,Yes,Yes,Yes
+OASIS1828,Enasidenib (mesylate),No,No,No,Yes,No
+OASIS1105,Guaifenesin,No,No,No,No,No
+OASIS1950,Infigratinib,Yes,Yes,Yes,Yes,Yes
+OASIS1892,Monomethyl fumarate,No,No,No,Yes,No
+OASIS293,Benzyl acetate,No,No,No,No,No
+OASIS1504,Mitotane,No,No,No,Yes,No
+OASIS656,Docetaxel,Yes,Yes,Yes,Yes,Yes
+OASIS1043,Nystatin,No,No,No,No,No
+OASIS711,Dydrogesterone,No,No,No,Yes,No
+,Compound_41a3bd97,No,No,No,No,No
+OASIS500,Sulfentrazone,No,No,No,No,No
+OASIS1913,Ticagrelor,Yes,Yes,No,Yes,No
+,Compound_5a4fdb4e,No,No,No,No,No
+,Compound_4e3771a5,No,No,No,No,No
+OASIS1486,Romidepsin,Yes,Yes,Yes,Yes,Yes
+OASIS1280,Hydrocortisone,No,No,No,Yes,No
+,Compound_5b69be95,No,No,No,No,No
+OASIS1097,Diflunisal,No,No,No,Yes,No
+OASIS802,Danazol,No,No,No,Yes,No
+OASIS082,Tacrine,No,Yes,Yes,Yes,No
+OASIS1761,Ripretinib,No,Yes,No,Yes,No
+OASIS680,Falnidamol,Yes,Yes,Yes,Yes,Yes
+OASIS246,Benzoic acid,No,No,No,No,No
+,Compound_21e5dc8d,No,No,No,No,No
+OASIS1844,Moxidectin,Yes,Yes,No,Yes,No
+OASIS230,Sodium 2-((hydroxymethyl)amino)acetate,No,No,No,No,No
+OASIS1100,L-Epinephrine,No,No,No,Yes,No
+OASIS1645,Methyl carbamate,No,No,No,No,No
+OASIS322,4-Nitrobenzoic acid,No,No,No,Yes,No
+,Compound_15eba834,No,No,No,No,No
+OASIS546,(2r)-2-(4-Chloro-2-methylphenoxy)propanoic acid,No,No,No,No,No
+OASIS483,"2-Ethylanthracene-9,10-dione",No,Yes,No,Yes,No
+OASIS987,Ethynodiol diacetate,No,No,No,Yes,No
+OASIS390,"1,4-Benzodinitrile",No,No,No,Yes,No
+,Compound_78597f1e,No,No,No,No,No
+,Compound_d425b770,No,No,No,No,No
+OASIS1153,Tacrolimus,Yes,Yes,No,Yes,No
+OASIS590,"N1-Isopropyl-N4-phenylbenzene-1,4-diamine",Yes,Yes,No,Yes,No
+OASIS1017,Levamisole,No,No,No,Yes,No
+OASIS015,Phenytoin,No,No,No,No,No
+OASIS1576,Zonisamide,No,No,No,No,No
+OASIS111,Fenamic acid,No,No,No,No,No
+OASIS1121,Sofalcone,No,No,No,Yes,No
+OASIS1891,Istradefylline,No,Yes,No,Yes,No
+OASIS1328,Trichlormethiazide,No,No,No,No,No
+OASIS720,Levomepromazine,Yes,Yes,Yes,Yes,Yes
+OASIS557,Fluazinam,Yes,Yes,Yes,Yes,Yes
+OASIS1081,8-Hydroxyquinoline,No,No,No,Yes,No
+OASIS936,Amoxicillin,No,No,No,No,No
+,Compound_cf1a96b5,No,No,No,No,No
+,Compound_1dccd867,No,No,No,No,No
+OASIS1555,Tizanidine,No,No,No,Yes,No
+OASIS622,Etretinate,No,No,No,Yes,No
+OASIS1935,Lactitol,No,No,No,Yes,No
+OASIS1772,Afatinib,Yes,Yes,Yes,Yes,Yes
+,Compound_255ef47f,No,No,No,No,No
+OASIS1367,Dirithromycin,No,No,No,No,No
+OASIS1789,Selumetinib,No,Yes,No,Yes,No
+OASIS706,Dichlorphenamide,No,No,No,No,No
+OASIS1215,Plicamycin,Yes,Yes,Yes,Yes,Yes
+OASIS1320,Piperacetazine,Yes,Yes,Yes,Yes,Yes
+OASIS069,Dantrolene,No,Yes,No,Yes,No
+OASIS652,Doxycycline,No,No,No,Yes,No
+OASIS662,Trovafloxacin,No,Yes,No,Yes,No
+OASIS1586,Atazanavir,Yes,Yes,Yes,Yes,Yes
+OASIS891,Fluconazole,No,No,No,No,No
+,Compound_357cf81f,No,No,No,No,No
+OASIS869,Raltegravir,No,No,No,No,No
+OASIS1321,Pipobroman,No,No,No,Yes,No
+OASIS1596,Peramivir,No,No,No,No,No
+OASIS949,Losartan (potassium),No,No,No,No,No
+OASIS406,Metalaxyl-M,No,No,No,No,No
+OASIS323,Piclamilast,No,No,No,Yes,No
+,Compound_ecf29b3b,No,No,No,No,No
+OASIS1918,Selpercatinib,No,Yes,No,Yes,No
+OASIS1349,Nicergoline,No,Yes,No,Yes,No
+,Compound_e6509093,No,No,No,No,No
+OASIS679,Vasopressin,No,No,No,No,No
+OASIS821,Rofecoxib,No,Yes,No,Yes,No
+,Compound_d1f5745d,No,No,No,No,No
+OASIS1764,Mobocertinib,Yes,Yes,Yes,Yes,Yes
+OASIS510,Oxadiazon,No,No,No,Yes,No
+OASIS1096,Clozapine,Yes,Yes,No,Yes,No
+OASIS1346,Sulfabenzamide,No,Yes,No,No,No
+,Compound_5ec2a600,No,No,No,No,No
+OASIS861,Lercanidipine,No,No,No,Yes,No
+OASIS249,Benzethonium (chloride),Yes,Yes,Yes,Yes,Yes
+OASIS1825,Osimertinib,Yes,Yes,Yes,Yes,Yes
+OASIS1480,Donepezil,No,Yes,No,Yes,No
+OASIS1340,Sorafenib,Yes,Yes,Yes,Yes,Yes
+OASIS1432,Pimozide,Yes,Yes,No,Yes,No
+OASIS1717,Calcifediol,Yes,Yes,No,Yes,No
+OASIS844,Idoxuridine,No,No,No,No,No
+OASIS696,Adenosine,No,No,No,Yes,No
+OASIS438,2-(2-Ethoxyethoxy)ethanol,No,No,No,Yes,No
+,Compound_0cf001d4,No,No,No,No,No
+OASIS061,Furosemide,No,No,No,Yes,No
+OASIS1488,Pazopanib,Yes,Yes,Yes,Yes,Yes
+OASIS1297,Deferoxamine,No,Yes,No,Yes,No
+OASIS1315,Nandrolone decanoate,No,No,No,Yes,No
+OASIS1285,Acetazolamide,No,Yes,No,No,No
+OASIS1632,"2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,9-Heptadecafluorononanoic acid",No,No,No,Yes,No
+OASIS1330,Methoxyflurane,No,No,No,No,No
+OASIS957,Telithromycin,Yes,Yes,Yes,Yes,Yes
+OASIS334,Roxarsone,No,No,No,No,No
+OASIS567,Sodium dodecyl sulfate,No,No,No,Yes,No
+OASIS1883,Maralixibat (chloride),Yes,Yes,Yes,Yes,Yes
+OASIS095,Ciprofloxacin,No,No,No,No,No
+OASIS690,Enflurane,No,No,No,No,No
+OASIS1608,Corn oil,No,No,No,No,No
+,Compound_9a411687,No,No,No,No,No
+OASIS581,"1,3,5-Triallyl-1,3,5-triazinane-2,4,6-trione",No,No,No,No,No
+OASIS964,Moxifloxacin,No,Yes,No,Yes,No
+OASIS150,Isophorone,No,No,No,No,No
+OASIS1050,Suloctidil,Yes,Yes,Yes,Yes,Yes
+OASIS994,Ampicillin,No,No,No,No,No
+OASIS524,4-Cumylphenol,No,No,No,Yes,No
+OASIS037,Fenofibrate,No,No,No,No,No
+OASIS835,Iloprost,No,No,No,Yes,No
+OASIS1040,Fludarabine,No,No,No,Yes,No
+OASIS447,Malathion,No,No,No,Yes,No
+OASIS664,Zoledronic Acid,No,No,No,No,No
+OASIS1897,Voxelotor,No,No,No,Yes,No
+OASIS057,Mefenamic acid,No,No,No,No,No
+OASIS573,"N-Decyl-N,N-dimethyldecan-1-aminium (chloride)",Yes,Yes,Yes,Yes,Yes
+OASIS1577,Efavirenz,No,No,No,Yes,No
+OASIS1863,Lomitapide (mesylate),Yes,Yes,Yes,Yes,Yes
+OASIS1401,Citalopram,Yes,Yes,No,Yes,No
+OASIS607,Thio-TEPA,No,No,No,Yes,No
+OASIS1146,Trazodone,No,Yes,No,Yes,No
+OASIS1210,Methocarbamol,No,No,No,No,No
+OASIS1753,Linagliptin,Yes,Yes,No,Yes,No
+OASIS1277,Acetohexamide,No,No,No,No,No
+OASIS1272,Clevidipine,No,No,No,No,No
+OASIS980,Telaprevir,Yes,Yes,No,Yes,No
+OASIS1058,Entecavir,No,No,No,Yes,No
+OASIS934,Ethacrynic acid,Yes,Yes,Yes,Yes,Yes
+OASIS1853,Baloxavir marboxil,Yes,Yes,Yes,Yes,Yes
+OASIS1268,Tandospirone,No,Yes,No,Yes,No
+OASIS135,Bronopol,No,Yes,No,Yes,No
+OASIS854,Bendamustine,No,No,No,No,No
+OASIS956,Capecitabine,No,No,No,No,No
+OASIS079,Diltiazem,No,Yes,No,Yes,No
+OASIS822,Terfenadine,Yes,Yes,Yes,Yes,Yes
+OASIS1784,Flibanserin,No,Yes,No,Yes,No
+OASIS1465,Mizoribine,No,No,No,No,No
+OASIS1872,Ibrutinib,Yes,Yes,No,Yes,No
+OASIS1090,Bumetanide,No,No,No,No,No
+OASIS1120,Rapamycin,Yes,Yes,No,Yes,No
+OASIS1338,Artemether,No,No,No,No,No
+OASIS1653,5-Hydroxymethylfurfural,No,No,No,No,No
+OASIS093,Clomipramine,Yes,Yes,Yes,Yes,Yes
+OASIS728,Pranoprofen,No,No,No,No,No
+OASIS014,Flutamide,No,Yes,No,Yes,No
+OASIS1510,Pyrazinamide,No,No,No,No,No
+OASIS1223,Sildenafil,No,Yes,No,Yes,No
+OASIS1038,Haloperidol,Yes,Yes,Yes,Yes,Yes
+OASIS307,Aflatoxin B1,Yes,Yes,Yes,Yes,Yes
+,Compound_ab084aae,No,No,No,No,No
+OASIS042,Azathioprine,Yes,Yes,No,Yes,No
+OASIS1124,Tiaprofenic acid,No,Yes,No,No,No
+OASIS018,Sulfasalazine,No,Yes,No,Yes,No
+OASIS1413,Josamycin,No,Yes,No,Yes,No
+OASIS1721,Deoxycholic acid,No,No,No,Yes,No
+OASIS1009,Felodipine,No,No,No,Yes,No
+OASIS1198,Clopidogrel,No,No,No,No,No
+,Compound_232f8ab7,No,No,No,No,No
+OASIS1450,Azithromycin,No,No,Yes,Yes,No
+OASIS604,Estradiol,No,Yes,No,Yes,No
+OASIS219,Esfenvalerate,No,No,No,Yes,No
+OASIS480,Penconazole,No,Yes,No,Yes,No
+OASIS1501,Astemizole,Yes,Yes,Yes,Yes,Yes
+OASIS831,Olmesartan,No,Yes,No,No,No
+OASIS1217,Propofol,No,No,No,No,No
+OASIS902,Cyclothiazide,No,No,No,No,No
+,Compound_aab77a44,No,No,No,No,No
+OASIS1808,Panobinostat,Yes,Yes,Yes,Yes,Yes
+OASIS1849,Canagliflozin,No,Yes,No,Yes,No
+OASIS1517,Thalidomide,No,No,No,No,No
+OASIS1783,Doravirine,No,No,No,Yes,No
+OASIS1514,Urapidil,No,Yes,No,No,No
+OASIS347,Perfluorobutanesulfonic acid,No,No,No,No,No
+OASIS1402,Cladribine,No,No,No,Yes,No
+OASIS668,Molsidomine,No,No,No,Yes,No
+OASIS968,Tolvaptan,No,Yes,No,Yes,No
+OASIS1692,"1,1-Dioxothiolan",No,No,No,No,No
+,Compound_a16a83ef,No,No,No,No,No
+OASIS969,Pentagastrin,No,No,No,No,No
+,Compound_2aa5e543,No,No,No,No,No
+OASIS853,Trabectedin,Yes,Yes,Yes,Yes,Yes
+OASIS732,Succimer,No,No,No,No,No
+OASIS337,Desloratadine,Yes,Yes,Yes,Yes,Yes
+,Compound_a0ebcfe9,No,No,No,No,No
+OASIS1179,Hexachlorophene,Yes,Yes,Yes,Yes,Yes
+OASIS1392,Ambroxol,No,Yes,No,Yes,No
+OASIS414,4-Methylanisole,No,No,No,No,No
+OASIS1389,Amantadine,No,No,No,No,No
+OASIS1332,Clotrimazole,No,No,No,Yes,No
+OASIS1464,Nicorandil,No,Yes,No,Yes,No
+OASIS1192,Cefotaxime,No,No,No,No,No
+OASIS1882,Risdiplam,No,No,No,Yes,No
+OASIS1098,Digoxin,Yes,Yes,Yes,Yes,Yes
+,Compound_fcf2b10c,No,No,No,No,No
+OASIS030,Imipramine,Yes,Yes,No,Yes,No
+OASIS1506,Glycerol,No,No,No,No,No
+OASIS1269,Menaquinone-4,No,Yes,No,No,No
+,Compound_14bca51b,No,No,No,No,No
+OASIS1804,Vibegron,No,No,No,Yes,No
+OASIS217,Chlorocresol,No,No,No,Yes,No
+OASIS455,"Dipropyl pyridine-2,5-dicarboxylate",No,No,No,No,No
+,Compound_039e71b7,No,No,No,No,No
+OASIS098,Pirinixic acid,No,No,No,No,No
+OASIS1068,Regadenoson,No,No,No,No,No
+OASIS1840,Macitentan,No,No,No,No,No
+OASIS107,Monocrotaline,No,No,No,No,No
+OASIS1553,Quetiapine,No,Yes,No,Yes,No
+,Compound_36ff3535,No,No,No,No,No
+OASIS1313,Methylprednisolone,No,No,No,Yes,No
+OASIS663,Vancomycin,No,No,No,No,No
+OASIS1284,Acemetacin,No,No,No,No,No
+OASIS1805,Siponimod,No,No,No,Yes,No
+,Compound_06965c8b,No,No,No,No,No
+OASIS1552,Phenylephrine,No,No,No,Yes,No
+,Compound_cd9dcad3,No,No,No,No,No
+,Compound_bfc267d0,No,No,No,No,No
+OASIS675,Raltitrexed,No,No,No,No,No
+OASIS824,Trandolapril,No,No,No,No,No
+OASIS863,Trimetazidine,No,No,No,No,No
+OASIS415,Oxybenzone,No,No,No,No,No
+,Compound_2e66ae36,No,No,No,No,No
+OASIS1150,Thiocolchicoside,No,No,No,No,No
+OASIS1187,Biperiden,No,No,No,Yes,No
+OASIS155,Chlorthal-dimethyl,No,No,No,No,No
+OASIS1548,Olanzapine,No,No,No,Yes,No
+OASIS1758,Omadacycline,No,No,No,No,No
+OASIS596,Probenecid,No,No,No,No,No
+OASIS1919,Oritavancin (diphosphate),Yes,Yes,No,Yes,No
+OASIS982,Atropine,No,No,No,Yes,No
+OASIS140,Retinoic acid,No,No,No,Yes,No
+OASIS793,Betaxolol,No,Yes,No,Yes,No
+OASIS1775,Dapagliflozin,No,No,No,No,No
+OASIS1503,Capsaicin,No,No,No,Yes,No
+OASIS1281,Ifosfamide,No,No,No,No,No
+OASIS1151,Lactulose,No,No,No,No,No
+OASIS1620,Aspartame,No,No,No,No,No
+OASIS841,3-Picolylamine,No,Yes,No,No,No
+OASIS1778,Pexidartinib,No,Yes,No,Yes,No
+OASIS1710,Telotristat ethyl,Yes,Yes,Yes,Yes,Yes
+OASIS1893,Selinexor,Yes,Yes,Yes,Yes,Yes
+OASIS1873,Olaparib,No,Yes,No,Yes,No
+OASIS910,Flucytosine,No,No,No,No,No
+,Compound_4850ff1d,No,No,No,No,No
+OASIS1859,Umbralisib,No,Yes,No,Yes,No
+OASIS1446,Sulfamethoxazole,No,No,No,No,No
+OASIS569,Amiodarone (hydrochloride),Yes,Yes,No,Yes,No
+OASIS916,Mycophenolate Mofetil,No,No,No,Yes,No
+OASIS488,Spirodiclofen,No,No,No,Yes,No
+OASIS1457,Roxithromycin,No,Yes,No,Yes,No
+OASIS1795,Acalabrutinib,Yes,Yes,No,Yes,No
+OASIS1656,Indole-3-carbinol,No,No,No,Yes,No
+OASIS1201,Desogestrel,No,No,No,Yes,No
+OASIS1111,Mifepristone,No,No,No,Yes,No
+OASIS1244,Metoclopramide,No,No,No,Yes,No
+,Compound_ece6ff71,No,No,No,No,No
+OASIS1435,Ramipril,No,No,No,No,No
+OASIS1010,Fenoterol,No,No,No,Yes,No
+OASIS1728,Diroximel fumarate,Yes,Yes,No,Yes,No
+,Compound_96d7185a,No,No,No,No,No
+OASIS1266,Teprenone,No,No,No,No,No
+OASIS375,Benzophenone,No,No,No,No,No
+OASIS897,Cefaclor,No,No,No,No,No
+,Compound_efdb9516,No,No,No,No,No
+,Compound_f9370cb8,No,No,No,No,No
+OASIS405,m-PEG3-OH,No,No,No,No,No
+OASIS475,2-Ethylhexan-1-ol,No,No,No,No,No
+OASIS1296,Clofazimine,No,Yes,No,No,No
+OASIS921,Pargyline,No,No,No,No,No
+OASIS041,Nimesulide,No,Yes,No,No,No
+OASIS1557,Zileuton,No,No,No,Yes,No
+OASIS640,Oxybutynin,Yes,Yes,No,Yes,No
+OASIS036,Nifedipine,No,Yes,No,Yes,No
+OASIS102,L-Ethionine,No,No,No,No,No
+OASIS542,Acenaphthylene,No,No,No,No,No
+OASIS063,Valproic acid,No,No,No,No,No
+OASIS845,Probucol,No,No,No,Yes,No
+OASIS901,Clarithromycin,No,No,No,Yes,No
+OASIS1754,Tazemetostat,No,Yes,No,Yes,No
+OASIS1584,Ciclopirox,No,No,No,No,No
+OASIS026,Phenacetin,No,No,No,No,No
+OASIS932,Trimethoprim,No,No,No,No,No
+OASIS719,Methazolamide,No,No,No,No,No
+,Compound_5c4491cc,No,No,No,No,No
+OASIS1334,Nevirapine,No,Yes,No,Yes,No
+,Compound_622f7d94,No,No,No,No,No
+OASIS357,"1H,1H,2H,2H-Perfluoro-1-decanol",No,No,No,Yes,No
+OASIS1499,Actinomycin D,Yes,Yes,Yes,Yes,Yes
+OASIS1086,Baclofen,No,No,No,No,No
+OASIS248,N-Methylpyrrolidone,No,No,No,No,No
+OASIS370,1-Naphthaleneacetic acid,No,No,No,No,No
+OASIS1925,Capmatinib,No,Yes,Yes,Yes,No
+OASIS544,1-Vinylpyrrolidin-2-one,No,No,No,No,No
+OASIS870,Gadoteridol,No,No,No,No,No
+OASIS1196,Clomethiazole,No,No,No,No,No
+OASIS1627,Perfluorohexanoic acid,No,No,No,No,No
+,Compound_2aa3c71f,No,No,No,No,No
+OASIS355,"2,2'-Oxybis(ethan-1-ol)",No,No,No,Yes,No
+,DMSO,No,No,No,No,No
+OASIS633,Midodrine,No,No,No,No,No
+,Compound_b4581fa7,No,No,No,No,No
+OASIS1824,Sonidegib,No,Yes,No,Yes,No
+OASIS1267,Tipranavir,No,No,No,Yes,No
+OASIS411,Bifenazate,Yes,Yes,Yes,Yes,Yes
+OASIS1180,Ketoprofen,No,No,No,Yes,No
+OASIS672,Isosorbide dinitrate,No,No,No,Yes,No
+,Compound_fbc541b1,No,No,No,No,No
+OASIS890,Finasteride,No,No,No,Yes,No
+OASIS1842,Ponesimod,No,No,No,Yes,No
+OASIS595,Curcumin,Yes,Yes,Yes,Yes,Yes
+OASIS1729,Entrectinib,Yes,Yes,Yes,Yes,Yes
+,Compound_6aa86f17,No,No,No,No,No
+OASIS658,Glipizide,No,Yes,No,No,No
+OASIS1341,Sulfadiazine,No,No,No,No,No
+OASIS639,Nomifensine,No,Yes,No,Yes,No
+OASIS791,Amodiaquine,Yes,Yes,Yes,Yes,Yes
+OASIS1850,Eicosapentaenoic acid ethyl ester,No,No,No,No,No
+OASIS1182,Triamterene,Yes,Yes,No,Yes,No
+OASIS608,Folic acid,No,No,No,No,No
+OASIS105,Hydroxyzine,Yes,Yes,No,Yes,No
+OASIS1533,Gliclazide,No,No,No,No,No
+OASIS1155,Entacapone,No,No,No,No,No
+OASIS1216,Pramipexole,No,No,No,No,No
+OASIS1225,6-Thioguanine,No,No,No,Yes,No
+OASIS476,Propiconazole,No,No,No,Yes,No
+OASIS1376,Ebrotidine,Yes,Yes,No,Yes,No
+OASIS1264,Ozagrel,No,No,No,No,No
+,Compound_680618a8,No,No,No,No,No
+OASIS1689,Dihydrocoumarin,No,No,No,No,No
+,Compound_eeba57fe,No,No,No,No,No
+OASIS145,2-Mercaptobenzothiazole,No,No,No,No,No
+OASIS935,Levonorgestrel,No,No,No,No,No
+OASIS1301,Ethosuximide,No,No,No,Yes,No
+OASIS1024,Phentolamine,Yes,Yes,No,Yes,No
+,Compound_21e939ce,No,No,No,No,No
+OASIS1587,Lumiracoxib,No,No,No,No,No
+OASIS088,Naproxen,No,No,No,No,No
+,Compound_0a1d0dd5,No,No,No,No,No
+OASIS676,Darunavir,No,Yes,No,Yes,No
+OASIS757,Sulfacarbamide,No,No,No,No,No
+,Compound_0b860169,No,No,No,No,No
+OASIS222,Ingliforib,No,No,No,Yes,No
+OASIS112,Doxepin (Hydrochloride),No,Yes,No,Yes,No
+OASIS1031,Tienilic acid,No,No,No,No,No
+OASIS439,Ethofumesate,No,Yes,No,Yes,No
+OASIS1781,Baricitinib,Yes,Yes,No,Yes,No
+OASIS1148,Moxonidine,No,No,No,No,No
+,Compound_137d81a8,No,No,No,No,No
+OASIS751,Oxaprozin,No,No,No,No,No
+OASIS419,Azoxystrobin,Yes,Yes,Yes,Yes,Yes
+OASIS1323,Primidone,No,No,No,No,No
+OASIS794,Bicalutamide,No,Yes,No,Yes,No
+OASIS1173,Carboprost (tromethamine),No,No,No,No,No
+,Compound_0a440abe,No,No,No,No,No
+OASIS904,Cytarabine,No,No,No,Yes,No
+OASIS746,Sulpiride,No,No,No,No,No
+OASIS876,Benzarone,No,Yes,No,No,No
+OASIS045,Methimazole,No,No,No,Yes,No
+OASIS1373,Cefepime,No,No,No,No,No
+OASIS926,Raloxifene,Yes,Yes,Yes,Yes,Yes
+OASIS473,Myclobutanil,No,No,No,No,No
+OASIS503,Fenhexamid,No,No,No,Yes,No
+OASIS628,Irbesartan,No,No,No,Yes,No
+OASIS022,Gemfibrozil,No,No,No,No,No
+OASIS1612,Ginkgo biloba extract,No,No,No,No,No
+OASIS1931,Tofacitinib,No,No,No,Yes,No
+OASIS1197,Clonidine,No,No,No,No,No
+OASIS946,Pranlukast,No,No,No,No,No
+OASIS1716,Fexinidazole,No,No,No,Yes,No
+OASIS1467,Rebamipide,No,No,No,No,No
+OASIS381,"2,6-Diaminopyridine",No,No,No,No,No
+OASIS1072,Aliskiren,No,No,No,No,No
+OASIS1705,Erdafitinib,Yes,Yes,Yes,Yes,Yes
+OASIS1379,Fesoterodine,Yes,Yes,Yes,Yes,Yes
+OASIS1757,Ozanimod (hydrochloride),Yes,Yes,No,Yes,No
+OASIS850,Pimecrolimus,Yes,Yes,No,Yes,No
+,Compound_04c8ac4c,No,No,No,No,No
+OASIS1015,Lansoprazole,No,Yes,No,Yes,No
+,Compound_da37299a,No,No,No,No,No
+OASIS1344,Indapamide,No,Yes,No,Yes,No
+OASIS1509,Prednisolone,No,No,No,Yes,No
+OASIS1036,Ziprasidone,No,Yes,No,Yes,No
+OASIS084,Labetalol,No,Yes,No,Yes,No
+OASIS339,Trans-Anethole,No,No,No,No,No
+OASIS004,Ketoconazole,Yes,Yes,No,Yes,No
+OASIS1829,Pemigatinib,Yes,Yes,Yes,Yes,Yes
+OASIS1837,Naloxegol (oxalate),Yes,No,No,Yes,No
+OASIS1652,Scopolamine (hydrobromide trihydrate),No,Yes,No,Yes,No
+OASIS1879,Sarecycline (hydrochloride),No,No,No,Yes,No
+OASIS1943,Amifampridine,No,No,No,No,No
+OASIS1637,Geranyl acetate,No,No,No,Yes,No
+OASIS365,Flutriafol,No,No,No,Yes,No
+OASIS775,Niperotidine,No,Yes,No,Yes,No
+,Compound_7bb51931,No,No,No,No,No
+OASIS1230,Bismuth Subsalicylate,No,No,No,No,No
+OASIS436,Alectinib (Hydrochloride),Yes,Yes,No,Yes,No
+OASIS1028,Sulfanilamide,No,No,No,No,No
+OASIS792,Atenolol,No,No,No,No,No
+OASIS1639,Pararosaniline (hydrochloride),Yes,Yes,Yes,Yes,Yes
+OASIS1502,5-Azacytidine,No,Yes,No,Yes,No
+OASIS1387,Dicoumarol,No,No,No,No,No
+OASIS528,"4-(tert-Butyl)benzene-1,2-diol",No,Yes,No,Yes,No
