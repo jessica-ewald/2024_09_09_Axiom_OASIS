@@ -90,7 +90,7 @@ plotly==5.24.1
 plotnine==0.13.6
 polars==0.20.0
 pulp==2.7.0
-pyarrow==13.0.0
+pyarrow==14.0.1
 pycparser==2.22
 pycytominer==1.2.0
 pydantic==2.9.1
