@@ -144,7 +144,7 @@ def predict_binary(
     label_path: str,
     output_path: str,
 ) -> None:
-    """Build classifier for each of Srijit's outcomes.
+    """Build classifier for binary outcomes.
 
     Parameters
     ----------
