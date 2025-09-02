@@ -2,7 +2,7 @@
 
 Use AWS cli to download files that give map plate and well IDs to image names.
 
-"""  # noqa: CPY001, INP001
+"""  # noqa: INP001
 
 import re
 
@@ -22,11 +22,11 @@ def main() -> None:
 
     for batch in batches:
         batch_path = f"{aws_path}/{batch}/"
-        aws_output = aws("s3", "ls", batch_path)
+        aws_output = aws("s3", "ls", batch_path, "--no-sign-request")
         plates = re.findall(r"plate_\d{8}", aws_output)
 
         for plate in plates:
-            aws("s3", "cp", f"{batch_path}{plate}/load_data.csv", f"{index_dir}/{plate}.csv")
+            aws("s3", "cp", f"{batch_path}{plate}/load_data.csv", f"{index_dir}/{plate}.csv", "--no-sign-request")
 
 
 if __name__ == "__main__":
