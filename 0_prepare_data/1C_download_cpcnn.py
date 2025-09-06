@@ -2,7 +2,7 @@
 
 Use CPG index to download all Axiom CPCNN profiles.
 
-"""  # noqa: CPY001, INP001
+"""  # noqa: INP001
 
 import re
 
@@ -23,11 +23,11 @@ def main() -> None:
     # get Dino embedding paths
     for batch in batches:
         batch_path = f"{aws_path}/{batch}/"
-        aws_output = aws("s3", "ls", batch_path)
+        aws_output = aws("s3", "ls", batch_path, "--no-sign-request")
         plates = re.findall(r"plate_\d{8}.parquet", aws_output)
 
         for plate in plates:
-            aws("s3", "cp", f"{batch_path}{plate}", f"{prof_dir}/{plate}")
+            aws("s3", "cp", f"{batch_path}{plate}", f"{prof_dir}/{plate}", "--no-sign-request")
 
 
 if __name__ == "__main__":

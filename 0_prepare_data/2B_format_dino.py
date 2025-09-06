@@ -78,7 +78,9 @@ def main() -> None:
     feat_cols = [i for i in data.columns if "Metadata_" not in i]
 
     data = data.group_by(["Metadata_Plate", "Metadata_Well"]).agg([
-        pl.first(meta_cols).exclude(["Metadata_well_id", "Metadata_Plate", "Metadata_Well"]),
+        pl.col(meta_cols)
+        .exclude(["Metadata_well_id", "Metadata_Plate", "Metadata_Well"])
+        .first(),
         pl.median(feat_cols),
     ])
 

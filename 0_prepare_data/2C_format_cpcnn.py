@@ -28,7 +28,9 @@ def main() -> None:
         dat = (
             dat.group_by(["Metadata_Plate", "Metadata_Well"])
             .agg([
-                pl.first(meta_cols).exclude(["Metadata_Plate", "Metadata_Well"]),
+                pl.col(meta_cols)
+                .exclude(["Metadata_Plate", "Metadata_Well"])
+                .first(),
                 pl.median(feat_cols),
             ])
             .collect()

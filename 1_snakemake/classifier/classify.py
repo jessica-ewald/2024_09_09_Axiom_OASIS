@@ -1,13 +1,16 @@
-import traceback  # noqa: CPY001, D100
+import traceback  # noqa: D100
+
+try:
+    import cupy as cp
+except ImportError:
+    import numpy as cp  # fallback for macOS
 
 import pandas as pd
 import polars as pl
 from sklearn.model_selection import StratifiedKFold
-from tqdm import tqdm
-from xgboost import XGBClassifier
-import cupy as cp
 from sklearn.preprocessing import LabelEncoder
 from tqdm.contrib.concurrent import thread_map
+from xgboost import XGBClassifier
 
 
 def binary_classifier(
