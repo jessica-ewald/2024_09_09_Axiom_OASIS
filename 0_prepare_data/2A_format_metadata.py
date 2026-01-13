@@ -14,6 +14,8 @@ meta_keep = [
     "compound_pathway",
     "compound_research_area",
     "compound_clinical_information",
+    "compound_url",
+    "compound_scode",
     "well",
     "row",
     "col",
