@@ -4,7 +4,7 @@ Each of the config files contains different analysis parameters, and is thus a s
 
 ## Reproduce manuscript results
 
-To reproduce the manuscript results, use cellprofiler_filt.json, cpcnn.json, and dino.json to generate results for each cell representation with repo commit 6ea26865b1fedd7aed52c2184bdc5da9b6facbf0.
+To reproduce the manuscript results, use cellprofiler_filt.json, cpcnn.json, and dino.json to generate results for each cell representation with repo commit 382d08b7f895f646fb30c0c270bc31d367a1002a.
 
 ## Config naming conventions
 
